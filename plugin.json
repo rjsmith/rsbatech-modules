@@ -1,23 +1,23 @@
 {
-  "slug": "MyPlugin",
-  "name": "MyPlugin",
-  "version": "2.4.0",
+  "slug": "RSBATech-Orestes",
+  "name": "Orestes",
+  "version": "2.0.0-rc",
   "license": "GPL-3.0-or-later",
-  "brand": "MyBrand",
-  "author": "Me",
-  "authorEmail": "",
-  "authorUrl": "",
-  "pluginUrl": "",
+  "brand": "RSBATech",
+  "author": "Richard Smith",
+  "authorEmail": "rsmith@rbatechnology.co.uk",
+  "authorUrl": "https://github.com/rjsmith",
+  "pluginUrl": "https://github.com/rjsmith/orestes-one",
   "manualUrl": "",
-  "sourceUrl": "",
+  "sourceUrl": "https://github.com/rjsmith/orestes-one.git",
   "donateUrl": "",
   "changelogUrl": "",
   "modules": [
     {
-      "slug": "MyModule",
-      "name": "MyModule",
-      "description": "",
-      "tags": []
+      "slug": "OrestesOne",
+      "name": "Orestes One",
+      "description": "MIDI control from Electra One",
+      "tags": ["Utility", "MIDI"]
     }
   ]
 }
