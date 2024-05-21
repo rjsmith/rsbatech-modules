@@ -11,6 +11,7 @@
 
 # Sublime Editor
 *.sublime-project
+*.sublime-workspace
 
 # Prerequisites
 *.d
