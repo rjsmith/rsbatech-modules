@@ -1,3 +1,17 @@
+# VCVRack
+/build
+/dep
+/dist
+/plugin.so
+/plugin.dylib
+/plugin.dll
+
+# MacOS
+.DS_Store
+
+# Sublime Editor
+*.sublime-project
+
 # Prerequisites
 *.d
 
