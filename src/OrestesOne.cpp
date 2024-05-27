@@ -12,6 +12,7 @@
 #include <iomanip>
 #include <sstream>
 #include <string>
+#include <array>
 
 namespace Orestes {
 namespace OrestesOne {
