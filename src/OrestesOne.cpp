@@ -38,7 +38,7 @@ struct OrestesOneOutput : midi::Output {
 		sendCCMsg(38, value % 128);
 		sendCCMsg(101, 127);
 		sendCCMsg(100, 127);
-		INFO("Sending NPRN %d value %d, force %s", nprn, value, force ? "true" : "false");
+		// INFO("Sending NPRN %d value %d, force %s", nprn, value, force ? "true" : "false");
 	}
 
     void sendCCMsg(int cc, int value) {
@@ -120,7 +120,8 @@ struct E1MidiOutput : OrestesOneOutput {
 
         // SysEx closing byte
         m.bytes.push_back(0xf7);
-        //sendMessage(m);
+        // INFO("Sending control update e1 ctrl %id, value %s", id, displayValue);
+        sendMessage(m);
 
    }
 
@@ -184,7 +185,7 @@ struct E1MidiOutput : OrestesOneOutput {
     * @see https://docs.electra.one/developers/midiimplementation.html#execute-lua-command
     */
    void sendE1ExecuteLua(const char* luaCommand) {
-        INFO("Execute Lua %s", luaCommand);
+        // INFO("Execute Lua %s", luaCommand);
 
         m.bytes.clear();
         // SysEx header byte
@@ -203,8 +204,8 @@ struct E1MidiOutput : OrestesOneOutput {
         // SysEx closing byte
         m.bytes.push_back(0xf7);
 
-        //INFO("Sending bytes %s", hexStr(m.bytes.data(), m.getSize()).data());
-        //sendMessage(m);
+        // INFO("Sending bytes %s", hexStr(m.bytes.data(), m.getSize()).data());
+        sendMessage(m);
 
 
    }
@@ -797,6 +798,7 @@ struct OrestesOneModule : Module {
                         midiParam[id].setValueToDefault();
                         e1ProcessResetParameterNPRN = -1;
                         lastValueOut[id] = -1;
+                        nprns[id].resetValue(); // Forces NPRN adapter to emit NPRM message out
 
                     } else if (t >= 0) {
 						midiParam[id].setValue(t);
@@ -812,7 +814,6 @@ struct OrestesOneModule : Module {
 					// Midi feedback
 					if (lastValueOut[id] != v) {
 
-                        INFO("lastValueOut %d, lastValueIn %d, v %d, valuesNprn %d", lastValueOut[id], lastValueIn[id], v, valuesNprn[nprn]);					
 						if (!e1ProcessResetParameter && nprn >= 0 && nprns[id].nprnMode == NPRNMODE::DIRECT)
                         							lastValueIn[id] = v;
 				        // Send manually altered parameter change out to MIDI
@@ -1975,11 +1976,8 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 	OrestesOneModule* module;
 	OrestesOneDisplay* mapWidget;
 
-	BufferedTriggerParamQuantity* expMemPrevQuantity;
 	dsp::SchmittTrigger expMemPrevTrigger;
-	BufferedTriggerParamQuantity* expMemNextQuantity;
 	dsp::SchmittTrigger expMemNextTrigger;
-	BufferedTriggerParamQuantity* expMemParamQuantity;
 	dsp::SchmittTrigger expMemParamTrigger;
 
 	enum class LEARN_MODE {
@@ -2055,22 +2053,12 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		ThemedModuleWidget<OrestesOneModule>::step();
 		if (module) {
 			// MEM
-			expMemPrevQuantity = dynamic_cast<BufferedTriggerParamQuantity*>(module->paramQuantities[1]);
-			expMemPrevQuantity->resetBuffer();
-			expMemNextQuantity = dynamic_cast<BufferedTriggerParamQuantity*>(module->paramQuantities[2]);
-			expMemNextQuantity->resetBuffer();
-			expMemParamQuantity = dynamic_cast<BufferedTriggerParamQuantity*>(module->paramQuantities[0]);
-			expMemParamQuantity->resetBuffer();
-		
-		
-			if (module->e1ProcessPrev || expMemPrevTrigger.process(expMemPrevQuantity->buffer)) {
+			if (module->e1ProcessPrev || expMemPrevTrigger.process(module->params[OrestesOneModule::PARAM_PREV].getValue())) {
 			    module->e1ProcessPrev = false;
-				expMemPrevQuantity->resetBuffer();
 				expMemPrevModule();
 			}
-			if (module->e1ProcessNext || expMemNextTrigger.process(expMemNextQuantity->buffer)) {
+			if (module->e1ProcessNext || expMemNextTrigger.process(module->params[OrestesOneModule::PARAM_NEXT].getValue())) {
 			    module->e1ProcessNext = false;
-				expMemNextQuantity->resetBuffer();
 				expMemNextModule();
 			}
 			if (module->e1ProcessSelect) {
@@ -2078,8 +2066,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 			    expMemSelectModule(module->e1SelectedModulePos);
 			    module->e1SelectedModulePos = Vec(0,0);
 			}
-			if (expMemParamTrigger.process(expMemParamQuantity->buffer)) {
-				expMemParamQuantity->resetBuffer();
+			if (expMemParamTrigger.process(module->params[OrestesOneModule::PARAM_APPLY].getValue())) {
 				enableLearn(LEARN_MODE::MEM);
 			}
 			module->lights[0].setBrightness(learnMode == LEARN_MODE::MEM);
