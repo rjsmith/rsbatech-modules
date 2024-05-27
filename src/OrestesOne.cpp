@@ -27,17 +27,18 @@ struct OrestesOneOutput : midi::Output {
 		std::fill_n(lastNPRNValues.begin(), 16384, -1);
 	}
 
-    void setNPRNValue(int value, int cc, bool force = false) {
-		if (value == lastNPRNValues[cc] && !force)
+    void setNPRNValue(int value, int nprn, int valueNprnIn, bool force = false) {
+		if ((value == lastNPRNValues[nprn] || value == valueNprnIn) && !force)
 			return;
-		lastNPRNValues[cc] = value;
+		lastNPRNValues[nprn] = value;
 		// NPRN
-		sendCCMsg(99, cc / 128);
-		sendCCMsg(98, cc % 128);
+		sendCCMsg(99, nprn / 128);
+		sendCCMsg(98, nprn % 128);
 		sendCCMsg(6, value / 128);
 		sendCCMsg(38, value % 128);
 		sendCCMsg(101, 127);
 		sendCCMsg(100, 127);
+		INFO("Sending NPRN %d value %d, force %s", nprn, value, force ? "true" : "false");
 	}
 
     void sendCCMsg(int cc, int value) {
@@ -385,7 +386,7 @@ struct OrestesOneModule : Module {
 
         void setValue(int value, bool sendOnly) {
             if (nprn == -1) return;
-            module->midiOutput.setNPRNValue(value, nprn, current == -1);
+            module->midiOutput.setNPRNValue(value, nprn, module->valuesNprn[nprn], current == -1);
             if (!sendOnly) current = value;
         }
 
@@ -811,6 +812,7 @@ struct OrestesOneModule : Module {
 					// Midi feedback
 					if (lastValueOut[id] != v) {
 
+                        INFO("lastValueOut %d, lastValueIn %d, v %d, valuesNprn %d", lastValueOut[id], lastValueIn[id], v, valuesNprn[nprn]);					
 						if (!e1ProcessResetParameter && nprn >= 0 && nprns[id].nprnMode == NPRNMODE::DIRECT)
                         							lastValueIn[id] = v;
 				        // Send manually altered parameter change out to MIDI
@@ -1042,7 +1044,7 @@ struct OrestesOneModule : Module {
     }
 
     /**
-     * Builds a 14 bit controllerId and 14Bit Value from a series of CC messages following the NPRN standard
+     * Builds a 14 bit controllerId and 14Bit Value from a series of received CC messages following the NPRN standard
      *
      * See http://www.philrees.co.uk/nrpnq.htm
      * [1]. CC 99 NPRN Parameter Order high order 7 bits (MSB)
