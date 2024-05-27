@@ -17,7 +17,7 @@ namespace Orestes {
 namespace OrestesOne {
 
 struct OrestesOneOutput : midi::Output {
-	std::array<int, 16384> lastNPRNValues;
+	std::array<int, 16384> lastNPRNValues{};
 
 	OrestesOneOutput() {
 		reset();
@@ -221,16 +221,6 @@ struct E1MidiOutput : OrestesOneOutput {
         return ss.str();
     }
 
-    // Convert c++ float to 5 byte 7-bit byte array
-    void floatToSysEx(float in, std::array<uint8_t, 5> out) {
-        uint32_t as_integer;
-        static_assert(sizeof(in) == sizeof(as_integer), "sizes don't match");
-        std::memcpy(&as_integer, &in, sizeof(as_integer));
-        for (uint8_t i = 0; i < out.size(); ++i) {
-            out[i] = as_integer & 0x7F;
-            as_integer >>= 7;
-        }
-    }
 };
 
 enum MIDIMODE {
@@ -450,7 +440,7 @@ struct OrestesOneModule : Module {
     /** NPRN Parsing */
     bool isPendingNPRN = true; // TRUE if processing a NPRN sequence, start CC 99, end CC 100
     int lastNPRNcc; // Tracks last received NPRN message
-    std::array<uint8_t, 4> nprnMsg; // Stores raw received nprn CC values (ignoring the NULL CC commands)
+    std::array<uint8_t, 4> nprnMsg{}; // Stores raw received nprn CC values (ignoring the NULL CC commands)
 
 	/** Channel ID of the learning session */
 	int learningId;
