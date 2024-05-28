@@ -77,10 +77,10 @@ struct ThemedModuleWidget : BASE {
 				};
 
 				Menu* menu = new Menu;
-				menu->addChild(Orestes::Rack::createValuePtrMenuItem("Blue", &module->panelTheme, 0));
+				menu->addChild(Orestes::Rack::createValuePtrMenuItem("Light", &module->panelTheme, 0));
 				menu->addChild(Orestes::Rack::createValuePtrMenuItem("Dark", &module->panelTheme, 1));
 				menu->addChild(new MenuSeparator);
-				menu->addChild(construct<PanelThemeDefaultItem>(&MenuItem::text, "Blue as default", &PanelThemeDefaultItem::theme, 0));
+				menu->addChild(construct<PanelThemeDefaultItem>(&MenuItem::text, "Light as default", &PanelThemeDefaultItem::theme, 0));
 				menu->addChild(construct<PanelThemeDefaultItem>(&MenuItem::text, "Dark as default", &PanelThemeDefaultItem::theme, 1));
 				menu->addChild(new MenuSeparator);
 				menu->addChild(createBoolMenuItem("Use Rack setting", "",
