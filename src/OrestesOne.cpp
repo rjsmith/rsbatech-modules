@@ -17,6 +17,8 @@
 namespace Orestes {
 namespace OrestesOne {
 
+static const char PRESET_FILTERS[] = "VCV Rack module preset (.vcvm):vcvm";
+
 struct OrestesOneOutput : midi::Output {
 	std::array<int, 16384> lastNPRNValues{};
 
@@ -2151,6 +2153,120 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		}
 	}
 
+	void loadMidiMapPreset_dialog() {
+		osdialog_filters* filters = osdialog_filters_parse(PRESET_FILTERS);
+		DEFER({
+			osdialog_filters_free(filters);
+		});
+
+		char* path = osdialog_file(OSDIALOG_OPEN, "", NULL, filters);
+		if (!path) {
+			// No path selected
+			return;
+		}
+		DEFER({
+			free(path);
+		});
+
+		loadMidiMapPreset_action(path);
+	}
+
+	void loadMidiMapPreset_action(std::string filename) {
+		INFO("Merging midimaps from preset %s", filename.c_str());
+
+		FILE* file = fopen(filename.c_str(), "r");
+		if (!file) {
+			WARN("Could not load patch file %s", filename.c_str());
+			return;
+		}
+		DEFER({
+			fclose(file);
+		});
+
+		json_error_t error;
+		json_t* moduleJ = json_loadf(file, 0, &error);
+		if (!moduleJ) {
+			std::string message = string::f("File is not a valid patch file. JSON parsing error at %s %d:%d %s", error.source, error.line, error.column, error.text);
+			osdialog_message(OSDIALOG_WARNING, OSDIALOG_OK, message.c_str());
+			return;
+		}
+		DEFER({
+			json_decref(moduleJ);
+		});
+
+		json_t* currentStateJ = toJson();
+		if (!mergeMidiMapPreset_convert(moduleJ, currentStateJ))
+			return;
+
+		// history::ModuleChange
+		history::ModuleChange* h = new history::ModuleChange;
+		h->name = "merge midimaps from preset";
+		h->moduleId = module->id;
+		h->oldModuleJ = toJson();
+
+		module->fromJson(currentStateJ);
+
+		h->newModuleJ = toJson();
+		APP->history->push(h);
+	}
+
+	/**
+	 * Merge module midiMap entries from the importedPresetJ into the current midiMap of this OrestesOne module.
+	 * Entries from the imported presetJ will overwrite matching entries in the existing midiMap.
+	 * 
+	 * Mutates the currentStateJ with the amended midiMap list = current midiMap + merged midiMap from importedPresetJ
+	 */
+	bool mergeMidiMapPreset_convert(json_t* importedPresetJ, json_t* currentStateJ) {
+		std::string pluginSlug = json_string_value(json_object_get(importedPresetJ, "plugin"));
+		std::string modelSlug = json_string_value(json_object_get(importedPresetJ, "model"));
+
+		// Only handle presets for OrestesOne
+		if (!(pluginSlug == "RSBATech-Orestes" && modelSlug == "OrestesOne"))
+			return false;
+
+		// Get the midiMap in the imported preset Json
+		json_t* dataJ = json_object_get(importedPresetJ, "data");
+		json_t* midiMapJ = json_object_get(dataJ, "midiMap");
+
+		json_t* currentStateDataJ = json_object_get(currentStateJ, "data");
+		json_t* currentStateMidiMapJ = json_object_get(currentStateDataJ, "midiMap");
+
+		// Loop over the midiMap from the imported preset JSON
+		size_t i;
+		json_t* midiMapJJ;
+		json_array_foreach(midiMapJ, i, midiMapJJ) {
+			std::string importedPluginSlug = json_string_value(json_object_get(midiMapJJ, "pluginSlug"));
+			std::string importedModuleSlug = json_string_value(json_object_get(midiMapJJ, "moduleSlug"));
+
+			// Find this mapped module in the current Orestes module state Json
+			size_t ii;
+			json_t* currentStateMidiMapJJ;
+			bool foundCurrent = false;
+			json_array_foreach(currentStateMidiMapJ, ii, currentStateMidiMapJJ) {
+				std::string currentPluginSlug = json_string_value(json_object_get(currentStateMidiMapJJ, "pluginSlug"));
+				std::string currentModuleSlug = json_string_value(json_object_get(currentStateMidiMapJJ, "moduleSlug"));
+
+				if (currentPluginSlug == importedPluginSlug && currentModuleSlug == importedModuleSlug) {
+						foundCurrent = true;
+						// Replace current midi map with the imported one
+						json_array_set(currentStateMidiMapJ, ii, midiMapJJ);
+				}
+
+			}
+			if (foundCurrent == false) {
+				// Did not find the imported module in the current midi map, so append it now
+				json_t* clonedMidiMapJJ = json_deep_copy(midiMapJJ);
+				json_array_append(currentStateMidiMapJ, clonedMidiMapJJ);
+				json_decref(clonedMidiMapJJ);
+			}
+
+		};
+
+		// currentStateJ* now has the updated merged midimap
+		INFO("Merged %zu midimaps" , i);
+		return true;
+	}
+
 	void extendParamWidgetContextMenu(ParamWidget* pw, Menu* menu) override {
 		if (!module) return;
 		if (module->learningId >= 0) return;
@@ -2426,6 +2542,8 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 				menu->addChild(createBoolPtrMenuItem("Periodically", "", &module->midiResendPeriodically));
 			}
 		));
+		menu->addChild(createMenuItem("Merge module maps from Orestes-One preset", "", [=]() { loadMidiMapPreset_dialog(); }));
+
 		menu->addChild(new MenuSeparator());
 		menu->addChild(createSubmenuItem("User interface", "",
 			[=](Menu* menu) {
