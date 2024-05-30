@@ -2542,7 +2542,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 				menu->addChild(createBoolPtrMenuItem("Periodically", "", &module->midiResendPeriodically));
 			}
 		));
-		menu->addChild(createMenuItem("Merge module maps from Orestes-One preset", "", [=]() { loadMidiMapPreset_dialog(); }));
+		menu->addChild(createMenuItem("Merge module maps from preset", "", [=]() { loadMidiMapPreset_dialog(); }));
 
 		menu->addChild(new MenuSeparator());
 		menu->addChild(createSubmenuItem("User interface", "",
@@ -2606,19 +2606,52 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 					}
 				}; // MidimapModuleItem
 
-				std::list<std::pair<std::string, MidimapModuleItem*>> l; 
+				struct MidimapPluginItem: MenuItem {
+					OrestesOneModule* module;
+					std::string pluginSlug;
+					MidimapPluginItem() {
+						rightText = RIGHT_ARROW;
+					}
+					// Create child menu listing all modules in this plugin
+					Menu* createChildMenu() override {
+						std::list<std::pair<std::string, MidimapModuleItem*>> l; 
+						for (auto it : module->midiMap) {
+							if (it.first.first == pluginSlug) {
+								MemModule* a = it.second;
+								MidimapModuleItem* midimapModuleItem = new MidimapModuleItem;
+								midimapModuleItem->text = string::f("%s %s", a->pluginName.c_str(), a->moduleName.c_str());
+								midimapModuleItem->module = module;
+								midimapModuleItem->midimapModule = a;
+								midimapModuleItem->pluginSlug = it.first.first;
+								midimapModuleItem->moduleSlug = it.first.second;
+								l.push_back(std::pair<std::string, MidimapModuleItem*>(midimapModuleItem->text, midimapModuleItem));
+							}
+						}
+
+						l.sort();
+						Menu* menu = new Menu;
+						for (auto it : l) {
+							menu->addChild(it.second);
+						}
+						return menu;
+
+					}
+				}; // MidimapPluginItem
+
+				std::map<std::string, MidimapPluginItem*> l;
+				l.clear();
+
 				for (auto it : module->midiMap) {
 					MemModule* a = it.second;
-					MidimapModuleItem* midimapModuleItem = new MidimapModuleItem;
-					midimapModuleItem->text = string::f("%s %s", a->pluginName.c_str(), a->moduleName.c_str());
-					midimapModuleItem->module = module;
-					midimapModuleItem->midimapModule = a;
-					midimapModuleItem->pluginSlug = it.first.first;
-					midimapModuleItem->moduleSlug = it.first.second;
-					l.push_back(std::pair<std::string, MidimapModuleItem*>(midimapModuleItem->text, midimapModuleItem));
+					if (l.find(it.first.first) == l.end()) {
+						// Map does not already have an entry for this plugin, so add one now
+						MidimapPluginItem* midimapPluginItem = new MidimapPluginItem;
+						midimapPluginItem->text = string::f("%s", a->pluginName.c_str());
+						midimapPluginItem->module = module;
+						midimapPluginItem->pluginSlug = it.first.first;
+						l[it.first.first] = midimapPluginItem;	
+					}
 				}
-
-				l.sort();
 				Menu* menu = new Menu;
 				for (auto it : l) {
 					menu->addChild(it.second);
