@@ -17,7 +17,8 @@
 namespace Orestes {
 namespace OrestesOne {
 
-static const char PRESET_FILTERS[] = "VCV Rack module preset (.vcvm):vcvm";
+static const char LOAD_MIDIMAP_FILTERS[] = "VCV Rack module preset (.vcvm):vcvm, JSON (.json):json";
+static const char SAVE_JSON_FILTERS[] = "JSON (.json):json";
 
 struct OrestesOneOutput : midi::Output {
 	std::array<int, 16384> lastNPRNValues{};
@@ -965,20 +966,20 @@ struct OrestesOneModule : Module {
                 switch(msg.bytes.at(5)) {
                     // Next
                     case 0x01: {
-                        INFO("Received a Next Command");
+                        // INFO("Received an E1 Next Command");
                         e1ProcessNext = true;
                         return true;
                     }
                     // Prev
                     case 0x02: {
-                        INFO("Received a Prev Command");
+                        // INFO("Received an E1 Prev Command");
                         e1ProcessNext = false;
                         e1ProcessPrev = true;
                         return true;
                     }
                     // Module Select
                     case 0x03: {
-                        INFO("Received a Module Select Command");
+                        // INFO("Received an E1 Module Select Command");
                         e1ProcessSelect = true;
                         // Convert bytes 7 to float
                         std::vector<uint8_t>::const_iterator vit = msg.bytes.begin() + 6;
@@ -990,7 +991,7 @@ struct OrestesOneModule : Module {
                     }
                     // List Mapped Modules
                     case 0x04: {
-                        INFO("Received a List Mapped Modules Command");
+                        // INFO("Received an E1 List Mapped Modules Command");
                         e1ProcessListMappedModules = true;
                         return true;
                     }
@@ -999,12 +1000,12 @@ struct OrestesOneModule : Module {
                         e1ProcessResetParameter = true;
                         e1ProcessResetParameterNPRN = ((int) msg.bytes.at(6) << 7) + ((int) msg.bytes.at(7));
 
-                        INFO("Received a Reset Parameter Command for NPRN %d", e1ProcessResetParameterNPRN);
+                        // INFO("Received an E1 Reset Parameter Command for NPRN %d", e1ProcessResetParameterNPRN);
                         return true;
                     }
                     // Re-send MIDI feedback
                     case 0x06: {
-                        INFO("Received a Re-send MIDI Feedback Command");
+                        // INFO("Received an E1 Re-send MIDI Feedback Command");
                         e1ProcessResendMIDIFeedback = true;
                         return true;
                     }
@@ -1116,13 +1117,13 @@ struct OrestesOneModule : Module {
 	}
 
 	void changeE1Module(const char* moduleName, float moduleY, float moduleX) {
-	    INFO("changeE1Module to %s", moduleName);
+	    // INFO("changeE1Module to %s", moduleName);
 	    midiCtrlOutput.changeE1Module(moduleName, moduleY, moduleX);
 	}
 
 	void endChangeE1Module() {
-    	    INFO("endChangeE1Module");
-    	    midiCtrlOutput.endChangeE1Module();
+	    // INFO("endChangeE1Module");
+	    midiCtrlOutput.endChangeE1Module();
     }
 
 
@@ -1321,10 +1322,46 @@ struct OrestesOneModule : Module {
 	}
 
 	void expMemDelete(std::string pluginSlug, std::string moduleSlug) {
+		json_t* currentStateJ = toJson();
+
 		auto p = std::pair<std::string, std::string>(pluginSlug, moduleSlug);
 		auto it = midiMap.find(p);
 		delete it->second;
 		midiMap.erase(p);
+
+		// history::ModuleChange
+		history::ModuleChange* h = new history::ModuleChange;
+		h->name = "delete module mappings";
+		h->moduleId = this->id;
+		h->oldModuleJ = currentStateJ;
+		h->newModuleJ = toJson();
+		APP->history->push(h);
+		
+	}
+
+	/* Delete all mapped modules belonging to same plugin, add to undo history */
+	void expMemPluginDelete(std::string pluginSlug) {
+		json_t* currentStateJ = toJson();
+
+		// From: https://stackoverflow.com/a/4600592
+		auto itr = midiMap.begin();
+		while (itr != midiMap.end()) {
+		    if (itr->first.first == pluginSlug) {
+		    	delete itr->second;
+		       	itr = midiMap.erase(itr);
+		    } else {
+		       ++itr;
+		    }
+		}
+
+		// history::ModuleChange
+		history::ModuleChange* h = new history::ModuleChange;
+		h->name = "delete plugin mappings";
+		h->moduleId = this->id;
+		h->oldModuleJ = currentStateJ;
+		h->newModuleJ = toJson();
+		APP->history->push(h);
+		
 	}
 
 	void expMemApply(Module* m, math::Vec pos = Vec(0,0)) {
@@ -1365,6 +1402,71 @@ struct OrestesOneModule : Module {
 		}
 
 		updateMapLen();
+
+	}
+
+	void expMemExportPlugin(std::string pluginSlug) {
+
+		osdialog_filters* filters = osdialog_filters_parse(SAVE_JSON_FILTERS);
+		DEFER({
+			osdialog_filters_free(filters);
+		});
+
+		std::string filename = pluginSlug + ".json";
+		char* path = osdialog_file(OSDIALOG_SAVE, "", filename.c_str(), filters);
+		if (!path) {
+			// No path selected
+			return;
+		}
+		DEFER({
+			free(path);
+		});
+
+		exportPluginMidiMap_action(path, pluginSlug);
+	}
+
+	void exportPluginMidiMap_action(char* path, std::string pluginSlug) {
+
+		INFO("Exporting midimaps for plugin %s to file %s", pluginSlug.c_str(), path);
+
+		json_t* rootJ = json_object();
+		DEFER({
+			json_decref(rootJ);
+		});
+
+		json_object_set_new(rootJ, "plugin", json_string(this->model->plugin->slug.c_str()));
+		json_object_set_new(rootJ, "model", json_string(this->model->slug.c_str()));
+		json_t* dataJ = json_object();
+
+		// Get map of all mapped modules for this plugin
+		std::map<std::pair<std::string, std::string>, MemModule*> pluginMap;
+
+		pluginMap.clear();
+		for (auto it : midiMap) {
+			if (it.first.first == pluginSlug)
+				pluginMap[it.first] = it.second;
+		}
+
+		json_t* midiMapJ = midiMapToJsonArray(pluginMap);
+
+		json_object_set_new(dataJ, "midiMap", midiMapJ);
+		json_object_set_new(rootJ, "data", dataJ);
+
+		// Write to json file
+		FILE* file = fopen(path, "w");		
+		if (!file) {
+			WARN("Could not create file %s", path);
+			return;
+		}
+		DEFER({
+			fclose(file);
+		});
+
+		if (json_dumpf(rootJ, file, JSON_INDENT(4)) < 0) {
+			std::string message = string::f("File could not be written to %s", path);
+			osdialog_message(OSDIALOG_ERROR, OSDIALOG_OK, message.c_str());
+			return;
+		}
 
 	}
 
@@ -1413,8 +1515,15 @@ struct OrestesOneModule : Module {
 		json_object_set_new(rootJ, "midiCtrlInput", midiCtrlInput.toJson());
 		json_object_set_new(rootJ, "midiCtrlOutput", midiCtrlOutput.toJson());
 
+		json_t* midiMapJ = midiMapToJsonArray(midiMap);
+		json_object_set_new(rootJ, "midiMap", midiMapJ);
+
+		return rootJ;
+	}
+
+	json_t* midiMapToJsonArray(const std::map<std::pair<std::string, std::string>, MemModule*>& aMidiMap) {
 		json_t* midiMapJ = json_array();
-		for (auto it : midiMap) {
+		for (auto it : aMidiMap) {
 			json_t* midiMapJJ = json_object();
 			json_object_set_new(midiMapJJ, "pluginSlug", json_string(it.first.first.c_str()));
 			json_object_set_new(midiMapJJ, "moduleSlug", json_string(it.first.second.c_str()));
@@ -1439,10 +1548,9 @@ struct OrestesOneModule : Module {
 
 			json_array_append_new(midiMapJ, midiMapJJ);
 		}
-		json_object_set_new(rootJ, "midiMap", midiMapJ);
-
-		return rootJ;
+		return midiMapJ;
 	}
+
 
 	void dataFromJson(json_t* rootJ) override {
 		json_t* panelThemeJ = json_object_get(rootJ, "panelTheme");
@@ -2071,7 +2179,6 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 	}
 
 	void expMemPrevModule() {
-		INFO("expMemPrevModule");
 		std::list<Widget*> modules = APP->scene->rack->getModuleContainer()->children;
 		auto sort = [&](Widget* w1, Widget* w2) {
 			auto t1 = std::make_tuple(w1->box.pos.y, w1->box.pos.x);
@@ -2083,7 +2190,6 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 	}
 
 	void expMemNextModule() {
-		INFO("expMemNextModule");
 		std::list<Widget*> modules = APP->scene->rack->getModuleContainer()->children;
 		auto sort = [&](Widget* w1, Widget* w2) {
 			auto t1 = std::make_tuple(w1->box.pos.y, w1->box.pos.x);
@@ -2154,7 +2260,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 	}
 
 	void loadMidiMapPreset_dialog() {
-		osdialog_filters* filters = osdialog_filters_parse(PRESET_FILTERS);
+		osdialog_filters* filters = osdialog_filters_parse(LOAD_MIDIMAP_FILTERS);
 		DEFER({
 			osdialog_filters_free(filters);
 		});
@@ -2172,11 +2278,11 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 	}
 
 	void loadMidiMapPreset_action(std::string filename) {
-		INFO("Merging midimaps from preset %s", filename.c_str());
+		INFO("Merging mappings from file %s", filename.c_str());
 
 		FILE* file = fopen(filename.c_str(), "r");
 		if (!file) {
-			WARN("Could not load patch file %s", filename.c_str());
+			WARN("Could not load file %s", filename.c_str());
 			return;
 		}
 		DEFER({
@@ -2186,7 +2292,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		json_error_t error;
 		json_t* moduleJ = json_loadf(file, 0, &error);
 		if (!moduleJ) {
-			std::string message = string::f("File is not a valid patch file. JSON parsing error at %s %d:%d %s", error.source, error.line, error.column, error.text);
+			std::string message = string::f("File is not a valid JSON file. Parsing error at %s %d:%d %s", error.source, error.line, error.column, error.text);
 			osdialog_message(OSDIALOG_WARNING, OSDIALOG_OK, message.c_str());
 			return;
 		}
@@ -2200,7 +2306,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 
 		// history::ModuleChange
 		history::ModuleChange* h = new history::ModuleChange;
-		h->name = "merge midimaps from preset";
+		h->name = "merge mappings";
 		h->moduleId = module->id;
 		h->oldModuleJ = toJson();
 
@@ -2220,8 +2326,8 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		std::string pluginSlug = json_string_value(json_object_get(importedPresetJ, "plugin"));
 		std::string modelSlug = json_string_value(json_object_get(importedPresetJ, "model"));
 
-		// Only handle presets for OrestesOne
-		if (!(pluginSlug == "RSBATech-Orestes" && modelSlug == "OrestesOne"))
+		// Only handle presets or midimap JSON files for OrestesOne
+		if (!(pluginSlug == module->model->plugin->slug && modelSlug == module->model->slug))
 			return false;
 
 		// Get the midiMap in the imported preset Json
@@ -2263,7 +2369,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		};
 
 		// currentStateJ* now has the updated merged midimap
-		INFO("Merged %zu midimaps" , i);
+		// INFO("Merged %zu mappings" , i);
 		return true;
 	}
 
@@ -2542,8 +2648,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 				menu->addChild(createBoolPtrMenuItem("Periodically", "", &module->midiResendPeriodically));
 			}
 		));
-		menu->addChild(createMenuItem("Merge module maps from preset", "", [=]() { loadMidiMapPreset_dialog(); }));
-
+	
 		menu->addChild(new MenuSeparator());
 		menu->addChild(createSubmenuItem("User interface", "",
 			[=](Menu* menu) {
@@ -2614,12 +2719,29 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 					}
 					// Create child menu listing all modules in this plugin
 					Menu* createChildMenu() override {
+						struct DeletePluginItem : MenuItem {
+							OrestesOneModule* module;
+							std::string pluginSlug;
+							void onAction(const event::Action& e) override {
+								module->expMemPluginDelete(pluginSlug);
+							}
+						}; // DeletePluginItem
+
+						struct ExportPluginItem : MenuItem {
+							OrestesOneModule* module;
+							std::string pluginSlug;
+							void onAction(const event::Action& e) override {
+								module->expMemExportPlugin(pluginSlug);
+							}
+						}; // ExportPluginItem
+
+
 						std::list<std::pair<std::string, MidimapModuleItem*>> l; 
 						for (auto it : module->midiMap) {
 							if (it.first.first == pluginSlug) {
 								MemModule* a = it.second;
 								MidimapModuleItem* midimapModuleItem = new MidimapModuleItem;
-								midimapModuleItem->text = string::f("%s %s", a->pluginName.c_str(), a->moduleName.c_str());
+								midimapModuleItem->text = string::f("%s", a->moduleName.c_str());
 								midimapModuleItem->module = module;
 								midimapModuleItem->midimapModule = a;
 								midimapModuleItem->pluginSlug = it.first.first;
@@ -2630,6 +2752,9 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 
 						l.sort();
 						Menu* menu = new Menu;
+						menu->addChild(construct<DeletePluginItem>(&MenuItem::text, "Delete all", &DeletePluginItem::module, module, &DeletePluginItem::pluginSlug, pluginSlug));
+						menu->addChild(construct<ExportPluginItem>(&MenuItem::text, "Export all...", &ExportPluginItem::module, module, &ExportPluginItem::pluginSlug, pluginSlug));
+						menu->addChild(new MenuSeparator());
 						for (auto it : l) {
 							menu->addChild(it.second);
 						}
@@ -2704,9 +2829,10 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 
 		menu->addChild(new MenuSeparator());
 		menu->addChild(createMenuLabel("MEM"));
-		menu->addChild(construct<MapMenuItem>(&MenuItem::text, "Available mappings", &MapMenuItem::module, module));
 		menu->addChild(construct<SaveMenuItem>(&MenuItem::text, "Store mapping", &SaveMenuItem::module, module));
 		menu->addChild(createMenuItem("Apply mapping", RACK_MOD_SHIFT_NAME "+V", [=]() { enableLearn(LEARN_MODE::MEM); }));
+		menu->addChild(construct<MapMenuItem>(&MenuItem::text, "Manage mappings", &MapMenuItem::module, module));
+		menu->addChild(createMenuItem("Merge mappings from...", "", [=]() { loadMidiMapPreset_dialog(); }));
 	}
 };
 
