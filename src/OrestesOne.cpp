@@ -21,14 +21,14 @@ static const char LOAD_MIDIMAP_FILTERS[] = "VCV Rack module preset (.vcvm):vcvm,
 static const char SAVE_JSON_FILTERS[] = "JSON (.json):json";
 
 struct OrestesOneOutput : midi::Output {
-	std::array<int, 16384> lastNPRNValues{};
+	std::array<int, MAX_CHANNELS> lastNPRNValues{};
 
 	OrestesOneOutput() {
 		reset();
 	}
 
 	void reset() {
-		std::fill_n(lastNPRNValues.begin(), 16384, -1);
+		std::fill_n(lastNPRNValues.begin(), MAX_CHANNELS, -1);
 	}
 
     void setNPRNValue(int value, int nprn, int valueNprnIn, bool force = false) {
@@ -88,8 +88,9 @@ struct E1MidiOutput : OrestesOneOutput {
 	}
 
     void sendE1ControlUpdate(int id, const char* name, const char* displayValue) {
-        // See https://jansson.readthedocs.io/en/2.12/apiref.html
-        // SysEx
+        // See https://docs.electra.one/developers/midiimplementation.html#control-update
+
+        // E1 VCVRack preset controls NPRM parameter numbers are offset by 2 from their preset controller Id
         int e1ControllerId = id + 2;
 
         m.bytes.clear();
@@ -114,6 +115,7 @@ struct E1MidiOutput : OrestesOneOutput {
         // {"name":name,"value":{"id":"value","text":displayValue}}
         json_t* valueJ = json_object();
         json_object_set_new(valueJ, "text", json_string(displayValue));
+        json_object_set_new(valueJ, "visible", json_boolean(true));
         json_t* rootJ = json_object();
         json_object_set_new(rootJ, "name", json_string(name));
         json_object_set_new(rootJ, "value", valueJ);
@@ -130,10 +132,7 @@ struct E1MidiOutput : OrestesOneOutput {
    }
 
    /**
-    * Update a E1 preset group label.
-    * Executes a lua command on the E1 of form:
-    *
-    * updateGroupLabel(1, "New label")
+    * Inform E1 that a change module action is starting
     */
    void changeE1Module(const char* moduleDisplayName, float moduleY, float moduleX) {
 
@@ -143,6 +142,9 @@ struct E1MidiOutput : OrestesOneOutput {
 
    }
 
+ 	/**
+ 	 * Inform E1 that a chang emodule sequence has completed
+ 	 */
    void endChangeE1Module() {
          std::stringstream ss;
          ss << "endChangeE1Module()";
@@ -469,9 +471,9 @@ struct OrestesOneModule : Module {
 
 	uint32_t ts = 0;
 
-	/** The value of each NPRN number */
-    int valuesNprn[16384];
-    uint32_t valuesNprnTs[16284];
+	/** The value of each NPRN parameter, assuming use range 0 .. MAX_CHANNELS */
+    int valuesNprn[MAX_CHANNELS];
+    uint32_t valuesNprnTs[MAX_CHANNELS];
 	
 	MIDIMODE midiMode = MIDIMODE::MIDIMODE_DEFAULT;
 
@@ -536,7 +538,7 @@ struct OrestesOneModule : Module {
 		// We also might be in the MIDIMap() constructor, which could cause problems, but when constructing, all ParamHandles will point to no Modules anyway.
 		clearMaps_NoLock();
 		mapLen = 1;
-		for (int i = 0; i < 128*128; i++) {
+		for (int i = 0; i < MAX_CHANNELS; i++) {
 		    valuesNprn[i] = -1;
 		    valuesNprnTs[i] = 0;
 		}
@@ -631,54 +633,6 @@ struct OrestesOneModule : Module {
 		if (e1ProcessResendMIDIFeedback || (midiResendPeriodically && midiResendDivider.process())) {
 			midiResendFeedback();
 		}
-
-		// // Expanders
-		// bool expMemFound = false;
-		// bool expCtxFound = false;
-		// bool expClkFound = false;
-		// Module* exp = rightExpander.module;
-		// for (int i = 0; i < 3; i++) {
-		// 	if (!exp) break;
-		// 	if (exp->model == modelOrestesOneMem && !expMemFound) {
-		// 		expMemStorage = reinterpret_cast<std::map<std::pair<std::string, std::string>, MemModule*>*>(exp->leftExpander.consumerMessage);
-		// 		expMem = exp;
-		// 		expMemFound = true;
-		// 		exp = exp->rightExpander.module;
-		// 		continue;
-		// 	}
-		// 	if (exp->model == modelOrestesOneCtx && !expCtxFound) {
-		// 		expCtx = exp;
-		// 		expCtxFound = true;
-		// 		exp = exp->rightExpander.module;
-		// 		continue;
-		// 	}
-		// 	if (exp->model == modelOrestesOneClk && !expClkFound) {
-		// 		expClk = exp;
-		// 		expClkFound = true;
-		// 		exp = exp->rightExpander.module;
-		// 		continue;
-		// 	}
-		// 	break;
-		// }
-		// if (!expMemFound) {
-		// 	expMemStorage = NULL;
-		// 	expMem = NULL;
-		// }
-		// if (!expCtxFound) {
-		// 	expCtx = NULL;
-		// }
-		// if (!expClkFound) {
-		// 	if (expClk) {
-		// 		for (int i = 0; i < MAX_CHANNELS; i++) {
-		// 			midiParam[i].clockMode = OrestesOneParam::CLOCKMODE::OFF;
-		// 			midiParam[i].clockSource = 0;
-		// 		}
-		// 	}
-		// 	expClk = NULL;
-		// }
-		// else {
-		// 	expClkProcess();
-		// }
 
         // Only step channels when some midi event has been received. Additionally
         // step channels for parameter changes made manually at a lower frequency . Notice
@@ -951,6 +905,9 @@ struct OrestesOneModule : Module {
      * [5]         0x05 Reset Parameter
      * [6]         NPRN id MSB (0-127)
      * [7]         NPRN id LSB (0-127)
+     * 
+     * Command: Re-send MIDI feedback
+     * [5]			0x06 Re-send MIDI
      *
      */
     bool parseE1SysEx(midi::Message msg) {
@@ -979,7 +936,7 @@ struct OrestesOneModule : Module {
                     }
                     // Module Select
                     case 0x03: {
-                        // INFO("Received an E1 Module Select Command");
+                        INFO("Received an E1 Module Select Command");
                         e1ProcessSelect = true;
                         // Convert bytes 7 to float
                         std::vector<uint8_t>::const_iterator vit = msg.bytes.begin() + 6;
@@ -991,7 +948,7 @@ struct OrestesOneModule : Module {
                     }
                     // List Mapped Modules
                     case 0x04: {
-                        // INFO("Received an E1 List Mapped Modules Command");
+                        INFO("Received an E1 List Mapped Modules Command");
                         e1ProcessListMappedModules = true;
                         return true;
                     }
@@ -1000,12 +957,12 @@ struct OrestesOneModule : Module {
                         e1ProcessResetParameter = true;
                         e1ProcessResetParameterNPRN = ((int) msg.bytes.at(6) << 7) + ((int) msg.bytes.at(7));
 
-                        // INFO("Received an E1 Reset Parameter Command for NPRN %d", e1ProcessResetParameterNPRN);
+                        INFO("Received an E1 Reset Parameter Command for NPRN %d", e1ProcessResetParameterNPRN);
                         return true;
                     }
                     // Re-send MIDI feedback
                     case 0x06: {
-                        // INFO("Received an E1 Re-send MIDI Feedback Command");
+                        INFO("Received an E1 Re-send MIDI Feedback Command");
                         e1ProcessResendMIDIFeedback = true;
                         return true;
                     }
