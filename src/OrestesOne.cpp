@@ -471,13 +471,13 @@ struct OrestesOneModule : Module {
 
 	uint32_t ts = 0;
 
-	/** The value of each NPRN parameter, assuming use range 0 .. MAX_CHANNELS */
-    int valuesNprn[MAX_CHANNELS];
-    uint32_t valuesNprnTs[MAX_CHANNELS];
+	/** The value of each NPRN parameter, assuming use range 0 .. MAX_NPRN_ID */
+    int valuesNprn[MAX_NPRN_ID+1];
+    uint32_t valuesNprnTs[MAX_NPRN_ID+1];
 	
 	MIDIMODE midiMode = MIDIMODE::MIDIMODE_DEFAULT;
 
-	/** Track last values */
+	/** Track last channel values */
 	int lastValueIn[MAX_CHANNELS];
 	int lastValueInIndicate[MAX_CHANNELS];
 	int lastValueOut[MAX_CHANNELS];
@@ -538,7 +538,7 @@ struct OrestesOneModule : Module {
 		// We also might be in the MIDIMap() constructor, which could cause problems, but when constructing, all ParamHandles will point to no Modules anyway.
 		clearMaps_NoLock();
 		mapLen = 1;
-		for (int i = 0; i < MAX_CHANNELS; i++) {
+		for (int i = 0; i <= MAX_NPRN_ID; i++) {
 		    valuesNprn[i] = -1;
 		    valuesNprnTs[i] = 0;
 		}
@@ -1035,6 +1035,11 @@ struct OrestesOneModule : Module {
                     int nprn = (nprnMsg[0] << 7) + nprnMsg[1];
                     int value = (nprnMsg[2] << 7) + nprnMsg[3];
                     isPendingNPRN = false;
+
+                    // Guard to limit max recognised NPRN Parameter Id
+                    if (nprn > MAX_NPRN_ID) {
+                    	return false;
+                    }
 
                     // Learn
                     if (learningId >= 0 && learnedNprnLast != nprn && valuesNprn[nprn] != value) {                    
