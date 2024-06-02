@@ -4,8 +4,8 @@
 namespace Orestes {
 namespace OrestesOne {
 
-static const int MAX_CHANNELS = 640;
-static const int MAX_NPRN_ID = 300;
+static const int MAX_CHANNELS = 300;
+static const int MAX_NPRN_ID = 299; // 0 to MAX_NPRN_ID
 
 #define MIDIOPTION_VELZERO_BIT 0
 

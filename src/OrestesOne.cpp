@@ -1219,9 +1219,21 @@ struct OrestesOneModule : Module {
 		updateMapLen();
 	}
 
-	void moduleBind(Module* m, bool keepCcAndNote) {
+	void learnParamAutomap(int id, int64_t moduleId, int paramId) {
+		APP->engine->updateParamHandle(&paramHandles[id], moduleId, paramId, true);
+		midiParam[id].reset(true);
+		learnedParam = true;
+		if (id <= MAX_NPRN_ID) {
+			learnedNprn = true;
+			nprns[id].setNprn(id);
+		}
+		commitLearn();
+		updateMapLen();
+	}
+
+	void moduleBind(Module* m, bool keepCcAndNote, bool autoMap = false) {
 		if (!m) return;
-		if (!keepCcAndNote) {
+		if (!keepCcAndNote || autoMap) {
 			clearMaps_WithLock();
 		}
 		else {
@@ -1231,18 +1243,22 @@ struct OrestesOneModule : Module {
 			}
 		}
 		for (size_t i = 0; i < m->params.size() && i < MAX_CHANNELS; i++) {
-			learnParam(int(i), m->id, int(i));
+			if (autoMap) {
+				learnParamAutomap(int(i), m->id, int(i));
+			} else {
+				learnParam(int(i), m->id, int(i));
+			}
 		}
 
 		updateMapLen();
 	}
 
-	void moduleBindExpander(bool keepCcAndNote) {
+	void moduleBindExpander(bool keepCcAndNote, bool autoMap) {
 		Module::Expander* exp = &leftExpander;
 		if (exp->moduleId < 0) return;
 		Module* m = exp->module;
 		if (!m) return;
-		moduleBind(m, keepCcAndNote);
+		moduleBind(m, keepCcAndNote, autoMap);
 	}
 
 	void refreshParamHandleText(int id) {
@@ -2047,7 +2063,8 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		OFF = 0,
 		BIND_CLEAR = 1,
 		BIND_KEEP = 2,
-		MEM = 3
+		MEM = 3,
+		BIND_AUTOMAP = 4
 	};
 
 	LEARN_MODE learnMode = LEARN_MODE::OFF;
@@ -2492,9 +2509,11 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 			OrestesOneModule* module = dynamic_cast<OrestesOneModule*>(this->module);
 			switch (learnMode) {
 				case LEARN_MODE::BIND_CLEAR:
-					module->moduleBind(m, false); break;
+					module->moduleBind(m, false, false); break;
 				case LEARN_MODE::BIND_KEEP:
-					module->moduleBind(m, true); break;
+					module->moduleBind(m, true, false); break;
+				case LEARN_MODE::BIND_AUTOMAP:
+					module->moduleBind(m, false, true); break;	
 				case LEARN_MODE::MEM:
 					module->expMemApply(m, mw->box.pos); break;
 				case LEARN_MODE::OFF:
@@ -2513,16 +2532,23 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 					if ((e.mods & RACK_MOD_MASK) == (GLFW_MOD_SHIFT | RACK_MOD_CTRL)) {
 						enableLearn(LEARN_MODE::BIND_CLEAR);
 					}
+					if ((e.mods & RACK_MOD_MASK) == (GLFW_MOD_SHIFT | GLFW_MOD_ALT)) {
+						enableLearn(LEARN_MODE::BIND_AUTOMAP);
+					}
 					break;
 				}
 				case GLFW_KEY_E: {
 					if ((e.mods & RACK_MOD_MASK) == GLFW_MOD_SHIFT) {
 						OrestesOneModule* module = dynamic_cast<OrestesOneModule*>(this->module);
-						module->moduleBindExpander(true);
+						module->moduleBindExpander(true, false);
 					}
 					if ((e.mods & RACK_MOD_MASK) == (GLFW_MOD_SHIFT | RACK_MOD_CTRL)) {
 						OrestesOneModule* module = dynamic_cast<OrestesOneModule*>(this->module);
-						module->moduleBindExpander(false);
+						module->moduleBindExpander(false, false);
+					}
+					if ((e.mods & RACK_MOD_MASK) == (GLFW_MOD_SHIFT | GLFW_MOD_ALT)) {
+						OrestesOneModule* module = dynamic_cast<OrestesOneModule*>(this->module);
+						module->moduleBindExpander(false, true);
 					}
 					break;
 				}
@@ -2622,14 +2648,18 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		menu->addChild(createMenuItem("Clear mappings", "", [=]() { module->clearMaps_WithLock(); }));
 		menu->addChild(createSubmenuItem("Map module (left)", "",
 			[=](Menu* menu) {
-				menu->addChild(createMenuItem("Clear first", RACK_MOD_CTRL_NAME "+" RACK_MOD_SHIFT_NAME "+E", [=]() { module->moduleBindExpander(false); }));
-				menu->addChild(createMenuItem("Keep MIDI assignments", RACK_MOD_SHIFT_NAME "+E", [=]() { module->moduleBindExpander(true); }));
+				menu->addChild(createMenuItem("Automap", RACK_MOD_ALT_NAME "+" RACK_MOD_SHIFT_NAME "+E", [=]() { module->moduleBindExpander(false, true); }));
+				menu->addChild(createMenuItem("Clear first", RACK_MOD_CTRL_NAME "+" RACK_MOD_SHIFT_NAME "+E", [=]() { module->moduleBindExpander(false, false); }));
+				menu->addChild(createMenuItem("Keep MIDI assignments", RACK_MOD_SHIFT_NAME "+E", [=]() { module->moduleBindExpander(true, false); }));
+
 			}
 		));
 		menu->addChild(createSubmenuItem("Map module (select)", "",
 			[=](Menu* menu) {
+				menu->addChild(createMenuItem("Automap", RACK_MOD_ALT_NAME "+" RACK_MOD_SHIFT_NAME "+D", [=]() { enableLearn(LEARN_MODE::BIND_AUTOMAP); }));
 				menu->addChild(createMenuItem("Clear first", RACK_MOD_CTRL_NAME "+" RACK_MOD_SHIFT_NAME "+D", [=]() { enableLearn(LEARN_MODE::BIND_CLEAR); }));
 				menu->addChild(createMenuItem("Keep MIDI assignments", RACK_MOD_SHIFT_NAME "+D", [=]() { enableLearn(LEARN_MODE::BIND_KEEP); }));
+
 			}
 		));
 
