@@ -1248,7 +1248,7 @@ struct OrestesOneModule : Module {
 	void refreshParamHandleText(int id) {
 		std::string text = "ORESTES-ONE";
 		if (nprns[id].getNprn() >= 0) {
-        	text += string::f(" nprn%05d", nprns[id].getNprn());
+        	text += string::f(" nprn%03d", nprns[id].getNprn());
         }
 		paramHandles[id].text = text;
 	}
@@ -1833,7 +1833,7 @@ struct OrestesOneChoice : MapModuleChoice<MAX_CHANNELS, OrestesOneModule> {
 	std::string getSlotPrefix() override {
 
 		if (module->nprns[id].getNprn() >= 0) {
-             return string::f("nprn%05d ", module->nprns[id].getNprn());
+             return string::f("nprn%03d ", module->nprns[id].getNprn());
         }
 		else if (module->paramHandles[id].moduleId >= 0) {
 			return ".... ";
@@ -2411,7 +2411,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 								text = module->textLabel[i];
 							}
 							else if (module->nprns[i].getNprn() >= 0) {
-                            	text = string::f("MIDI NPRN %05d", module->nprns[i].getNprn());
+                            	text = string::f("MIDI NPRN %03d", module->nprns[i].getNprn());
                             }
 							menu->addChild(construct<RemapItem>(&MenuItem::text, text, &RemapItem::module, module, &RemapItem::pq, pq, &RemapItem::id, i, &RemapItem::currentId, currentId));
 						}
@@ -2580,11 +2580,9 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 			}
 		));
 		menu->addChild(Orestes::Rack::createMapSubmenuItem<int>("Precision", {
-				{ 1, string::f("Samplerate (%i Hz)", sampleRate / 1) },
-				{ 8, string::f("High (%i Hz)", sampleRate / 8) },
-				{ 64, string::f("Moderate (%i Hz)", sampleRate / 64) },
-				{ 256, string::f("Low (%i Hz)", sampleRate / 256) },
-				{ 512, string::f("Rock bottom (%i Hz)", sampleRate / 512) }
+				{ 64, string::f("High (%i Hz)", sampleRate / 64) },
+				{ 256, string::f("Medium (%i Hz)", sampleRate / 256) },
+				{ 512, string::f("Low (%i Hz)", sampleRate / 512) }
 			},
 			[=]() {
 				return module->processDivision;
