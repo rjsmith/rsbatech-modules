@@ -2817,8 +2817,6 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 			}
 		}; // SaveMenuItem
 
-		menu->addChild(new MenuSeparator());
-		menu->addChild(createMenuLabel("MEM"));
 		menu->addChild(construct<SaveMenuItem>(&MenuItem::text, "Store mapping", &SaveMenuItem::module, module));
 		menu->addChild(createMenuItem("Apply mapping", RACK_MOD_SHIFT_NAME "+V", [=]() { enableLearn(LEARN_MODE::MEM); }));
 		menu->addChild(construct<MapMenuItem>(&MenuItem::text, "Manage mappings", &MapMenuItem::module, module));
