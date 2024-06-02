@@ -17,6 +17,11 @@ enum class NPRNMODE {
 	TOGGLE_VALUE = 4
 };
 
+static const std::set<std::pair<std::string, std::string>> AUTOMAP_EXCLUDED_MODULES {
+	std::pair<std::string, std::string>("RSBATechModules", "OrestesOne"),
+	std::pair<std::string, std::string>("MindMeldModular", "PatchMaster")
+};
+
 struct MemParam {
 	int paramId = -1;
     int nprn = -1;

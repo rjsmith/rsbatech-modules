@@ -859,7 +859,7 @@ struct OrestesOneModule : Module {
             Module* m = mw->module;
             if (expMemTest(m)) {
                 // Add module to mapped module list
-                // If there more than one instance of  mapped module in the rack, it will appear in the list multiple time
+                // If there more than one instance of  mapped module in the rack, it will appear in the list multiple times
                 auto key = string::f("%s %s", m->model->plugin->slug.c_str(), m->model->slug.c_str());
                 E1MappedModuleListItem item = {
                     key,
@@ -1261,6 +1261,66 @@ struct OrestesOneModule : Module {
 		moduleBind(m, keepCcAndNote, autoMap);
 	}
 
+    /**
+     * Creates a new module mapping for every module in the current rack.
+     * Optionally skips modules which already have a mapping definition loaded into Orestes-One midiMap
+     */
+    void autoMapAllModules(bool skipPremappedModules) {
+
+    	// Get snapshot of current state
+		json_t* currentStateJ = toJson();
+
+    	// Iterate over every module in the rack
+        std::list<Widget*> modules = APP->scene->rack->getModuleContainer()->children;
+        modules.sort();
+        std::list<Widget*>::iterator it = modules.begin();
+
+        // Scan over all rack modules
+        for (; it != modules.end(); it++) {
+            ModuleWidget* mw = dynamic_cast<ModuleWidget*>(*it);
+            Module* m = mw->module;
+
+            std::string pluginSlug = m->model->plugin->slug;
+            std::string moduleSlug = m->model->slug;
+
+            // if module is bypassed, skip
+            if (m->isBypassed()) {
+            	// INFO("Skipping %s isBypassed", m->model->slug.c_str());
+            	continue;
+            }
+
+	    	// If module is in automap black list, skip (e.g. Patchmaster)
+	    	if (!isModuleAutomappable(m)) {
+	    		// INFO("Skipping %s as excluded", m->model->slug.c_str());
+	    		continue;
+	    	}
+
+	    	// If module is already mapped in the midiMap, and skipPremappedModules = true, skip
+	    	if (skipPremappedModules && expMemTest(m)) {
+	    		// INFO("Skipping %s as pre-mapped", m->model->slug.c_str());
+	    		continue;
+	    	}
+
+	    	// Bind module parameters
+	    	// INFO("Binding %s", m->model->slug.c_str());
+	    	moduleBind(m, false, true);
+
+	    	// Save a new midi map mapping
+
+			expMemSave(pluginSlug, moduleSlug);
+
+        }
+
+    	// history::ModuleChange
+		history::ModuleChange* h = new history::ModuleChange;
+		h->name = "automap all modules";
+		h->moduleId = this->id;
+		h->oldModuleJ = currentStateJ;
+		h->newModuleJ = toJson();
+		APP->history->push(h);
+
+    }
+
 	void refreshParamHandleText(int id) {
 		std::string text = "ORESTES-ONE";
 		if (nprns[id].getNprn() >= 0) {
@@ -1272,9 +1332,11 @@ struct OrestesOneModule : Module {
 	void expMemSave(std::string pluginSlug, std::string moduleSlug) {
 		MemModule* m = new MemModule;
 		Module* module = NULL;
+		bool hasParameters = false;
 		for (size_t i = 0; i < MAX_CHANNELS; i++) {
 			if (paramHandles[i].moduleId < 0) continue;
 			if (paramHandles[i].module->model->plugin->slug != pluginSlug && paramHandles[i].module->model->slug == moduleSlug) continue;
+			hasParameters = true;
 			module = paramHandles[i].module;
 			MemParam* p = new MemParam;
 			p->paramId = paramHandles[i].paramId;
@@ -1287,6 +1349,9 @@ struct OrestesOneModule : Module {
 			p->max = midiParam[i].getMax();
 			m->paramMap.push_back(p);
 		}
+
+		if (!hasParameters) return; // No mapped partameters, so do not add to map
+
 		m->pluginName = module->model->plugin->name;
 		m->moduleName = module->model->name;
 
@@ -1456,6 +1521,15 @@ struct OrestesOneModule : Module {
 		return true;
 	}
 
+	/**
+	 * Determines if module is excluded from automapping
+	 */
+    bool isModuleAutomappable(Module* m) {
+    	if (!m) return false;
+		auto p = std::pair<std::string, std::string>(m->model->plugin->slug, m->model->slug);
+		auto it = AUTOMAP_EXCLUDED_MODULES.find(p);
+		return (it == AUTOMAP_EXCLUDED_MODULES.end());
+	}
 
 	json_t* dataToJson() override {
 		json_t* rootJ = json_object();
@@ -2568,8 +2642,14 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 				case GLFW_KEY_SPACE: {
 					if (module->learningId >= 0) {
 						OrestesOneModule* module = dynamic_cast<OrestesOneModule*>(this->module);
-						module->enableLearn(module->learningId + 1);
-						if (module->learningId == -1) disableLearn();
+						int currentLearningId = module->learningId;
+						if ((e.mods & RACK_MOD_MASK) == GLFW_MOD_SHIFT) {
+							module->clearMap(module->learningId, false);
+						} 
+
+						module->enableLearn(currentLearningId + 1);
+						if (module->learningId == -1) disableLearn();	
+						
 						e.consume(this);
 					}
 					break;
@@ -2645,6 +2725,12 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		));
 		menu->addChild(createBoolPtrMenuItem("Status overlay", "", &module->overlayEnabled));
 		menu->addChild(new MenuSeparator());
+		menu->addChild(createSubmenuItem("Automap this rack", "",
+			[=](Menu* menu) {
+				menu->addChild(createMenuItem("Skip pre-mapped modules", "", [=]() { module->autoMapAllModules(true); }));
+				menu->addChild(createMenuItem("Overwrite pre-mapped modules", "", [=]() { module->autoMapAllModules(false); }));
+			}
+		));
 		menu->addChild(createMenuItem("Clear mappings", "", [=]() { module->clearMaps_WithLock(); }));
 		menu->addChild(createSubmenuItem("Map module (left)", "",
 			[=](Menu* menu) {
