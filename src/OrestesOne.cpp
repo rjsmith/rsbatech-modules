@@ -1250,6 +1250,14 @@ struct OrestesOneModule : Module {
 			}
 		}
 
+		if (autoMap) {
+			// Also auto - save the module mapping in the midiMap
+			std::string pluginSlug = m->model->plugin->slug;
+            std::string moduleSlug = m->model->slug;
+
+			expMemSave(pluginSlug, moduleSlug, true);
+
+		}
 		updateMapLen();
 	}
 
@@ -1301,14 +1309,9 @@ struct OrestesOneModule : Module {
 	    		continue;
 	    	}
 
-	    	// Bind module parameters
+	    	// Bind & save module parameters in midimap
 	    	// INFO("Binding %s", m->model->slug.c_str());
 	    	moduleBind(m, false, true);
-
-	    	// Save a new midi map mapping
-
-			expMemSave(pluginSlug, moduleSlug);
-
         }
 
     	// history::ModuleChange
@@ -1329,7 +1332,7 @@ struct OrestesOneModule : Module {
 		paramHandles[id].text = text;
 	}
 
-	void expMemSave(std::string pluginSlug, std::string moduleSlug) {
+	void expMemSave(std::string pluginSlug, std::string moduleSlug, bool autoMapped) {
 		MemModule* m = new MemModule;
 		Module* module = NULL;
 		bool hasParameters = false;
@@ -1350,11 +1353,11 @@ struct OrestesOneModule : Module {
 			m->paramMap.push_back(p);
 		}
 
-		if (!hasParameters) return; // No mapped partameters, so do not add to map
+		if (!hasParameters) return; // No mapped parameters, so do not add to map
 
 		m->pluginName = module->model->plugin->name;
 		m->moduleName = module->model->name;
-
+		m->autoMapped = autoMapped; // Manually saving module map, so assume is no longer considered auto-mapped
 		auto p = std::pair<std::string, std::string>(pluginSlug, moduleSlug);
 		auto it = midiMap.find(p);
 		if (it != midiMap.end()) {
@@ -1579,8 +1582,8 @@ struct OrestesOneModule : Module {
 			json_t* midiMapJJ = json_object();
 			json_object_set_new(midiMapJJ, "pluginSlug", json_string(it.first.first.c_str()));
 			json_object_set_new(midiMapJJ, "moduleSlug", json_string(it.first.second.c_str()));
-
 			auto a = it.second;
+			json_object_set_new(midiMapJJ, "autoMapped", json_boolean(a->autoMapped));
 			json_object_set_new(midiMapJJ, "pluginName", json_string(a->pluginName.c_str()));
 			json_object_set_new(midiMapJJ, "moduleName", json_string(a->moduleName.c_str()));
 			json_t* paramMapJ = json_array();
@@ -1709,6 +1712,12 @@ struct OrestesOneModule : Module {
 			MemModule* a = new MemModule;
 			a->pluginName = json_string_value(json_object_get(midiMapJJ, "pluginName"));
 			a->moduleName = json_string_value(json_object_get(midiMapJJ, "moduleName"));
+			json_t* autoMappedJ = json_object_get(midiMapJJ, "autoMapped");
+			if (autoMappedJ) {
+				a->autoMapped = json_boolean_value(autoMappedJ);
+			} else {
+				a->autoMapped = false; // default
+			}
 			json_t* paramMapJ = json_object_get(midiMapJJ, "paramMap");
 			size_t j;
 			json_t* paramMapJJ;
@@ -2734,7 +2743,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		menu->addChild(createMenuItem("Clear mappings", "", [=]() { module->clearMaps_WithLock(); }));
 		menu->addChild(createSubmenuItem("Map module (left)", "",
 			[=](Menu* menu) {
-				menu->addChild(createMenuItem("Automap", RACK_MOD_ALT_NAME "+" RACK_MOD_SHIFT_NAME "+E", [=]() { module->moduleBindExpander(false, true); }));
+				menu->addChild(createMenuItem("Automap & save", RACK_MOD_ALT_NAME "+" RACK_MOD_SHIFT_NAME "+E", [=]() { module->moduleBindExpander(false, true); }));
 				menu->addChild(createMenuItem("Clear first", RACK_MOD_CTRL_NAME "+" RACK_MOD_SHIFT_NAME "+E", [=]() { module->moduleBindExpander(false, false); }));
 				menu->addChild(createMenuItem("Keep MIDI assignments", RACK_MOD_SHIFT_NAME "+E", [=]() { module->moduleBindExpander(true, false); }));
 
@@ -2817,7 +2826,12 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 							if (it.first.first == pluginSlug) {
 								MemModule* a = it.second;
 								MidimapModuleItem* midimapModuleItem = new MidimapModuleItem;
-								midimapModuleItem->text = string::f("%s", a->moduleName.c_str());
+								if (a->autoMapped) {
+									midimapModuleItem->text = string::f("%s (A)", a->moduleName.c_str());
+								} else {
+									midimapModuleItem->text = string::f("%s", a->moduleName.c_str());
+								}
+								
 								midimapModuleItem->module = module;
 								midimapModuleItem->midimapModule = a;
 								midimapModuleItem->pluginSlug = it.first.first;
@@ -2873,7 +2887,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 					std::string pluginSlug;
 					std::string moduleSlug;
 					void onAction(const event::Action& e) override {
-						module->expMemSave(pluginSlug, moduleSlug);
+						module->expMemSave(pluginSlug, moduleSlug, false);
 					}
 				}; // SaveItem
 

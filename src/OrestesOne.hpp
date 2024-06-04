@@ -36,6 +36,7 @@ struct MemParam {
 struct MemModule {
 	std::string pluginName;
 	std::string moduleName;
+	bool autoMapped;
 	std::list<MemParam*> paramMap;
 	~MemModule() {
 		for (auto it : paramMap) delete it;
