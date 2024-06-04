@@ -1261,14 +1261,6 @@ struct OrestesOneModule : Module {
 		updateMapLen();
 	}
 
-	void moduleBindExpander(bool keepCcAndNote, bool autoMap) {
-		Module::Expander* exp = &leftExpander;
-		if (exp->moduleId < 0) return;
-		Module* m = exp->module;
-		if (!m) return;
-		moduleBind(m, keepCcAndNote, autoMap);
-	}
-
     /**
      * Creates a new module mapping for every module in the current rack.
      * Optionally skips modules which already have a mapping definition loaded into Orestes-One midiMap
@@ -2620,21 +2612,6 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 					}
 					break;
 				}
-				case GLFW_KEY_E: {
-					if ((e.mods & RACK_MOD_MASK) == GLFW_MOD_SHIFT) {
-						OrestesOneModule* module = dynamic_cast<OrestesOneModule*>(this->module);
-						module->moduleBindExpander(true, false);
-					}
-					if ((e.mods & RACK_MOD_MASK) == (GLFW_MOD_SHIFT | RACK_MOD_CTRL)) {
-						OrestesOneModule* module = dynamic_cast<OrestesOneModule*>(this->module);
-						module->moduleBindExpander(false, false);
-					}
-					if ((e.mods & RACK_MOD_MASK) == (GLFW_MOD_SHIFT | GLFW_MOD_ALT)) {
-						OrestesOneModule* module = dynamic_cast<OrestesOneModule*>(this->module);
-						module->moduleBindExpander(false, true);
-					}
-					break;
-				}
 				case GLFW_KEY_V: {
 					if ((e.mods & RACK_MOD_MASK) == GLFW_MOD_SHIFT) {
 						enableLearn(LEARN_MODE::MEM);
@@ -2738,15 +2715,6 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 			[=](Menu* menu) {
 				menu->addChild(createMenuItem("Skip pre-mapped modules", "", [=]() { module->autoMapAllModules(true); }));
 				menu->addChild(createMenuItem("Overwrite pre-mapped modules", "", [=]() { module->autoMapAllModules(false); }));
-			}
-		));
-		menu->addChild(createMenuItem("Clear mappings", "", [=]() { module->clearMaps_WithLock(); }));
-		menu->addChild(createSubmenuItem("Map module (left)", "",
-			[=](Menu* menu) {
-				menu->addChild(createMenuItem("Automap & save", RACK_MOD_ALT_NAME "+" RACK_MOD_SHIFT_NAME "+E", [=]() { module->moduleBindExpander(false, true); }));
-				menu->addChild(createMenuItem("Clear first", RACK_MOD_CTRL_NAME "+" RACK_MOD_SHIFT_NAME "+E", [=]() { module->moduleBindExpander(false, false); }));
-				menu->addChild(createMenuItem("Keep MIDI assignments", RACK_MOD_SHIFT_NAME "+E", [=]() { module->moduleBindExpander(true, false); }));
-
 			}
 		));
 		menu->addChild(createSubmenuItem("Map module (select)", "",
@@ -2918,9 +2886,14 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		}; // SaveMenuItem
 
 		menu->addChild(construct<SaveMenuItem>(&MenuItem::text, "Store mapping", &SaveMenuItem::module, module));
-		menu->addChild(createMenuItem("Apply mapping", RACK_MOD_SHIFT_NAME "+V", [=]() { enableLearn(LEARN_MODE::MEM); }));
+		menu->addChild(createMenuItem("Clear mappings", "", [=]() { module->clearMaps_WithLock(); }));
+
+		menu->addChild(new MenuSeparator());
 		menu->addChild(construct<MapMenuItem>(&MenuItem::text, "Manage mappings", &MapMenuItem::module, module));
 		menu->addChild(createMenuItem("Merge mappings from...", "", [=]() { loadMidiMapPreset_dialog(); }));
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuItem("Apply mapping", RACK_MOD_SHIFT_NAME "+V", [=]() { enableLearn(LEARN_MODE::MEM); }));
+
 	}
 };
 
