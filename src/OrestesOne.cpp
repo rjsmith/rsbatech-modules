@@ -134,10 +134,10 @@ struct E1MidiOutput : OrestesOneOutput {
    /**
     * Inform E1 that a change module action is starting
     */
-   void changeE1Module(const char* moduleDisplayName, float moduleY, float moduleX) {
+   void changeE1Module(const char* moduleDisplayName, float moduleY, float moduleX, int maxNprnId) {
 
         std::stringstream ss;
-        ss << "changeE1Module(\"" << moduleDisplayName << "\", " << string::f("%g", moduleY) << ", " << string::f("%g", moduleX) << ")";
+        ss << "changeE1Module(\"" << moduleDisplayName << "\", " << string::f("%g, %g, %d", moduleY, moduleX, maxNprnId) << ")";
         sendE1ExecuteLua(ss.str().c_str());
 
    }
@@ -1078,9 +1078,9 @@ struct OrestesOneModule : Module {
 		}
 	}
 
-	void changeE1Module(const char* moduleName, float moduleY, float moduleX) {
+	void changeE1Module(const char* moduleName, float moduleY, float moduleX, int maxNprnId) {
 	    // INFO("changeE1Module to %s", moduleName);
-	    midiCtrlOutput.changeE1Module(moduleName, moduleY, moduleX);
+	    midiCtrlOutput.changeE1Module(moduleName, moduleY, moduleX, maxNprnId);
 	}
 
 	void endChangeE1Module() {
@@ -1409,8 +1409,14 @@ struct OrestesOneModule : Module {
 		if (it == midiMap.end()) return;
 		MemModule* map = it->second;
 
-        // Update module name on E1 page
-		changeE1Module(m->model->getFullName().c_str(), pos.y, pos.x);
+        // Send message to E1 to prep for new mappings before new values sent
+        int maxNprnId = 0;
+        for (MemParam* it : map->paramMap) {
+        	if (it->nprn > maxNprnId) {
+        		maxNprnId = it->nprn;
+        	}
+        }
+		changeE1Module(m->model->getFullName().c_str(), pos.y, pos.x, maxNprnId);
 
 		clearMaps_WithLock();
 		midiOutput.reset();
