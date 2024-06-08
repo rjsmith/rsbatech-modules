@@ -22,6 +22,8 @@ static const std::set<std::pair<std::string, std::string>> AUTOMAP_EXCLUDED_MODU
 	std::pair<std::string, std::string>("MindMeldModular", "PatchMaster")
 };
 
+static const std::string DEFAULT_LIBRARY_FILENAME = "midimap-library.json";
+
 struct MemParam {
 	int paramId = -1;
     int nprn = -1;

@@ -42,7 +42,7 @@ struct OrestesOneOutput : midi::Output {
 		sendCCMsg(38, value % 128);
 		sendCCMsg(101, 127);
 		sendCCMsg(100, 127);
-		// INFO("Sending NPRN %d value %d, force %s", nprn, value, force ? "true" : "false");
+		// DEBUG("Sending NPRN %d value %d, force %s", nprn, value, force ? "true" : "false");
 	}
 
     void sendCCMsg(int cc, int value) {
@@ -126,7 +126,7 @@ struct E1MidiOutput : OrestesOneOutput {
 
         // SysEx closing byte
         m.bytes.push_back(0xf7);
-        // INFO("Sending control update e1 ctrl %id, value %s", id, displayValue);
+        // DEBUG("Sending control update e1 ctrl %id, value %s", id, displayValue);
         sendMessage(m);
 
    }
@@ -191,7 +191,7 @@ struct E1MidiOutput : OrestesOneOutput {
     * @see https://docs.electra.one/developers/midiimplementation.html#execute-lua-command
     */
    void sendE1ExecuteLua(const char* luaCommand) {
-        // INFO("Execute Lua %s", luaCommand);
+        // DEBUG("Execute Lua %s", luaCommand);
 
         m.bytes.clear();
         // SysEx header byte
@@ -210,7 +210,7 @@ struct E1MidiOutput : OrestesOneOutput {
         // SysEx closing byte
         m.bytes.push_back(0xf7);
 
-        // INFO("Sending bytes %s", hexStr(m.bytes.data(), m.getSize()).data());
+        // DEBUG("Sending bytes %s", hexStr(m.bytes.data(), m.getSize()).data());
         sendMessage(m);
 
 
@@ -500,7 +500,13 @@ struct OrestesOneModule : Module {
 	// MEM-
 	// Pointer of the MEM's attribute
 	int64_t expMemModuleId = -1;
+
 	/** [Stored to JSON] */
+	std::string midiMapLibraryFilename;
+	/** [Stored to JSON] */
+	bool autosaveMappingLibrary = true;
+
+	/** Internal module midiMap. Not saved to module Json. */
 	std::map<std::pair<std::string, std::string>, MemModule*> midiMap;
 
 	OrestesOneModule() {
@@ -571,7 +577,8 @@ struct OrestesOneModule : Module {
 		e1ProcessSelect = false;
 		e1ProcessListMappedModules = false;
 		e1ProcessResetParameter = false;
-
+		midiMapLibraryFilename.clear();
+		autosaveMappingLibrary = true;
 		resetMap();
 	}
 
@@ -923,20 +930,20 @@ struct OrestesOneModule : Module {
                 switch(msg.bytes.at(5)) {
                     // Next
                     case 0x01: {
-                        // INFO("Received an E1 Next Command");
+                        // DEBUG("Received an E1 Next Command");
                         e1ProcessNext = true;
                         return true;
                     }
                     // Prev
                     case 0x02: {
-                        // INFO("Received an E1 Prev Command");
+                        // DEBUG("Received an E1 Prev Command");
                         e1ProcessNext = false;
                         e1ProcessPrev = true;
                         return true;
                     }
                     // Module Select
                     case 0x03: {
-                        INFO("Received an E1 Module Select Command");
+                        // DEBUG ("Received an E1 Module Select Command");
                         e1ProcessSelect = true;
                         // Convert bytes 7 to float
                         std::vector<uint8_t>::const_iterator vit = msg.bytes.begin() + 6;
@@ -948,7 +955,7 @@ struct OrestesOneModule : Module {
                     }
                     // List Mapped Modules
                     case 0x04: {
-                        INFO("Received an E1 List Mapped Modules Command");
+                        // DEBUG("Received an E1 List Mapped Modules Command");
                         e1ProcessListMappedModules = true;
                         return true;
                     }
@@ -957,12 +964,12 @@ struct OrestesOneModule : Module {
                         e1ProcessResetParameter = true;
                         e1ProcessResetParameterNPRN = ((int) msg.bytes.at(6) << 7) + ((int) msg.bytes.at(7));
 
-                        INFO("Received an E1 Reset Parameter Command for NPRN %d", e1ProcessResetParameterNPRN);
+                        // DEBUG("Received an E1 Reset Parameter Command for NPRN %d", e1ProcessResetParameterNPRN);
                         return true;
                     }
                     // Re-send MIDI feedback
                     case 0x06: {
-                        INFO("Received an E1 Re-send MIDI Feedback Command");
+                        // DEBUG("Received an E1 Re-send MIDI Feedback Command");
                         e1ProcessResendMIDIFeedback = true;
                         return true;
                     }
@@ -1079,12 +1086,12 @@ struct OrestesOneModule : Module {
 	}
 
 	void changeE1Module(const char* moduleName, float moduleY, float moduleX, int maxNprnId) {
-	    // INFO("changeE1Module to %s", moduleName);
+	    // DEBUG("changeE1Module to %s", moduleName);
 	    midiCtrlOutput.changeE1Module(moduleName, moduleY, moduleX, maxNprnId);
 	}
 
 	void endChangeE1Module() {
-	    // INFO("endChangeE1Module");
+	    // DEBUG("endChangeE1Module");
 	    midiCtrlOutput.endChangeE1Module();
     }
 
@@ -1285,26 +1292,29 @@ struct OrestesOneModule : Module {
 
             // if module is bypassed, skip
             if (m->isBypassed()) {
-            	// INFO("Skipping %s isBypassed", m->model->slug.c_str());
+            	// DEBUG("Skipping %s isBypassed", m->model->slug.c_str());
             	continue;
             }
 
 	    	// If module is in automap black list, skip (e.g. Patchmaster)
 	    	if (!isModuleAutomappable(m)) {
-	    		// INFO("Skipping %s as excluded", m->model->slug.c_str());
+	    		// DEBUG("Skipping %s as excluded", m->model->slug.c_str());
 	    		continue;
 	    	}
 
 	    	// If module is already mapped in the midiMap, and skipPremappedModules = true, skip
 	    	if (skipPremappedModules && expMemTest(m)) {
-	    		// INFO("Skipping %s as pre-mapped", m->model->slug.c_str());
+	    		// DEBUG("Skipping %s as pre-mapped", m->model->slug.c_str());
 	    		continue;
 	    	}
 
 	    	// Bind & save module parameters in midimap
-	    	// INFO("Binding %s", m->model->slug.c_str());
+	    	// DEBUG("Binding %s", m->model->slug.c_str());
 	    	moduleBind(m, false, true);
         }
+
+        // Update saved mapping library file
+        expMemSaveLibrary();
 
     	// history::ModuleChange
 		history::ModuleChange* h = new history::ModuleChange;
@@ -1471,7 +1481,7 @@ struct OrestesOneModule : Module {
 
 	void exportPluginMidiMap_action(char* path, std::string pluginSlug) {
 
-		INFO("Exporting midimaps for plugin %s to file %s", pluginSlug.c_str(), path);
+		// DEBUG("Exporting midimaps for plugin %s to file %s", pluginSlug.c_str(), path);
 
 		json_t* rootJ = json_object();
 		DEFER({
@@ -1523,6 +1533,19 @@ struct OrestesOneModule : Module {
 	}
 
 	/**
+	 * Re-writes the internal midiMap into the current mapping library file,
+	 * overwriting existing file contents
+	 */ 
+	void expMemSaveLibrary(bool force = false) {
+
+		if (midiMapLibraryFilename.empty()) return;
+		if (!force && !autosaveMappingLibrary) return;
+
+		saveMappingLibraryFile(midiMapLibraryFilename);
+
+	}
+
+	/**
 	 * Determines if module is excluded from automapping
 	 */
     bool isModuleAutomappable(Module* m) {
@@ -1568,13 +1591,15 @@ struct OrestesOneModule : Module {
 		json_object_set_new(rootJ, "midiCtrlInput", midiCtrlInput.toJson());
 		json_object_set_new(rootJ, "midiCtrlOutput", midiCtrlOutput.toJson());
 
-		json_t* midiMapJ = midiMapToJsonArray(midiMap);
-		json_object_set_new(rootJ, "midiMap", midiMapJ);
+		// Only persist the location of the module mapping json file in module / preset state
+		// Avoids saving (potentially large) full mapping library json in rack autosave patch.json
+		json_object_set_new(rootJ, "midiMapLibraryFilename", json_string(midiMapLibraryFilename.c_str()));
+		json_object_set_new(rootJ, "autosaveMidiMapLibrary", json_boolean(autosaveMappingLibrary));
 
 		return rootJ;
 	}
 
-	json_t* midiMapToJsonArray(const std::map<std::pair<std::string, std::string>, MemModule*>& aMidiMap) {
+	json_t* midiMapToJsonArray(std::map<std::pair<std::string, std::string>, MemModule*>& aMidiMap) {
 		json_t* midiMapJ = json_array();
 		for (auto it : aMidiMap) {
 			json_t* midiMapJJ = json_object();
@@ -1698,9 +1723,144 @@ struct OrestesOneModule : Module {
 			if (midiCtrlOutputJ) midiCtrlOutput.fromJson(midiCtrlOutputJ);
 		}
 
+		json_t* autosaveMappingLibraryJ = json_object_get(rootJ, "autosaveMidiMapLibrary");
+		if (autosaveMappingLibraryJ) autosaveMappingLibrary = json_boolean_value(autosaveMappingLibraryJ);
+
+		// Try to read and load the  module midimap library from the saved file location from the saved JSON
+		bool midiMapLoaded = false;
+		json_t* midiMapLibraryFilenameJ = json_object_get(rootJ, "midiMapLibraryFilename");
+		if (midiMapLibraryFilenameJ) {
+
+			midiMapLibraryFilename = json_string_value(midiMapLibraryFilenameJ);
+
+			// Load library data from file into json
+			if (!midiMapLibraryFilename.empty()) {
+				if (readMappingLibraryFile(midiMapLibraryFilename)) midiMapLoaded = true;
+			} else {
+				// If there is a default library file in the user presets, load that anyway
+				std::string userPresetPath = this->model->getUserPresetDirectory();
+				midiMapLibraryFilename = system::join(userPresetPath, DEFAULT_LIBRARY_FILENAME);
+
+				if (system::exists(midiMapLibraryFilename)) midiMapLoaded = readMappingLibraryFile(midiMapLibraryFilename);
+
+			}
+		}
+
+		// No loaded midimap library file either from Orestes-One state or loaded preset
+		// So try and load default factory mapping library
+		if (!midiMapLoaded && loadMidiMapFromFactoryLibraryFile()) {
+			// factory library loaded OK, now save copy of factory midimap to user preset folder if there is not already one in there
+			std::string userPresetPath = this->model->getUserPresetDirectory();
+			std::string defaultMidiMapLibraryFilename = system::join(userPresetPath, DEFAULT_LIBRARY_FILENAME);
+
+			if (!system::exists(defaultMidiMapLibraryFilename)) {
+				midiMapLibraryFilename = defaultMidiMapLibraryFilename;
+				saveMappingLibraryFile(defaultMidiMapLibraryFilename);
+			}
+		}
+			
+	}
+
+	bool loadMidiMapFromFactoryLibraryFile() {
+		// Load factory default library
+		// It is stored in the plugin presets folder
+		std::string pluginPresetPath = this->model->getFactoryPresetDirectory();
+		std::string factoryLibraryFilename = system::join(pluginPresetPath, "midimap-library.json");
+
+		if (!system::exists(factoryLibraryFilename)) {
+			WARN("Factory library file %s does not exist, skipping", factoryLibraryFilename.c_str());
+			return false;
+		}
+		
+		FILE* file = fopen(factoryLibraryFilename.c_str(), "r");
+		if (!file) {
+			WARN("Could not load factory library file %s, skipping", factoryLibraryFilename.c_str());
+			return false;
+		}
+		DEFER({
+			fclose(file);
+		});
+
+		json_error_t error;
+		json_t* libraryJ = json_loadf(file, 0, &error);
+		DEFER({
+			json_decref(libraryJ);
+		});
+
+		if (!libraryJ) {
+			WARN("Factory library file is not a valid JSON file. Parsing error at %s %d:%d %s, skipping", error.source, error.line, error.column, error.text);
+			return false;
+		}
+	
+		if (loadMidiMapFromLibrary(libraryJ)) {
+			return true;
+		} else {
+			return false;
+		}
+
+
+	}
+
+
+	bool readMappingLibraryFile(std::string filename) {
+
+		DEBUG ("Reading mapping library file at %s", filename.c_str());
+		FILE* file = fopen(filename.c_str(), "r");
+		if (!file) {
+			WARN("Could not load mapping library file %s", filename.c_str());
+			return false;
+		}
+		DEFER({
+			fclose(file);
+		});
+
+		json_error_t error;
+		json_t* libraryJ = json_loadf(file, 0, &error);
+		DEFER ({
+			json_decref(libraryJ);
+		});
+
+		if (!libraryJ) {
+			WARN("File is not a valid JSON file. Parsing error at %s %d:%d %s", error.source, error.line, error.column, error.text);
+			return false;
+		}
+		return loadMidiMapFromLibrary(libraryJ);
+		
+	}
+
+	/**
+	 * Replaces internal midiMap from selected mapping library file
+	 * 
+	 * Mutates the currentStateJ with the loaded midiMap list
+	 */
+	bool loadMidiMapFromLibrary(json_t* libraryJ) {
+
+		std::string pluginSlug = json_string_value(json_object_get(libraryJ, "plugin"));
+
+		std::string modelSlug = json_string_value(json_object_get(libraryJ, "model"));
+
+		// Only handle midimap library JSON files created by OrestesOne
+		if (!(pluginSlug == this->model->plugin->slug && modelSlug == this->model->slug))
+			return false;
+
+		// Get the midiMap in the imported library Json
+		json_t* dataJ = json_object_get(libraryJ, "data");
+		json_t* midiMapJ = json_object_get(dataJ, "midiMap");
+		
+		// Load libray file midiMap into internal midiMap state
+		midiMapJSONToMidiMap(midiMapJ);
+
+		// DEBUG("Loaded midiMap with %d", (int)midiMap.size());
+
+		return true;
+	}
+
+	/**
+	 * Replaces internal midiMap with contents of a midiMap JSON array
+	 */
+	void midiMapJSONToMidiMap(json_t* midiMapJ) {
 
 		resetMap();
-		json_t* midiMapJ = json_object_get(rootJ, "midiMap");
 		size_t i;
 		json_t* midiMapJJ;
 		json_array_foreach(midiMapJ, i, midiMapJJ) {
@@ -1733,9 +1893,48 @@ struct OrestesOneModule : Module {
 				json_t* maxJ = json_object_get(paramMapJJ, "max");
 				if (maxJ) p->max = json_real_value(maxJ);
 				a->paramMap.push_back(p);
+
 			}
 			midiMap[std::pair<std::string, std::string>(pluginSlug, moduleSlug)] = a;
 		}
+	}
+
+	/**
+	 * Co-ordinates saving internal midimap state as a mapping library json file
+	 */
+	bool saveMappingLibraryFile(std::string filename) {
+
+		DEBUG ("Saving library to %s", filename.c_str());
+		json_t* rootJ = json_object();
+		DEFER({
+			json_decref(rootJ);
+		});
+
+		json_object_set_new(rootJ, "plugin", json_string(this->model->plugin->slug.c_str()));
+		json_object_set_new(rootJ, "model", json_string(this->model->slug.c_str()));
+		json_t* dataJ = json_object();
+		json_t* midiMapJ = midiMapToJsonArray(midiMap);
+
+		json_object_set_new(dataJ, "midiMap", midiMapJ);
+		json_object_set_new(rootJ, "data", dataJ);
+
+		// Write to json file
+		FILE* file = fopen(filename.c_str(), "w");
+		if (!file) {
+			WARN("Could not open mapping library file for writing %s", filename.c_str());
+			return false;
+		}
+		DEFER({
+			fclose(file);
+		});
+
+		if (json_dumpf(rootJ, file, JSON_INDENT(4)) < 0) {
+			std::string message = string::f("File could not be written to %s", filename.c_str());
+			osdialog_message(OSDIALOG_ERROR, OSDIALOG_OK, message.c_str());
+			return false;
+		}
+
+		return true;
 	}
 
 	void setProcessDivision(int d) {
@@ -2190,6 +2389,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		addChild(createParamCentered<TL1105>(Vec(80.0f, 360.0f), module, OrestesOneModule::PARAM_NEXT));
 		addChild(createLightCentered<TinyLight<WhiteLight>>(Vec(190.f, 360.f), module, OrestesOneModule::LIGHT_APPLY));
 		addChild(createParamCentered<TL1105>(Vec(210.0f, 360.f), module, OrestesOneModule::PARAM_APPLY));
+		
 		MemDisplay* memDisplay = createWidgetCentered<MemDisplay>(Vec(260.0f, 360.f));
 		memDisplay->module = module;
 		addChild(memDisplay);
@@ -2319,6 +2519,99 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		}
 	}
 
+	/**
+	 * Sets the current mapping library file and reads a module mapping JSON file into the internal midiMap
+	 */
+	void expMemSelectLibrary() {
+
+		osdialog_filters* filters = osdialog_filters_parse(LOAD_MIDIMAP_FILTERS);
+		DEFER({
+			osdialog_filters_free(filters);
+		});
+
+		std::string currentLibraryFilePath;
+		if (!module->midiMapLibraryFilename.empty()) {
+			currentLibraryFilePath = system::getDirectory(module->midiMapLibraryFilename);
+		} else {
+			currentLibraryFilePath = module->model->getUserPresetDirectory();
+		}
+
+		std::string currentLibraryFilename;
+		if (!module->midiMapLibraryFilename.empty()) {
+			currentLibraryFilename = system::getFilename(module->midiMapLibraryFilename);
+		} else {
+			currentLibraryFilename = DEFAULT_LIBRARY_FILENAME;
+		}
+
+		char* path = osdialog_file(OSDIALOG_OPEN, currentLibraryFilePath.c_str(), currentLibraryFilename.c_str(), filters);
+		if (!path) {
+			return;
+		}
+		DEFER({
+			free(path);
+		});
+
+
+		loadMidiMapLibrary_action(path);
+	}
+
+	void loadMidiMapLibrary_dialog() {
+		osdialog_filters* filters = osdialog_filters_parse(LOAD_MIDIMAP_FILTERS);
+		DEFER({
+			osdialog_filters_free(filters);
+		});
+
+		char* path = osdialog_file(OSDIALOG_OPEN, "", NULL, filters);
+		if (!path) {
+			// No path selected
+			return;
+		}
+		DEFER({
+			free(path);
+		});
+
+		loadMidiMapLibrary_action(path);
+	}
+
+	void loadMidiMapLibrary_action(std::string filename) {
+		// DEBUG("Loading mapping library from file %s", filename.c_str());
+
+		FILE* file = fopen(filename.c_str(), "r");
+		if (!file) {
+			WARN("Could not load file %s", filename.c_str());
+			return;
+		}
+		DEFER({
+			fclose(file);
+		});
+
+		json_error_t error;
+		json_t* libraryJ = json_loadf(file, 0, &error);
+		if (!libraryJ) {
+			std::string message = string::f("File is not a valid JSON file. Parsing error at %s %d:%d %s", error.source, error.line, error.column, error.text);
+			osdialog_message(OSDIALOG_WARNING, OSDIALOG_OK, message.c_str());
+			return;
+		}
+		DEFER({
+			json_decref(libraryJ);
+		});
+
+		json_t* currentStateJ = toJson();
+		if (!module->loadMidiMapFromLibrary(libraryJ))
+			return;
+
+		// Update library filename
+		module->midiMapLibraryFilename = filename;
+
+		// history::ModuleChange
+		history::ModuleChange* h = new history::ModuleChange;
+		h->name = "select mapping library";
+		h->moduleId = module->id;
+		h->oldModuleJ = currentStateJ;
+		h->newModuleJ = toJson();
+		APP->history->push(h);
+	}
+
 	void loadMidiMapPreset_dialog() {
 		osdialog_filters* filters = osdialog_filters_parse(LOAD_MIDIMAP_FILTERS);
 		DEFER({
@@ -2338,7 +2631,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 	}
 
 	void loadMidiMapPreset_action(std::string filename) {
-		INFO("Merging mappings from file %s", filename.c_str());
+		INFO("Importing mappings from file %s", filename.c_str());
 
 		FILE* file = fopen(filename.c_str(), "r");
 		if (!file) {
@@ -2361,7 +2654,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		});
 
 		json_t* currentStateJ = toJson();
-		if (!mergeMidiMapPreset_convert(moduleJ, currentStateJ))
+		if (mergeMidiMapPreset_convert(moduleJ, currentStateJ) == 0)
 			return;
 
 		// history::ModuleChange
@@ -2370,10 +2663,11 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		h->moduleId = module->id;
 		h->oldModuleJ = toJson();
 
-		module->fromJson(currentStateJ);
-
+		module->fromJson(currentStateJ); // Applies merged mappings to internal midiMap
 		h->newModuleJ = toJson();
 		APP->history->push(h);
+
+		module->expMemSaveLibrary();
 	}
 
 	/**
@@ -2382,13 +2676,13 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 	 * 
 	 * Mutates the currentStateJ with the amended midiMap list = current midiMap + merged midiMap from importedPresetJ
 	 */
-	bool mergeMidiMapPreset_convert(json_t* importedPresetJ, json_t* currentStateJ) {
+	int mergeMidiMapPreset_convert(json_t* importedPresetJ, json_t* currentStateJ) {
 		std::string pluginSlug = json_string_value(json_object_get(importedPresetJ, "plugin"));
 		std::string modelSlug = json_string_value(json_object_get(importedPresetJ, "model"));
 
-		// Only handle presets or midimap JSON files for OrestesOne
+		// Only handle presets or midimap JSON files from OrestesOne
 		if (!(pluginSlug == module->model->plugin->slug && modelSlug == module->model->slug))
-			return false;
+			return 0;
 
 		// Get the midiMap in the imported preset Json
 		json_t* dataJ = json_object_get(importedPresetJ, "data");
@@ -2400,6 +2694,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		// Loop over the midiMap from the imported preset JSON
 		size_t i;
 		json_t* midiMapJJ;
+		int importedModules = 0;
 		json_array_foreach(midiMapJ, i, midiMapJJ) {
 			std::string importedPluginSlug = json_string_value(json_object_get(midiMapJJ, "pluginSlug"));
 			std::string importedModuleSlug = json_string_value(json_object_get(midiMapJJ, "moduleSlug"));
@@ -2416,6 +2711,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 						foundCurrent = true;
 						// Replace current midi map with the imported one
 						json_array_set(currentStateMidiMapJ, ii, midiMapJJ);
+						importedModules++;
 				}
 
 			}
@@ -2424,13 +2720,14 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 				json_t* clonedMidiMapJJ = json_deep_copy(midiMapJJ);
 				json_array_append(currentStateMidiMapJ, clonedMidiMapJJ);
 				json_decref(clonedMidiMapJJ);
+				importedModules++;
 			}
 
 		};
 
 		// currentStateJ* now has the updated merged midimap
-		// INFO("Merged %zu mappings" , i);
-		return true;
+		DEBUG("Merged %d modules", importedModules);
+		return importedModules;
 	}
 
 	void extendParamWidgetContextMenu(ParamWidget* pw, Menu* menu) override {
@@ -2594,7 +2891,9 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 				case LEARN_MODE::BIND_KEEP:
 					module->moduleBind(m, true, false); break;
 				case LEARN_MODE::BIND_AUTOMAP:
-					module->moduleBind(m, false, true); break;	
+					module->moduleBind(m, false, true); 
+					module->expMemSaveLibrary();
+					break;	
 				case LEARN_MODE::MEM:
 					module->expMemApply(m, mw->box.pos); break;
 				case LEARN_MODE::OFF:
@@ -2761,6 +3060,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 							std::string moduleSlug;
 							void onAction(const event::Action& e) override {
 								module->expMemDelete(pluginSlug, moduleSlug);
+								module->expMemSaveLibrary();
 							}
 						}; // DeleteItem
 
@@ -2783,6 +3083,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 							std::string pluginSlug;
 							void onAction(const event::Action& e) override {
 								module->expMemPluginDelete(pluginSlug);
+								module->expMemSaveLibrary();
 							}
 						}; // DeletePluginItem
 
@@ -2862,9 +3163,11 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 					std::string moduleSlug;
 					void onAction(const event::Action& e) override {
 						module->expMemSave(pluginSlug, moduleSlug, false);
+						module->expMemSaveLibrary();
 					}
 				}; // SaveItem
 
+				// Get unique list of modules in current parameter map
 				typedef std::pair<std::string, std::string> ppair;
 				std::list<std::pair<std::string, ppair>> list;
 				std::set<ppair> s;
@@ -2891,15 +3194,20 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 			}
 		}; // SaveMenuItem
 
-		menu->addChild(construct<SaveMenuItem>(&MenuItem::text, "Store mapping", &SaveMenuItem::module, module));
+		menu->addChild(construct<SaveMenuItem>(&MenuItem::text, "Add module to library", &SaveMenuItem::module, module));
 		menu->addChild(createMenuItem("Clear mappings", "", [=]() { module->clearMaps_WithLock(); }));
-
-		menu->addChild(new MenuSeparator());
-		menu->addChild(construct<MapMenuItem>(&MenuItem::text, "Manage mappings", &MapMenuItem::module, module));
-		menu->addChild(createMenuItem("Merge mappings from...", "", [=]() { loadMidiMapPreset_dialog(); }));
-		menu->addChild(new MenuSeparator());
 		menu->addChild(createMenuItem("Apply mapping", RACK_MOD_SHIFT_NAME "+V", [=]() { enableLearn(LEARN_MODE::MEM); }));
 
+		menu->addChild(new MenuSeparator());
+		menu->addChild(createMenuLabel("Mapping Library"));
+		menu->addChild(createBoolPtrMenuItem("Autosave changes into mapping library file", "", &module->autosaveMappingLibrary));
+		menu->addChild(construct<MapMenuItem>(&MenuItem::text, "Manage library mappings", &MapMenuItem::module, module));
+		menu->addChild(createMenuItem("Import mappings into library...", "", [=]() { loadMidiMapPreset_dialog(); }));
+		menu->addChild(createMenuItem("Save mapping library file", "", [=]() { module->expMemSaveLibrary(true); }));
+		menu->addChild(createMenuItem("Change mapping library file...", "", [=]() { expMemSelectLibrary(); }));
+
+		menu->addChild(createMenuLabel(system::getFilename(module->midiMapLibraryFilename)));
+		
 	}
 };
 
