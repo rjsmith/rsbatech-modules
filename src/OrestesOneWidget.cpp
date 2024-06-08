@@ -473,7 +473,8 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 			    expMemSelectModule(module->e1SelectedModulePos);
 			    module->e1SelectedModulePos = Vec(0,0);
 			}
-			if (expMemParamTrigger.process(module->params[OrestesOneModule::PARAM_APPLY].getValue())) {
+			if (module->e1ProcessApply || expMemParamTrigger.process(module->params[OrestesOneModule::PARAM_APPLY].getValue())) {
+				module->e1ProcessApply = false;
 				enableLearn(LEARN_MODE::MEM);
 			}
 			module->lights[0].setBrightness(learnMode == LEARN_MODE::MEM);

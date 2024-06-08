@@ -425,6 +425,7 @@ struct OrestesOneModule : Module {
     bool e1ProcessNext;
     bool e1ProcessPrev;
     bool e1ProcessSelect;
+    bool e1ProcessApply;
     math::Vec e1SelectedModulePos;
     bool e1ProcessResendMIDIFeedback;
 
@@ -572,6 +573,7 @@ struct OrestesOneModule : Module {
 		e1ProcessNext = false;
 		e1ProcessPrev = false;
 		e1ProcessSelect = false;
+		e1ProcessApply = false;
 		e1ProcessListMappedModules = false;
 		e1ProcessResetParameter = false;
 		midiMapLibraryFilename.clear();
@@ -970,6 +972,12 @@ struct OrestesOneModule : Module {
                         e1ProcessResendMIDIFeedback = true;
                         return true;
                     }
+                    // Apply Module
+	                case 0x07: {
+	                	// DEBUG("Received an E1 Apply Module Command");
+	                	e1ProcessApply = true;
+	                	return true;	
+	                }
                     default: {
                         return false;
                     }
