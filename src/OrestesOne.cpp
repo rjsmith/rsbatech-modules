@@ -1374,17 +1374,18 @@ struct OrestesOneModule : Module {
 
 		auto p = std::pair<std::string, std::string>(pluginSlug, moduleSlug);
 		auto it = midiMap.find(p);
-		delete it->second;
-		midiMap.erase(p);
+		if (it != midiMap.end()) {
+			delete it->second;
+			midiMap.erase(p);
 
-		// history::ModuleChange
-		history::ModuleChange* h = new history::ModuleChange;
-		h->name = "delete module mappings";
-		h->moduleId = this->id;
-		h->oldModuleJ = currentStateJ;
-		h->newModuleJ = toJson();
-		APP->history->push(h);
-		
+			// history::ModuleChange
+			history::ModuleChange* h = new history::ModuleChange;
+			h->name = "delete module mappings";
+			h->moduleId = this->id;
+			h->oldModuleJ = currentStateJ;
+			h->newModuleJ = toJson();
+			APP->history->push(h);
+		}
 	}
 
 	/* Delete all mapped modules belonging to same plugin, add to undo history */
@@ -1526,7 +1527,10 @@ struct OrestesOneModule : Module {
 
 	bool expMemTest(Module* m) {
 		if (!m) return false;
-		auto p = std::pair<std::string, std::string>(m->model->plugin->slug, m->model->slug);
+		return findModuleInMidiMap(m->model->plugin->slug, m->model->slug);
+	}
+	bool findModuleInMidiMap(std::string pluginSlug, std::string moduleSlug) {
+		auto p = std::pair<std::string, std::string>(pluginSlug, moduleSlug);
 		auto it = midiMap.find(p);
 		if (it == midiMap.end()) return false;
 		return true;
@@ -1848,7 +1852,7 @@ struct OrestesOneModule : Module {
 		json_t* midiMapJ = json_object_get(dataJ, "midiMap");
 		
 		// Load libray file midiMap into internal midiMap state
-		midiMapJSONToMidiMap(midiMapJ);
+		midiMapJSONArrayToMidiMap(midiMapJ);
 
 		// DEBUG("Loaded midiMap with %d", (int)midiMap.size());
 
@@ -1858,45 +1862,49 @@ struct OrestesOneModule : Module {
 	/**
 	 * Replaces internal midiMap with contents of a midiMap JSON array
 	 */
-	void midiMapJSONToMidiMap(json_t* midiMapJ) {
+	void midiMapJSONArrayToMidiMap(json_t* midiMapJ) {
 
 		resetMap();
 		size_t i;
 		json_t* midiMapJJ;
 		json_array_foreach(midiMapJ, i, midiMapJJ) {
-			std::string pluginSlug = json_string_value(json_object_get(midiMapJJ, "pluginSlug"));
-			std::string moduleSlug = json_string_value(json_object_get(midiMapJJ, "moduleSlug"));
-
-			MemModule* a = new MemModule;
-			a->pluginName = json_string_value(json_object_get(midiMapJJ, "pluginName"));
-			a->moduleName = json_string_value(json_object_get(midiMapJJ, "moduleName"));
-			json_t* autoMappedJ = json_object_get(midiMapJJ, "autoMapped");
-			if (autoMappedJ) {
-				a->autoMapped = json_boolean_value(autoMappedJ);
-			} else {
-				a->autoMapped = false; // default
-			}
-			json_t* paramMapJ = json_object_get(midiMapJJ, "paramMap");
-			size_t j;
-			json_t* paramMapJJ;
-			json_array_foreach(paramMapJ, j, paramMapJJ) {
-				MemParam* p = new MemParam;
-				p->paramId = json_integer_value(json_object_get(paramMapJJ, "paramId"));
-				p->nprn = json_integer_value(json_object_get(paramMapJJ, "nprn"));
-				p->nprnMode = (NPRNMODE)json_integer_value(json_object_get(paramMapJJ, "nprnMode"));
-				p->label = json_string_value(json_object_get(paramMapJJ, "label"));
-				p->midiOptions = json_integer_value(json_object_get(paramMapJJ, "midiOptions"));
-				json_t* slewJ = json_object_get(paramMapJJ, "slew");
-				if (slewJ) p->slew = json_real_value(slewJ);
-				json_t* minJ = json_object_get(paramMapJJ, "min");
-				if (minJ) p->min = json_real_value(minJ);
-				json_t* maxJ = json_object_get(paramMapJJ, "max");
-				if (maxJ) p->max = json_real_value(maxJ);
-				a->paramMap.push_back(p);
-
-			}
-			midiMap[std::pair<std::string, std::string>(pluginSlug, moduleSlug)] = a;
+			midiMapJSONToMidiMap(midiMapJJ);
 		}
+	}
+
+	void midiMapJSONToMidiMap(json_t* midiMapJJ) {
+		std::string pluginSlug = json_string_value(json_object_get(midiMapJJ, "pluginSlug"));
+		std::string moduleSlug = json_string_value(json_object_get(midiMapJJ, "moduleSlug"));
+
+		MemModule* a = new MemModule;
+		a->pluginName = json_string_value(json_object_get(midiMapJJ, "pluginName"));
+		a->moduleName = json_string_value(json_object_get(midiMapJJ, "moduleName"));
+		json_t* autoMappedJ = json_object_get(midiMapJJ, "autoMapped");
+		if (autoMappedJ) {
+			a->autoMapped = json_boolean_value(autoMappedJ);
+		} else {
+			a->autoMapped = false; // default
+		}
+		json_t* paramMapJ = json_object_get(midiMapJJ, "paramMap");
+		size_t j;
+		json_t* paramMapJJ;
+		json_array_foreach(paramMapJ, j, paramMapJJ) {
+			MemParam* p = new MemParam;
+			p->paramId = json_integer_value(json_object_get(paramMapJJ, "paramId"));
+			p->nprn = json_integer_value(json_object_get(paramMapJJ, "nprn"));
+			p->nprnMode = (NPRNMODE)json_integer_value(json_object_get(paramMapJJ, "nprnMode"));
+			p->label = json_string_value(json_object_get(paramMapJJ, "label"));
+			p->midiOptions = json_integer_value(json_object_get(paramMapJJ, "midiOptions"));
+			json_t* slewJ = json_object_get(paramMapJJ, "slew");
+			if (slewJ) p->slew = json_real_value(slewJ);
+			json_t* minJ = json_object_get(paramMapJJ, "min");
+			if (minJ) p->min = json_real_value(minJ);
+			json_t* maxJ = json_object_get(paramMapJJ, "max");
+			if (maxJ) p->max = json_real_value(maxJ);
+			a->paramMap.push_back(p);
+
+		}
+		midiMap[std::pair<std::string, std::string>(pluginSlug, moduleSlug)] = a;
 	}
 
 	/**
@@ -2612,7 +2620,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		APP->history->push(h);
 	}
 
-	void loadMidiMapPreset_dialog() {
+	void loadMidiMapPreset_dialog(bool skipPremappedModules) {
 		osdialog_filters* filters = osdialog_filters_parse(LOAD_MIDIMAP_FILTERS);
 		DEFER({
 			osdialog_filters_free(filters);
@@ -2627,10 +2635,10 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 			free(path);
 		});
 
-		loadMidiMapPreset_action(path);
+		loadMidiMapPreset_action(path, skipPremappedModules);
 	}
 
-	void loadMidiMapPreset_action(std::string filename) {
+	void loadMidiMapPreset_action(std::string filename, bool skipPremappedModules) {
 		INFO("Importing mappings from file %s", filename.c_str());
 
 		FILE* file = fopen(filename.c_str(), "r");
@@ -2654,16 +2662,14 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		});
 
 		json_t* currentStateJ = toJson();
-		if (mergeMidiMapPreset_convert(moduleJ, currentStateJ) == 0)
+		if (mergeMidiMapPreset_convert(moduleJ, skipPremappedModules) == 0)
 			return;
 
 		// history::ModuleChange
 		history::ModuleChange* h = new history::ModuleChange;
-		h->name = "merge mappings";
+		h->name = "import mappings";
 		h->moduleId = module->id;
-		h->oldModuleJ = toJson();
-
-		module->fromJson(currentStateJ); // Applies merged mappings to internal midiMap
+		h->oldModuleJ = currentStateJ;
 		h->newModuleJ = toJson();
 		APP->history->push(h);
 
@@ -2672,11 +2678,9 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 
 	/**
 	 * Merge module midiMap entries from the importedPresetJ into the current midiMap of this OrestesOne module.
-	 * Entries from the imported presetJ will overwrite matching entries in the existing midiMap.
-	 * 
-	 * Mutates the currentStateJ with the amended midiMap list = current midiMap + merged midiMap from importedPresetJ
+	 * Entries from the imported presetJ will overwrite matching entries in the existing midiMap.	 * 
 	 */
-	int mergeMidiMapPreset_convert(json_t* importedPresetJ, json_t* currentStateJ) {
+	int mergeMidiMapPreset_convert(json_t* importedPresetJ, bool skipPremappedModules) {
 		std::string pluginSlug = json_string_value(json_object_get(importedPresetJ, "plugin"));
 		std::string modelSlug = json_string_value(json_object_get(importedPresetJ, "model"));
 
@@ -2688,9 +2692,6 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		json_t* dataJ = json_object_get(importedPresetJ, "data");
 		json_t* midiMapJ = json_object_get(dataJ, "midiMap");
 
-		json_t* currentStateDataJ = json_object_get(currentStateJ, "data");
-		json_t* currentStateMidiMapJ = json_object_get(currentStateDataJ, "midiMap");
-
 		// Loop over the midiMap from the imported preset JSON
 		size_t i;
 		json_t* midiMapJJ;
@@ -2699,34 +2700,25 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 			std::string importedPluginSlug = json_string_value(json_object_get(midiMapJJ, "pluginSlug"));
 			std::string importedModuleSlug = json_string_value(json_object_get(midiMapJJ, "moduleSlug"));
 
-			// Find this mapped module in the current Orestes module state Json
-			size_t ii;
-			json_t* currentStateMidiMapJJ;
-			bool foundCurrent = false;
-			json_array_foreach(currentStateMidiMapJ, ii, currentStateMidiMapJJ) {
-				std::string currentPluginSlug = json_string_value(json_object_get(currentStateMidiMapJJ, "pluginSlug"));
-				std::string currentModuleSlug = json_string_value(json_object_get(currentStateMidiMapJJ, "moduleSlug"));
-
-				if (currentPluginSlug == importedPluginSlug && currentModuleSlug == importedModuleSlug) {
-						foundCurrent = true;
-						// Replace current midi map with the imported one
-						json_array_set(currentStateMidiMapJ, ii, midiMapJJ);
-						importedModules++;
+			// Find this mapped module in the current Orestes module midiMap
+			auto p = std::pair<std::string, std::string>(importedPluginSlug, importedModuleSlug);
+			auto it = module->midiMap.find(p);
+			if (it != module->midiMap.end()) {
+				if (skipPremappedModules) {
+					continue;
 				}
-
+				delete it->second;
+				module->midiMap.erase(p);
 			}
-			if (foundCurrent == false) {
-				// Did not find the imported module in the current midi map, so append it now
-				json_t* clonedMidiMapJJ = json_deep_copy(midiMapJJ);
-				json_array_append(currentStateMidiMapJ, clonedMidiMapJJ);
-				json_decref(clonedMidiMapJJ);
-				importedModules++;
-			}
-
+			
+			// Add new entry to midiMap
+			module->midiMapJSONToMidiMap(midiMapJJ);
+			importedModules++;
+			
 		};
 
 		// currentStateJ* now has the updated merged midimap
-		DEBUG("Merged %d modules", importedModules);
+		DEBUG("Imported mappings for %d modules", importedModules);
 		return importedModules;
 	}
 
@@ -3202,7 +3194,15 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		menu->addChild(createMenuLabel("Mapping Library"));
 		menu->addChild(createBoolPtrMenuItem("Autosave changes into mapping library file", "", &module->autosaveMappingLibrary));
 		menu->addChild(construct<MapMenuItem>(&MenuItem::text, "Manage library mappings", &MapMenuItem::module, module));
-		menu->addChild(createMenuItem("Import mappings into library...", "", [=]() { loadMidiMapPreset_dialog(); }));
+
+
+		menu->addChild(createSubmenuItem("Import mappings into library", "",
+			[=](Menu* menu) {
+				menu->addChild(createMenuItem("Skip pre-mapped modules...", "", [=]() { loadMidiMapPreset_dialog(true); }));
+				menu->addChild(createMenuItem("Overwrite pre-mapped modules...", "", [=]() { loadMidiMapPreset_dialog(false); }));
+			}
+		));
+
 		menu->addChild(createMenuItem("Save mapping library file", "", [=]() { module->expMemSaveLibrary(true); }));
 		menu->addChild(createMenuItem("Change mapping library file...", "", [=]() { expMemSelectLibrary(); }));
 
