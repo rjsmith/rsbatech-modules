@@ -36,6 +36,7 @@ struct MemParam {
 	float slew = 0.f;
 	float min = 0.f;
 	float max = 1.f;
+	int64_t moduleId = -1; // Only used for storing rack mapping parameters
 };
 
 struct MemModule {
@@ -46,6 +47,10 @@ struct MemModule {
 	~MemModule() {
 		for (auto it : paramMap) delete it;
 	}
+	void reset() {
+		for (auto it : paramMap) delete it;
+	}
+
 };
 
 } // namespace OrestesOne

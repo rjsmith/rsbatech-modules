@@ -477,6 +477,10 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 				module->e1ProcessApply = false;
 				enableLearn(LEARN_MODE::MEM);
 			}
+			if (module->e1ProcessApplyRackMapping) {
+				module->e1ProcessApplyRackMapping = false;
+				module->expMemApplyRackMapping();
+			}
 			module->lights[0].setBrightness(learnMode == LEARN_MODE::MEM);
 		
 		}
@@ -1226,8 +1230,11 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		}; // SaveMenuItem
 
 		menu->addChild(construct<SaveMenuItem>(&MenuItem::text, "Add module to library", &SaveMenuItem::module, module));
+		menu->addChild(createMenuItem("Save rack-level mapping", "", [=]() { module->expMemSaveRackMapping(); }));
+
 		menu->addChild(createMenuItem("Clear mappings", "", [=]() { module->clearMaps_WithLock(); }));
-		menu->addChild(createMenuItem("Apply mapping", RACK_MOD_SHIFT_NAME "+V", [=]() { enableLearn(LEARN_MODE::MEM); }));
+		menu->addChild(createMenuItem("Apply module mapping", RACK_MOD_SHIFT_NAME "+V", [=]() { enableLearn(LEARN_MODE::MEM); }));
+		menu->addChild(createMenuItem("Apply rack-level mapping", "", [=]() { module->expMemApplyRackMapping(); }));
 
 		menu->addChild(new MenuSeparator());
 		menu->addChild(createMenuLabel("Mapping Library"));

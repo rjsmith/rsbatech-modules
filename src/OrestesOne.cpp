@@ -426,6 +426,7 @@ struct OrestesOneModule : Module {
     bool e1ProcessPrev;
     bool e1ProcessSelect;
     bool e1ProcessApply;
+    bool e1ProcessApplyRackMapping;
     math::Vec e1SelectedModulePos;
     bool e1ProcessResendMIDIFeedback;
 
@@ -507,6 +508,12 @@ struct OrestesOneModule : Module {
 	/** Internal module midiMap. Not saved to module Json. */
 	std::map<std::pair<std::string, std::string>, MemModule*> midiMap;
 
+	/** [Stored to JSON] 
+	 * Stores rack-level mapping e.g. for Patchmaster mappings
+	 * Used to switch between this mapping and a module mapping in midiMap
+	 */
+	MemModule rackMapping = MemModule();
+
 	OrestesOneModule() {
 		panelTheme = pluginSettings.panelThemeDefault;
 
@@ -574,11 +581,13 @@ struct OrestesOneModule : Module {
 		e1ProcessPrev = false;
 		e1ProcessSelect = false;
 		e1ProcessApply = false;
+		e1ProcessApplyRackMapping = false;
 		e1ProcessListMappedModules = false;
 		e1ProcessResetParameter = false;
 		midiMapLibraryFilename.clear();
 		autosaveMappingLibrary = true;
 		resetMap();
+		rackMapping.reset();
 	}
 
 	void resetMap() {
@@ -978,6 +987,12 @@ struct OrestesOneModule : Module {
 	                	e1ProcessApply = true;
 	                	return true;	
 	                }
+	                // Apply Rack Mapping
+	            	case 0x08: {
+	            		DEBUG("Received an E1 Apply Rack Mapping Command");
+	            		e1ProcessApplyRackMapping = true;
+	            		return true;
+	            	}
                     default: {
                         return false;
                     }
@@ -1418,6 +1433,29 @@ struct OrestesOneModule : Module {
 		
 	}
 
+	/**
+	 * Store current mapping parameters as restorable rack-level mapping
+	 */
+	void expMemSaveRackMapping() {
+		rackMapping.reset();
+		for (size_t i = 0; i < MAX_CHANNELS; i++) {
+			if (paramHandles[i].moduleId < 0) continue;
+			MemParam* p = new MemParam;
+			p->paramId = paramHandles[i].paramId;
+			p->nprn = nprns[i].getNprn();
+			p->nprnMode = nprns[i].nprnMode;
+			p->label = textLabel[i];
+			p->midiOptions = midiOptions[i];
+			p->slew = midiParam[i].getSlew();
+			p->min = midiParam[i].getMin();
+			p->max = midiParam[i].getMax();
+			p->moduleId = paramHandles[i].moduleId;
+			rackMapping.paramMap.push_back(p);
+		}
+
+	}
+
+
 	void expMemApply(Module* m, math::Vec pos = Vec(0,0)) {
 		if (!m) return;
 		auto p = std::pair<std::string, std::string>(m->model->plugin->slug, m->model->slug);
@@ -1464,6 +1502,50 @@ struct OrestesOneModule : Module {
 		updateMapLen();
 
 	}
+
+	void expMemApplyRackMapping() {
+
+		if (rackMapping.paramMap.empty()) return;
+
+		// Send message to E1 to prep for new rack mappings before new values sent
+        int maxNprnId = 0;
+        for (MemParam* it : rackMapping.paramMap) {
+        	if (it->nprn > maxNprnId) {
+        		maxNprnId = it->nprn;
+        	}
+        }
+		changeE1Module("Rack Mapping", 0, 0, maxNprnId);
+		clearMaps_WithLock();
+		midiOutput.reset();
+		midiCtrlOutput.reset();
+		expMemModuleId = -1;
+
+		int i = 0;
+		sendE1EndMessage = 1;
+		for (MemParam* it : rackMapping.paramMap) {
+			learnParam(i,it->moduleId, it->paramId);
+			nprns[i].setNprn(it->nprn);
+			nprns[i].nprnMode = it->nprnMode;
+			nprns[i].set14bit(true);
+			textLabel[i] = it->label;
+			midiOptions[i] = it->midiOptions;
+			midiParam[i].setSlew(it->slew);
+			midiParam[i].setMin(it->min);
+			midiParam[i].setMax(it->max);
+			// Force next processMappings() call to process all mappings after module controls have been switched
+			lastValueOut[i] = -1;
+
+			// If this parameter is mapped to a MIDI controller, increment the sendE1EndMessage counter so
+			// the process() code can figure out when it has sent all mapped parameters for the module to the E1
+		    if (nprns[i].getNprn() >= 0) sendE1EndMessage++;
+
+			i++;
+		}
+
+		updateMapLen();
+
+	}
+
 
 	void expMemExportPlugin(std::string pluginSlug) {
 
@@ -1600,6 +1682,27 @@ struct OrestesOneModule : Module {
 		json_object_set_new(rootJ, "midiCtrlInput", midiCtrlInput.toJson());
 		json_object_set_new(rootJ, "midiCtrlOutput", midiCtrlOutput.toJson());
 
+
+		json_t* rackMappingJJ = json_object();		
+		json_t* paramMapJ = json_array();
+		for (auto p : rackMapping.paramMap) {
+			json_t* paramMapJJ = json_object();
+			json_object_set_new(paramMapJJ, "paramId", json_integer(p->paramId));
+			json_object_set_new(paramMapJJ, "nprn", json_integer(p->nprn));
+			json_object_set_new(paramMapJJ, "nprnMode", json_integer((int)p->nprnMode));
+			json_object_set_new(paramMapJJ, "label", json_string(p->label.c_str()));
+			json_object_set_new(paramMapJJ, "midiOptions", json_integer(p->midiOptions));
+			json_object_set_new(paramMapJJ, "slew", json_real(p->slew));
+			json_object_set_new(paramMapJJ, "min", json_real(p->min));
+			json_object_set_new(paramMapJJ, "max", json_real(p->max));
+			json_object_set_new(paramMapJJ, "moduleId", json_integer(p->moduleId));
+			json_array_append_new(paramMapJ, paramMapJJ);
+		}
+		json_object_set_new(rackMappingJJ, "paramMap", paramMapJ);
+
+		// json_t* rackMappingJ = rackMappingToJson(rackMapping);
+		json_object_set_new(rootJ, "rackMapping", rackMappingJJ);
+
 		// Only persist the location of the module mapping json file in module / preset state
 		// Avoids saving (potentially large) full mapping library json in rack autosave patch.json
 		json_object_set_new(rootJ, "midiMapLibraryFilename", json_string(midiMapLibraryFilename.c_str()));
@@ -1638,6 +1741,25 @@ struct OrestesOneModule : Module {
 		return midiMapJ;
 	}
 
+	json_t* rackMappingToJson(MemModule& aRackMapping) {
+		json_t* midiMapJJ = json_object();			
+		json_t* paramMapJ = json_array();
+		for (auto p : aRackMapping.paramMap) {
+			json_t* paramMapJJ = json_object();
+			json_object_set_new(paramMapJJ, "paramId", json_integer(p->paramId));
+			json_object_set_new(paramMapJJ, "nprn", json_integer(p->nprn));
+			json_object_set_new(paramMapJJ, "nprnMode", json_integer((int)p->nprnMode));
+			json_object_set_new(paramMapJJ, "label", json_string(p->label.c_str()));
+			json_object_set_new(paramMapJJ, "midiOptions", json_integer(p->midiOptions));
+			json_object_set_new(paramMapJJ, "slew", json_real(p->slew));
+			json_object_set_new(paramMapJJ, "min", json_real(p->min));
+			json_object_set_new(paramMapJJ, "max", json_real(p->max));
+			json_object_set_new(paramMapJJ, "moduleId", json_integer(p->moduleId));
+			json_array_append_new(paramMapJ, paramMapJJ);
+		}
+		json_object_set_new(midiMapJJ, "paramMap", paramMapJ);
+		return midiMapJJ;
+	}
 
 	void dataFromJson(json_t* rootJ) override {
 		json_t* panelThemeJ = json_object_get(rootJ, "panelTheme");
@@ -1730,6 +1852,41 @@ struct OrestesOneModule : Module {
 			if (midiCtrlInputJ) midiCtrlInput.fromJson(midiCtrlInputJ);
 			json_t* midiCtrlOutputJ = json_object_get(rootJ, "midiCtrlOutput");
 			if (midiCtrlOutputJ) midiCtrlOutput.fromJson(midiCtrlOutputJ);
+		}
+
+		// Rack Mapping
+		json_t* rackMappingJ = json_object_get(rootJ, "rackMapping");
+		if (rackMappingJ) {
+
+			rackMapping.reset();
+			json_t* paramMapJ = json_object_get(rackMappingJ, "paramMap");
+			size_t j;
+			json_t* paramMapJJ;
+			json_array_foreach(paramMapJ, j, paramMapJJ) {
+				MemParam* p = new MemParam;
+				p->paramId = json_integer_value(json_object_get(paramMapJJ, "paramId"));
+				p->moduleId = json_integer_value(json_object_get(paramMapJJ, "moduleId"));
+				p->nprn = json_integer_value(json_object_get(paramMapJJ, "nprn"));
+				p->nprnMode = (NPRNMODE)json_integer_value(json_object_get(paramMapJJ, "nprnMode"));
+				p->label = json_string_value(json_object_get(paramMapJJ, "label"));
+				p->midiOptions = json_integer_value(json_object_get(paramMapJJ, "midiOptions"));
+				json_t* slewJ = json_object_get(paramMapJJ, "slew");
+				if (slewJ) p->slew = json_real_value(slewJ);
+				json_t* minJ = json_object_get(paramMapJJ, "min");
+				if (minJ) p->min = json_real_value(minJ);
+				json_t* maxJ = json_object_get(paramMapJJ, "max");
+				if (maxJ) p->max = json_real_value(maxJ);
+				rackMapping.paramMap.push_back(p);
+			}
+
+
+
+
+
+
+
+
+			// rackMappingJSONToRackMapping(rackMappingJ);
 		}
 
 		json_t* autosaveMappingLibraryJ = json_object_get(rootJ, "autosaveMidiMapLibrary");
@@ -1910,6 +2067,29 @@ struct OrestesOneModule : Module {
 
 		}
 		midiMap[std::pair<std::string, std::string>(pluginSlug, moduleSlug)] = a;
+	}
+
+	void rackMappingJSONToRackMapping(json_t* rackMappingJ) {
+		rackMapping.reset();
+		json_t* paramMapJ = json_object_get(rackMappingJ, "paramMap");
+		size_t j;
+		json_t* paramMapJJ;
+		json_array_foreach(paramMapJ, j, paramMapJJ) {
+			MemParam* p = new MemParam;
+			p->paramId = json_integer_value(json_object_get(paramMapJJ, "paramId"));
+			p->moduleId = json_integer_value(json_object_get(paramMapJJ, "moduleId"));
+			p->nprn = json_integer_value(json_object_get(paramMapJJ, "nprn"));
+			p->nprnMode = (NPRNMODE)json_integer_value(json_object_get(paramMapJJ, "nprnMode"));
+			p->label = json_string_value(json_object_get(paramMapJJ, "label"));
+			p->midiOptions = json_integer_value(json_object_get(paramMapJJ, "midiOptions"));
+			json_t* slewJ = json_object_get(paramMapJJ, "slew");
+			if (slewJ) p->slew = json_real_value(slewJ);
+			json_t* minJ = json_object_get(paramMapJJ, "min");
+			if (minJ) p->min = json_real_value(minJ);
+			json_t* maxJ = json_object_get(paramMapJJ, "max");
+			if (maxJ) p->max = json_real_value(maxJ);
+			rackMapping.paramMap.push_back(p);
+		}
 	}
 
 	/**
