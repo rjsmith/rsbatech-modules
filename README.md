@@ -1,9 +1,37 @@
 # orestes-one
-VCVRack control from the Electra-One MIDI controller
+A [VCV Rack](https://vcvrack.com/) module to control modules and parameteres in a rack with the [Electra-One MIDI controller](https://electra.one). It works together with a specific [Electra-One preset](https://app.electra.one/preset/4rIzUF8a60kXiYsyvlTN) to provide two-way control and parameter feedback using smooth 14bit value changes.  
 
 
+![Orestes-One controlling a Befaco Rampage module](/images/OrestesOne.png?raw=true "Orestes-One controlling a Befaco Rampage module")
 
+![Electra-One preset showing a module control page](/images/E1VCVRackPresetModule.png?raw=true "Electra-One preset showing a module control page")
 
+![Electra-One preset showing module select page](/images/E1VCVRackPresetModulegrid.png?raw=true "Electra-One preset showing the module select page")
+
+## Key Features
+
+Functionally, Orestes-One is basically ([MIDI-CAT](https://library.vcvrack.com/Stoermelder-P1/MidiCat) minus MIDI CC7 & MIDI notes) + ([Oscelot](https://library.vcvrack.com/OSCelot/OSCelot) minus OSC) + MIDI NPRN + 2-way Electra-One SysEx + some of my own ideas
+
+* Control individual rack module parameters with rich value and control label feedback on the Electra-One screen
+* Smooth 14-bit NPRN controller changes
+* MIDI-CAT manual parameter mapping
+* Automap a single module
+* Automap all modules in a rack in one go, optionally skipping or overwriting existing module mappings
+* Mouse-free rack module selection and navigation using Electra One
+* Special support designed for [MindMeld PatchMaster](https://library.vcvrack.com/MindMeldModular/PatchMaster) modules in a rack, allowing switching between a single rack-level mapping and individual module mappings.
+* Create and manage re-usable module-specific mappings stored in a module mapping library file
+* Export and import module mappings, so they can be shared and curated by the user community (there are over 3000 modules to be mapped after all!)
+* Factory - provided module mappings included
+
+Plus most MIDI-CAT features (up to [v2.0.beta4](https://github.com/stoermelder/vcvrack-packone/blob/v2/CHANGELOG.md#20beta4))
+
+## Documentation
+
+Please see the [Orestes-One repo Wiki](https://github.com/rjsmith/orestes-one/wiki) for the Orestes-One and Electra-One preset user guide.
+
+## Change History
+
+Please see the [Change Log](CHANGELOG.md).
 
 ## Development
 
@@ -23,3 +51,9 @@ You can open a terminal window and view the VCVRack log to help debug any issues
 cd <path to rack2 folder>
 tail -f log.txt
 ```
+
+## Acknowledgements
+
+At least 80% of the code of Orestes-One was directly copied from the [MIDI-CAT MIDI controller module](https://library.vcvrack.com/Stoermelder-P1/MidiCat) which is part of the essential [stoermelder PackOne](https://github.com/stoermelder/vcvrack-packone) VCV Rack Plugin. 
+
+Thanks to TheModularMind for code and ideas from the [Oscelot](https://library.vcvrack.com/OSCelot/OSCelot) module. Orestes-One is basically (MIDI-CAT minus MIDI CC7 & notes) + (Oscelot minus OSC) + MIDI NPRN + Custom SysEx
