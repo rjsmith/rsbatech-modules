@@ -4,6 +4,4343 @@
     "data": {
         "midiMap": [
             {
+                "pluginSlug": "Airwin2Rack",
+                "moduleSlug": "Airwin2Rack",
+                "autoMapped": false,
+                "pluginName": "Airwindows",
+                "moduleName": "Airwindows Suite for Rack",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 10,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 11,
+                        "nprn": 12,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 12,
+                        "nprn": 13,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 13,
+                        "nprn": 14,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 14,
+                        "nprn": 15,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 15,
+                        "nprn": 16,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 16,
+                        "nprn": 17,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 17,
+                        "nprn": 18,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 18,
+                        "nprn": 19,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 19,
+                        "nprn": 20,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 20,
+                        "nprn": 21,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 21,
+                        "nprn": 22,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 22,
+                        "nprn": 22,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 23,
+                        "nprn": 23,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "AudibleInstruments",
+                "moduleSlug": "Blinds",
+                "autoMapped": false,
+                "pluginName": "Audible Instruments",
+                "moduleName": "Quad VC-polarizer",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "AudibleInstruments",
+                "moduleSlug": "Braids",
+                "autoMapped": false,
+                "pluginName": "Audible Instruments",
+                "moduleName": "Macro Oscillator",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "AudibleInstruments",
+                "moduleSlug": "Branches",
+                "autoMapped": false,
+                "pluginName": "Audible Instruments",
+                "moduleName": "Bernoulli Gate",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "AudibleInstruments",
+                "moduleSlug": "Clouds",
+                "autoMapped": false,
+                "pluginName": "Audible Instruments",
+                "moduleName": "Texture Synthesizer",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 10,
+                        "nprn": -1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 11,
+                        "nprn": -1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 12,
+                        "nprn": -1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "AudibleInstruments",
+                "moduleSlug": "Elements",
+                "autoMapped": false,
+                "pluginName": "Audible Instruments",
+                "moduleName": "Modal Synthesizer",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 12,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 13,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 14,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 16,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 10,
+                        "nprn": 17,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 11,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 12,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 13,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 14,
+                        "nprn": 18,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 15,
+                        "nprn": 20,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 16,
+                        "nprn": 22,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 17,
+                        "nprn": 24,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 18,
+                        "nprn": 25,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 19,
+                        "nprn": 26,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 20,
+                        "nprn": 27,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 21,
+                        "nprn": 28,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 22,
+                        "nprn": 30,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 23,
+                        "nprn": 31,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 24,
+                        "nprn": 32,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 25,
+                        "nprn": 33,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 26,
+                        "nprn": 34,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 27,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "AudibleInstruments",
+                "moduleSlug": "Frames",
+                "autoMapped": false,
+                "pluginName": "Audible Instruments",
+                "moduleName": "Keyframer/Mixer",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 11,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "AudibleInstruments",
+                "moduleSlug": "Marbles",
+                "autoMapped": false,
+                "pluginName": "Audible Instruments",
+                "moduleName": "Random Sampler",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 12,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 17,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 11,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 10,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 11,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 12,
+                        "nprn": 20,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 13,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 14,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "AudibleInstruments",
+                "moduleSlug": "Plaits",
+                "autoMapped": false,
+                "pluginName": "Audible Instruments",
+                "moduleName": "Macro Oscillator 2",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 10,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "AudibleInstruments",
+                "moduleSlug": "Rings",
+                "autoMapped": false,
+                "pluginName": "Audible Instruments",
+                "moduleName": "Resonator",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 11,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 10,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 11,
+                        "nprn": -1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "AudibleInstruments",
+                "moduleSlug": "Ripples",
+                "autoMapped": true,
+                "pluginName": "Audible Instruments",
+                "moduleName": "Liquid Filter",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "AudibleInstruments",
+                "moduleSlug": "Shades",
+                "autoMapped": false,
+                "pluginName": "Audible Instruments",
+                "moduleName": "Mixer",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "AudibleInstruments",
+                "moduleSlug": "Shelves",
+                "autoMapped": false,
+                "pluginName": "Audible Instruments",
+                "moduleName": "EQ Filter",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 13,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 14,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "AudibleInstruments",
+                "moduleSlug": "Stages",
+                "autoMapped": false,
+                "pluginName": "Audible Instruments",
+                "moduleName": "Segment Generator",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 18,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 19,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 20,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 21,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 10,
+                        "nprn": 22,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 11,
+                        "nprn": 23,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 12,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 13,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 14,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 15,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 16,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 17,
+                        "nprn": 11,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "AudibleInstruments",
+                "moduleSlug": "Streams",
+                "autoMapped": false,
+                "pluginName": "Audible Instruments",
+                "moduleName": "Dual Dynamics Gate",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 10,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "AudibleInstruments",
+                "moduleSlug": "Tides",
+                "autoMapped": false,
+                "pluginName": "Audible Instruments",
+                "moduleName": "Tidal Modulator",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "AudibleInstruments",
+                "moduleSlug": "Tides2",
+                "autoMapped": false,
+                "pluginName": "Audible Instruments",
+                "moduleName": "Tidal Modulator 2",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 12,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 16,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 14,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 10,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 11,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 12,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "AudibleInstruments",
+                "moduleSlug": "Veils",
+                "autoMapped": false,
+                "pluginName": "Audible Instruments",
+                "moduleName": "Quad VCA",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "AudibleInstruments",
+                "moduleSlug": "Warps",
+                "autoMapped": true,
+                "pluginName": "Audible Instruments",
+                "moduleName": "Meta Modulator",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Befaco",
+                "moduleSlug": "ABC",
+                "autoMapped": false,
+                "pluginName": "Befaco",
+                "moduleName": "A*B+C",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Befaco",
+                "moduleSlug": "ADSR",
+                "autoMapped": false,
+                "pluginName": "Befaco",
+                "moduleName": "ADSR",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Befaco",
+                "moduleSlug": "Burst",
+                "autoMapped": false,
+                "pluginName": "Befaco",
+                "moduleName": "Burst",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Befaco",
+                "moduleSlug": "ChoppingKinky",
+                "autoMapped": false,
+                "pluginName": "Befaco",
+                "moduleName": "Chopping Kinky",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Befaco",
+                "moduleSlug": "DualAtenuverter",
+                "autoMapped": false,
+                "pluginName": "Befaco",
+                "moduleName": "Dual Atenuverter",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Befaco",
+                "moduleSlug": "EvenVCO",
+                "autoMapped": true,
+                "pluginName": "Befaco",
+                "moduleName": "Even VCO",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Befaco",
+                "moduleSlug": "HexmixVCA",
+                "autoMapped": false,
+                "pluginName": "Befaco",
+                "moduleName": "Hex Mix VCA",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 11,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 10,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 11,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Befaco",
+                "moduleSlug": "Kickall",
+                "autoMapped": false,
+                "pluginName": "Befaco",
+                "moduleName": "Kickall",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Befaco",
+                "moduleSlug": "Mex",
+                "autoMapped": false,
+                "pluginName": "Befaco",
+                "moduleName": "Mex",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Befaco",
+                "moduleSlug": "Mixer",
+                "autoMapped": true,
+                "pluginName": "Befaco",
+                "moduleName": "Mixer",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Befaco",
+                "moduleSlug": "Morphader",
+                "autoMapped": false,
+                "pluginName": "Befaco",
+                "moduleName": "Morphader",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 13,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 10,
+                        "nprn": 14,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 11,
+                        "nprn": 15,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 12,
+                        "nprn": 16,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 13,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 14,
+                        "nprn": 11,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Befaco",
+                "moduleSlug": "MotionMTR",
+                "autoMapped": false,
+                "pluginName": "Befaco",
+                "moduleName": "Motion MTR",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Befaco",
+                "moduleSlug": "Muxlicer",
+                "autoMapped": false,
+                "pluginName": "Befaco",
+                "moduleName": "Muxlicer",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 11,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 10,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 11,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Befaco",
+                "moduleSlug": "NoisePlethora",
+                "autoMapped": false,
+                "pluginName": "Befaco",
+                "moduleName": "Noise Plethora",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 12,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 18,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 20,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 10,
+                        "nprn": 22,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 11,
+                        "nprn": 16,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 12,
+                        "nprn": 14,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 13,
+                        "nprn": 24,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 14,
+                        "nprn": 25,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 15,
+                        "nprn": 27,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 16,
+                        "nprn": 28,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 17,
+                        "nprn": 26,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 18,
+                        "nprn": 32,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Befaco",
+                "moduleSlug": "Octaves",
+                "autoMapped": false,
+                "pluginName": "Befaco",
+                "moduleName": "Octaves",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 10,
+                        "nprn": 11,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Befaco",
+                "moduleSlug": "Percall",
+                "autoMapped": false,
+                "pluginName": "Befaco",
+                "moduleName": "Percall",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 11,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Befaco",
+                "moduleSlug": "PonyVCO",
+                "autoMapped": true,
+                "pluginName": "Befaco",
+                "moduleName": "PonyVCO",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Befaco",
+                "moduleSlug": "Rampage",
+                "autoMapped": false,
+                "pluginName": "Befaco",
+                "moduleName": "Rampage",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 12,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 18,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 13,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 14,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 20,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 10,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 11,
+                        "nprn": 15,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 12,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Befaco",
+                "moduleSlug": "STMix",
+                "autoMapped": true,
+                "pluginName": "Befaco",
+                "moduleName": "STMix",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Befaco",
+                "moduleSlug": "SamplingModulator",
+                "autoMapped": false,
+                "pluginName": "Befaco",
+                "moduleName": "Sampling Modulator",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 10,
+                        "nprn": 11,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Befaco",
+                "moduleSlug": "SlewLimiter",
+                "autoMapped": false,
+                "pluginName": "Befaco",
+                "moduleName": "Slew Limiter",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Befaco",
+                "moduleSlug": "SpringReverb",
+                "autoMapped": false,
+                "pluginName": "Befaco",
+                "moduleName": "Spring Reverb",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Befaco",
+                "moduleSlug": "StereoStrip",
+                "autoMapped": false,
+                "pluginName": "Befaco",
+                "moduleName": "Stereo Strip",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Befaco",
+                "moduleSlug": "Voltio",
+                "autoMapped": true,
+                "pluginName": "Befaco",
+                "moduleName": "Voltio",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
                 "pluginSlug": "Core",
                 "moduleSlug": "AudioInterface2",
                 "autoMapped": false,

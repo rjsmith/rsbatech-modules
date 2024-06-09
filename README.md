@@ -1,5 +1,5 @@
 # orestes-one
-A [VCV Rack](https://vcvrack.com/) module to control modules and parameteres in a rack with the [Electra-One MIDI controller](https://electra.one). It works together with a specific [Electra-One preset](https://app.electra.one/preset/4rIzUF8a60kXiYsyvlTN) to provide two-way control and parameter feedback using smooth 14bit value changes.  
+A [VCV Rack](https://vcvrack.com/) module to control modules and parameters in a rack with the [Electra-One MIDI controller](https://electra.one). It works together with a specific [Electra-One preset](https://app.electra.one/preset/4rIzUF8a60kXiYsyvlTN) to provide two-way control and parameter feedback using smooth 14bit value changes.  
 
 
 ![Orestes-One controlling a Befaco Rampage module](/images/OrestesOne.png?raw=true "Orestes-One controlling a Befaco Rampage module")
