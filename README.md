@@ -6,7 +6,7 @@ A [VCV Rack](https://vcvrack.com/) module to control modules and parameteres in 
 
 ![Electra-One preset showing a module control page](/images/E1VCVRackPresetModule.png?raw=true "Electra-One preset showing a module control page")
 
-![Electra-One preset showing module select page](/images/E1VCVRackPresetModulegrid.png?raw=true "Electra-One preset showing the module select page")
+![Electra-One preset showing module select page](/images/E1VCVRackPresetModuleGrid.png?raw=true "Electra-One preset showing the module select page")
 
 ## Key Features
 
