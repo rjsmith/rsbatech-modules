@@ -1,7 +1,7 @@
 #pragma once
 #include "plugin.hpp"
 
-namespace Orestes {
+namespace RSBATechModules {
 namespace Rack {
 
 /** Move the view-port smoothly and center a Widget

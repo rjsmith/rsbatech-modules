@@ -14,14 +14,14 @@ This file was copied from https://github.com/stoermelder/vcvrack-packone
 
 // Abstract modules
 
-namespace Orestes {
+namespace RSBATechModules {
 
 template< int MAX_CHANNELS >
 struct MapModuleBase : Module {
 	/** Number of maps */
 	int mapLen = 0;
 	/** The mapped param handle of each channel */
-	Orestes::ParamHandleIndicator paramHandles[MAX_CHANNELS];
+	RSBATechModules::ParamHandleIndicator paramHandles[MAX_CHANNELS];
 
 	/** Channel ID of the learning session */
 	int learningId;

@@ -1,7 +1,7 @@
 #pragma once
 #include "plugin.hpp"
 
-namespace Orestes {
+namespace RSBATechModules {
 
 struct LedDisplayCenterChoiceEx : LedDisplayChoice {
 	LedDisplayCenterChoiceEx() {

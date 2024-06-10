@@ -5,7 +5,7 @@
 This file was copied from https://github.com/stoermelder/vcvrack-packone
 */
 
-namespace Orestes {
+namespace RSBATechModules {
 
 struct ParamWidgetContextExtender {
 	Widget* lastSelectedWidget;
@@ -13,7 +13,7 @@ struct ParamWidgetContextExtender {
 	struct CenterModuleItem : MenuItem {
 		ModuleWidget* mw;
 		void onAction(const event::Action& e) override {
-			Orestes::Rack::ViewportCenter{mw};
+			RSBATechModules::Rack::ViewportCenter{mw};
 		}
 	};
 

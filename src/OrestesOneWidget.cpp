@@ -2,7 +2,7 @@
 #include "MapModuleBase.hpp"
 #include "plugin.hpp"
 
-namespace Orestes {
+namespace RSBATechModules {
 namespace OrestesOne {
 
 struct SlewSlider : ui::Slider {
@@ -1011,7 +1011,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 				menu->addChild(createBoolPtrMenuItem("Clear mapping slots", "", &module->clearMapsOnLoad));
 			}
 		));
-		menu->addChild(Orestes::Rack::createMapSubmenuItem<int>("Precision", {
+		menu->addChild(RSBATechModules::Rack::createMapSubmenuItem<int>("Precision", {
 				{ 64, string::f("High (%i Hz)", sampleRate / 64) },
 				{ 256, string::f("Medium (%i Hz)", sampleRate / 256) },
 				{ 512, string::f("Low (%i Hz)", sampleRate / 512) }
@@ -1023,7 +1023,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 				module->setProcessDivision(division);
 			}
 		));
-		menu->addChild(Orestes::Rack::createMapSubmenuItem<MIDIMODE>("Mode", {
+		menu->addChild(RSBATechModules::Rack::createMapSubmenuItem<MIDIMODE>("Mode", {
 				{ MIDIMODE::MIDIMODE_DEFAULT, "Operating" },
 				{ MIDIMODE::MIDIMODE_LOCATE, "Locate and indicate" }
 			},
@@ -1260,4 +1260,4 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 }  // namespace OrestesOne
 }  // namespace Orestes
 
-Model* modelOrestesOne = createModel<Orestes::OrestesOne::OrestesOneModule, Orestes::OrestesOne::OrestesOneWidget>("OrestesOne");
+Model* modelOrestesOne = createModel<RSBATechModules::OrestesOne::OrestesOneModule, RSBATechModules::OrestesOne::OrestesOneWidget>("OrestesOne");

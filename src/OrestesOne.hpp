@@ -1,7 +1,7 @@
 #pragma once
 #include "plugin.hpp"
 
-namespace Orestes {
+namespace RSBATechModules {
 namespace OrestesOne {
 
 static const int MAX_CHANNELS = 300;

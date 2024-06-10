@@ -6,7 +6,7 @@
 This file was copied from https://github.com/stoermelder/vcvrack-packone
 */
 
-namespace Orestes {
+namespace RSBATechModules {
 namespace Rack {
 
 /** Creates a MenuItem that when hovered, opens a submenu with several MenuItems identified by a map.

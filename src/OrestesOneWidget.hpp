@@ -3,7 +3,7 @@
 #include "OrestesOne.cpp"
 #include "ui/ParamWidgetContextExtender.hpp"
 
-namespace Orestes {
+namespace RSBATechModules {
 namespace OrestesOne {
 
 }  // namespace OrestesOne

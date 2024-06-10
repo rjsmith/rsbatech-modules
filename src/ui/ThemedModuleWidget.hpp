@@ -5,7 +5,7 @@
 This file was copied from https://github.com/stoermelder/vcvrack-packone
 */
 
-namespace Orestes {
+namespace RSBATechModules {
 
 template < typename MODULE, typename BASE = ModuleWidget >
 struct ThemedModuleWidget : BASE {
@@ -77,8 +77,8 @@ struct ThemedModuleWidget : BASE {
 				};
 
 				Menu* menu = new Menu;
-				menu->addChild(Orestes::Rack::createValuePtrMenuItem("Light", &module->panelTheme, 0));
-				menu->addChild(Orestes::Rack::createValuePtrMenuItem("Dark", &module->panelTheme, 1));
+				menu->addChild(RSBATechModules::Rack::createValuePtrMenuItem("Light", &module->panelTheme, 0));
+				menu->addChild(RSBATechModules::Rack::createValuePtrMenuItem("Dark", &module->panelTheme, 1));
 				menu->addChild(new MenuSeparator);
 				menu->addChild(construct<PanelThemeDefaultItem>(&MenuItem::text, "Light as default", &PanelThemeDefaultItem::theme, 0));
 				menu->addChild(construct<PanelThemeDefaultItem>(&MenuItem::text, "Dark as default", &PanelThemeDefaultItem::theme, 1));

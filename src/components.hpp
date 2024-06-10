@@ -248,7 +248,7 @@ struct PolyLedWidget : Widget {
 
 
 template < typename MODULE, int SCENE_MAX >
-struct SceneLedDisplay : Orestes::OrestesLedDisplay {
+struct SceneLedDisplay : RSBATechModules::OrestesLedDisplay {
 	MODULE* module;
 
 	void step() override {

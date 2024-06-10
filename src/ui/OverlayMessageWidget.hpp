@@ -5,7 +5,7 @@
 This file was copied from https://github.com/stoermelder/vcvrack-packone
 */
 
-namespace Orestes {
+namespace RSBATechModules {
 
 struct OverlayMessageProvider {
 	struct Message {

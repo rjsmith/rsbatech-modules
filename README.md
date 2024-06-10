@@ -1,5 +1,15 @@
-# orestes-one
-A [VCV Rack](https://vcvrack.com/) module to control modules and parameters in a rack with the [Electra-One MIDI controller](https://electra.one). It works together with a specific [Electra-One preset](https://app.electra.one/preset/4rIzUF8a60kXiYsyvlTN) to provide two-way control and parameter feedback using smooth 14bit value changes.  
+# RSBATech-Modules
+
+A [VCV Rack](https://vcvrack.com/) Plugin.
+
+This Plugin includes the following modules:
+
+* Orestes-One
+
+
+## Orestes-One
+
+Orestes-One is a VCV Rack module to control modules and parameters in a rack with the [Electra-One MIDI controller](https://electra.one). It works together with a specific [Electra-One preset](https://app.electra.one/preset/4rIzUF8a60kXiYsyvlTN) to provide two-way control and parameter feedback using smooth 14bit value changes.  
 
 
 ![Orestes-One controlling a Befaco Rampage module](/images/OrestesOne.png?raw=true "Orestes-One controlling a Befaco Rampage module")
@@ -27,7 +37,7 @@ Plus most MIDI-CAT features (up to [v2.0.beta4](https://github.com/stoermelder/v
 
 ## Documentation
 
-Please see the [Orestes-One repo Wiki](https://github.com/rjsmith/orestes-one/wiki) for the Orestes-One and Electra-One preset user guide.
+Please see the [Wiki](https://github.com/rjsmith/rsbatech-modules/wiki) for the Orestes-One and Electra-One preset user guide.
 
 ## Change History
 

@@ -6,7 +6,7 @@
 This file was copied from https://github.com/stoermelder/vcvrack-packone
 */
 
-namespace Orestes {
+namespace RSBATechModules {
 
 struct ParamHandleIndicator : ParamHandle {
 	NVGcolor color;
@@ -32,7 +32,7 @@ struct ParamHandleIndicator : ParamHandle {
 		if (indicateCount > 0) return;
 		if (mw) {
 			// Move the view to center the mapped module
-			Orestes::Rack::ViewportCenter{mw};
+			RSBATechModules::Rack::ViewportCenter{mw};
 		}
 		indicateCount = 20;
 	}

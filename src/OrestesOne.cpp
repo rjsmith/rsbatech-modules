@@ -14,7 +14,7 @@
 #include <string>
 #include <array>
 
-namespace Orestes {
+namespace RSBATechModules {
 namespace OrestesOne {
 
 struct OrestesOneOutput : midi::Output {

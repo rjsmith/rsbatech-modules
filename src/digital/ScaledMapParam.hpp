@@ -1,7 +1,7 @@
 #pragma once
 #include "plugin.hpp"
 
-namespace Orestes {
+namespace RSBATechModules {
     
 template<typename T, typename PQ = ParamQuantity>
 struct ScaledMapParam {
