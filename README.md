@@ -43,7 +43,18 @@ Please see the [Wiki](https://github.com/rjsmith/rsbatech-modules/wiki) for the 
 
 Please see the [Change Log](CHANGELOG.md).
 
-## Development
+
+## Installation from repo - built installers
+
+Until this plugin is made available in the VCV Rack library, download the latest RSBATechModules installer for your platform from the releases list in this git repository, and copy the extracted .vcvrackplugin file into the Rack2 modules folder for your machine's architecture e.g. ```plugins-mac-arm64```.  Restart VCV rack and it should unpack and install the module. 
+
+Also follow this to update Orestes-One to a newwer version.
+
+**TBD**
+
+
+## Building & Installation from Source Code
+
 
 To build the plugin, download and unzip the [VCVRack SDK](https://vcvrack.com/downloads) for your machine's architecture and target VCVRack version.
 

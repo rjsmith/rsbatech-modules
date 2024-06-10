@@ -7,11 +7,11 @@
   "author": "Richard Smith",
   "authorEmail": "rsmith@rbatechnology.co.uk",
   "authorUrl": "https://github.com/rjsmith",
-  "pluginUrl": "https://github.com/rjsmith/orestes-one",
-  "manualUrl": "https://github.com/rjsmith/orestes-one/wiki",
-  "sourceUrl": "https://github.com/rjsmith/orestes-one.git",
+  "pluginUrl": "https://github.com/rjsmith/rsbatech-modules",
+  "manualUrl": "https://github.com/rjsmith/rsbatech-modules/wiki",
+  "sourceUrl": "https://github.com/rjsmith/rsbatech-modules.git",
   "donateUrl": "",
-  "changelogUrl": "https://github.com/rjsmith/orestes-one/blob/main/CHANGELOG.md",
+  "changelogUrl": "https://github.com/rjsmith/rsbatech-modules/blob/main/CHANGELOG.md",
   "modules": [
     {
       "slug": "OrestesOne",
