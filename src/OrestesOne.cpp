@@ -18,29 +18,6 @@ namespace RSBATechModules {
 namespace OrestesOne {
 
 struct OrestesOneOutput : midi::Output {
-	std::array<int, MAX_CHANNELS> lastNPRNValues{};
-
-	OrestesOneOutput() {
-		reset();
-	}
-
-	void reset() {
-		std::fill_n(lastNPRNValues.begin(), MAX_CHANNELS, -1);
-	}
-
-    void setNPRNValue(int value, int nprn, int valueNprnIn, bool force = false) {
-		if ((value == lastNPRNValues[nprn] || value == valueNprnIn) && !force)
-			return;
-		lastNPRNValues[nprn] = value;
-		// NPRN
-		sendCCMsg(99, nprn / 128);
-		sendCCMsg(98, nprn % 128);
-		sendCCMsg(6, value / 128);
-		sendCCMsg(38, value % 128);
-		sendCCMsg(101, 127);
-		sendCCMsg(100, 127);
-		// DEBUG("Sending NPRN %d value %d, force %s", nprn, value, force ? "true" : "false");
-	}
 
     void sendCCMsg(int cc, int value) {
         midi::Message m;
@@ -71,7 +48,7 @@ struct E1MappedModuleListItem {
 };
 
 struct E1MidiOutput : OrestesOneOutput {
-
+	std::array<int, MAX_CHANNELS> lastNPRNValues{};
     midi::Message m;
 
     E1MidiOutput() {
@@ -80,7 +57,7 @@ struct E1MidiOutput : OrestesOneOutput {
 	}
 
 	void reset() {
-		OrestesOneOutput::reset();
+		std::fill_n(lastNPRNValues.begin(), MAX_CHANNELS, -1);
     	m.bytes.clear();
 	}
 
@@ -182,6 +159,52 @@ struct E1MidiOutput : OrestesOneOutput {
          ss << "endMML()";
          sendE1ExecuteLua(ss.str().c_str());
     }
+
+    /**
+     * Packs a 14 bit NPRN parameter update to E1 encoded in a single 9-byte output Sysex message
+     * 
+ 	 * Byte(s)
+     * =======
+     * [0 ]        0xF0 SysEx header byte
+     * [1-3]       0x00 0x7F 0x7F Placeholder MIDI Manufacturer Id
+     * [4]         0x01 Control update
+     * [5]         NPRN id MSB (0-127)
+     * [6]         NPRN id LSB (0-127)
+     * [7]         Value MSB (0-127)
+     * [8]         Value LSB (0-127)
+     * [9]       0xF7 SysEx end byte
+     */
+    void setPackedNPRNValue(int value, int nprn, int valueNprnIn, bool force = false) {
+		if ((value == lastNPRNValues[nprn] || value == valueNprnIn) && !force)
+			return;
+		lastNPRNValues[nprn] = value;
+
+  		m.bytes.clear();
+        // SysEx header byte
+        m.bytes.push_back(0xF0);
+        // SysEx header byte
+        // Custom MIDI manufacturer Id
+        m.bytes.push_back(0x00);
+        m.bytes.push_back(0x7F);
+        m.bytes.push_back(0x7F);
+        // Packed NPRN
+        m.bytes.push_back(0x00);
+        // controlId MSB
+ 		m.bytes.push_back(nprn >> 7);
+        // controlId LSB
+        m.bytes.push_back(nprn & 0x7F);
+      	// value MSB
+ 		m.bytes.push_back(value >> 7);
+        // value LSB
+        m.bytes.push_back(value & 0x7F);
+        // SysEx closing byte
+ 		m.bytes.push_back(0xf7);
+
+ 		// DEBUG("Sending bytes %s", hexStr(m.bytes.data(), m.getSize()).data());
+        sendMessage(m);
+
+    }
+    
 
    /**
     * Execute a Lua command on the Electra One
@@ -380,7 +403,7 @@ struct OrestesOneModule : Module {
 
         void setValue(int value, bool sendOnly) {
             if (nprn == -1) return;
-            module->midiOutput.setNPRNValue(value, nprn, module->valuesNprn[nprn], current == -1);
+            module->midiOutput.setPackedNPRNValue(value, nprn, module->valuesNprn[nprn], current == -1);
             if (!sendOnly) current = value;
         }
 
@@ -896,34 +919,53 @@ struct OrestesOneModule : Module {
      *
      * Byte(s)
      * =======
-     * [0 ]        0xF0 SysEx header byte
-     * [1-3]       0x00 0x7F 0x7F Placeholder MIDI Manufacturer Id
-     * [4]         0x01 Command
+     * [0 ]       	 0xF0 SysEx header byte
+     * [1-3]       	0x00 0x7F 0x7F Placeholder MIDI Manufacturer Id
+     * 
+     * Packed NPRN
+     * ===========
+     * [4]			0x00 Packed NPRN
+     * [5]         	NPRN id MSB (0-127)
+     * [6]         	NPRN id LSB (0-127)
+     * [7]			value id MSB (0-127)
+     * [8]			value id LSB (0-127)
+     * [9]       	0xF7 SysEx end byte
+     * 
+     * Commands
+     * ========
+     * [4]         	0x01 Command
      * [...]
-     * [end]       0xF7 SysEx end byte
+     * [end]       	0xF7 SysEx end byte
      * ---
      * Command: Next
-     * [5]         0x01 Next mapped module
+     * [5]         	0x01 Next mapped module
      *
      * Command: Prev
-     * [5]         0x02 Prev mapped module
+     * [5]         	0x02 Prev mapped module
      *
      * Command: Select
-     * [5]         0x03 Select mapped module
-     * [6-x]      Module rack y position as a length byte + ascii string byte array,
-     * [x+1-y]     Module rack x position as a length byte + ascii string byte array
+     * [5]         	0x03 Select mapped module
+     * [6-x]      	Module rack y position as a length byte + ascii string byte array,
+     * [x+1-y]     	Module rack x position as a length byte + ascii string byte array
      *
      * Command: List mapped modules
-     * [5]         0x04 List mapped modules
+     * [5]         	0x04 List mapped modules
      *
      * Command: Reset mapped parameter to its default
-     * [5]         0x05 Reset Parameter
-     * [6]         NPRN id MSB (0-127)
-     * [7]         NPRN id LSB (0-127)
+     * [5]         	0x05 Reset Parameter
+     * [6]         	NPRN id MSB (0-127)
+     * [7]         	NPRN id LSB (0-127)
      * 
      * Command: Re-send MIDI feedback
      * [5]			0x06 Re-send MIDI
      *
+     * Command: Apply module mapping
+     * [5]			0x07 Re-send MIDI
+     * 
+     * Command: Apply rack mapping
+     * [5]			0x08 Re-send MIDI
+     * 
+     * 
      */
     bool parseE1SysEx(midi::Message msg) {
         if (msg.getSize() < 7)
@@ -933,6 +975,32 @@ struct OrestesOneModule : Module {
             return false;
 
         switch(msg.bytes.at(4)) {
+        	// Packed NPRN
+        	case 0x00: {
+				int nprn = (msg.bytes.at(5) << 7) + msg.bytes.at(6);
+                int value = (msg.bytes.at(7) << 7) + msg.bytes.at(8);
+                isPendingNPRN = false;
+
+                // Guard to limit max recognised NPRN Parameter Id
+                if (nprn > MAX_NPRN_ID) {
+                	return false;
+                }
+                // Learn
+                if (learningId >= 0 && learnedNprnLast != nprn && valuesNprn[nprn] != value) {                    
+                    nprns[learningId].setNprn(nprn);
+                    nprns[learningId].nprnMode = NPRNMODE::DIRECT;
+                    nprns[learningId].set14bit(true);
+                    learnedNprn = true;
+                    learnedNprnLast = nprn;
+                    commitLearn();
+                    updateMapLen();
+                    refreshParamHandleText(learningId);
+                }
+                bool midiReceived = valuesNprn[nprn] != value;
+                valuesNprn[nprn] = value;
+                valuesNprnTs[nprn] = ts;
+                return midiReceived;
+        	}
             // Command
             case 0x01: {
                 switch(msg.bytes.at(5)) {
