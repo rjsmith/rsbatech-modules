@@ -1012,9 +1012,9 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 			}
 		));
 		menu->addChild(RSBATechModules::Rack::createMapSubmenuItem<int>("Precision", {
-				{ 64, string::f("High (%i Hz)", sampleRate / 64) },
-				{ 256, string::f("Medium (%i Hz)", sampleRate / 256) },
-				{ 512, string::f("Low (%i Hz)", sampleRate / 512) }
+				{ 2048, string::f("High (%i Hz)", sampleRate / 2048) },
+				{ 4098, string::f("Medium (%i Hz)", sampleRate / 4098) },
+				{ 8192, string::f("Low (%i Hz)", sampleRate / 8192) }
 			},
 			[=]() {
 				return module->processDivision;

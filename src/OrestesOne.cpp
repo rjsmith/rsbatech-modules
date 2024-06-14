@@ -594,7 +594,7 @@ struct OrestesOneModule : Module {
 		midiIgnoreDevices = false;
 		midiResendPeriodically = false;
 		midiResendDivider.reset();
-		processDivision = 512;
+		processDivision = 4098;
 		processDivider.setDivision(processDivision);
 		processDivider.reset();
 		overlayEnabled = true;
@@ -676,14 +676,15 @@ struct OrestesOneModule : Module {
         // step channels for parameter changes made manually at a lower frequency . Notice
         // that midi allows about 1000 messages per second, so checking for changes more often
         // won't lead to higher precision on midi output.
-        if (processDivider.process() || midiReceived) {
-            processMappings(args.sampleTime);
+        bool stepParameterChange = processDivider.process();
+        if (stepParameterChange || midiReceived) {
+            processMappings(args.sampleTime, stepParameterChange, midiReceived);
             processE1Commands();
         }
 
 	}
 
-	void processMappings(float sampleTime) {
+	void processMappings(float sampleTime, bool stepParameterChange, bool midiReceived) {
 		float st = sampleTime * float(processDivision);
 
 		for (int id = 0; id < mapLen; id++) {
@@ -802,14 +803,25 @@ struct OrestesOneModule : Module {
 
 						if (!e1ProcessResetParameter && nprn >= 0 && nprns[id].nprnMode == NPRNMODE::DIRECT)
                         							lastValueIn[id] = v;
-				        // Send manually altered parameter change out to MIDI
-						nprns[id].setValue(v, lastValueIn[id] < 0);
-						lastValueOut[id] = v;
-						sendE1Feedback(id);
-                        e1ProcessResetParameter = false;
-                        // If we are broadcasting parameter updates when switching modules,
-                        // record that we have now sent this parameter
-                        if (sendE1EndMessage > 0) sendE1EndMessage--;
+				        
+
+						// Send enriched parameter feedback to E1
+						// But only at the "processDivider" rate to control data rate sent to E1.
+						// This means the displayed parameter values on E1 will lag the actual parameter value whilst
+						// the parameter is being chnaged (either from E1 or from the VCVRack GUI).
+						// Users can adjust the Oresets-One "Precision" to balance that lag with stability of E1 (reducing data traffic)
+						if (stepParameterChange) {
+							// Send manually altered parameter change out to MIDI
+						    nprns[id].setValue(v, lastValueIn[id] < 0);
+							lastValueOut[id] = v;
+
+							// DEBUG("Sending MIDI feedback for %d, value %d", id, v);
+							sendE1Feedback(id);
+                        	e1ProcessResetParameter = false;
+                       		 // If we are broadcasting parameter updates when switching modules,
+                       		 // record that we have now sent this parameter
+                        	if (sendE1EndMessage > 0) sendE1EndMessage--;
+                        }
 					}
 				} break;
 
