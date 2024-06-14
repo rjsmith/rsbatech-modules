@@ -159,6 +159,12 @@ struct E1MidiOutput : OrestesOneOutput {
          ss << "endMML()";
          sendE1ExecuteLua(ss.str().c_str());
     }
+    void sendOrestesOneVersion(std::string o1Version) {
+    	std::stringstream ss;
+    	ss << "o1Version(\"" << o1Version << "\")";
+        sendE1ExecuteLua(ss.str().c_str());
+
+    } 
 
     /**
      * Packs a 14 bit NPRN parameter update to E1 encoded in a single 9-byte output Sysex message
@@ -452,6 +458,7 @@ struct OrestesOneModule : Module {
     bool e1ProcessApplyRackMapping;
     math::Vec e1SelectedModulePos;
     bool e1ProcessResendMIDIFeedback;
+    bool e1VersionPoll;
 
     // E1 Process flags
     int sendE1EndMessage = 0;
@@ -607,6 +614,7 @@ struct OrestesOneModule : Module {
 		e1ProcessApplyRackMapping = false;
 		e1ProcessListMappedModules = false;
 		e1ProcessResetParameter = false;
+		e1VersionPoll = false;
 		midiMapLibraryFilename.clear();
 		autosaveMappingLibrary = true;
 		resetMap();
@@ -883,6 +891,14 @@ struct OrestesOneModule : Module {
         if (e1ProcessResendMIDIFeedback) {
             e1ProcessResendMIDIFeedback = false;
         }
+
+        if (e1VersionPoll) {
+        	// Send the OrestesOne plugin version to E1
+        	std::string o1PluginVersion = model->plugin->version;
+        	midiCtrlOutput.sendOrestesOneVersion(o1PluginVersion);
+        	e1VersionPoll = false;
+        }
+
     }
 
     /**
@@ -977,6 +993,8 @@ struct OrestesOneModule : Module {
      * Command: Apply rack mapping
      * [5]			0x08 Re-send MIDI
      * 
+     * Command: Version Poll
+     * [5]			0x09 Version Poll
      * 
      */
     bool parseE1SysEx(midi::Message msg) {
@@ -1072,6 +1090,11 @@ struct OrestesOneModule : Module {
 	            		DEBUG("Received an E1 Apply Rack Mapping Command");
 	            		e1ProcessApplyRackMapping = true;
 	            		return true;
+	            	}
+	            	// Version Poll
+	            	case 0x09: {
+	            		DEBUG("Received an E1 Version Poll Command");
+	            		e1VersionPoll = true;
 	            	}
                     default: {
                         return false;
