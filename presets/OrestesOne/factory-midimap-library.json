@@ -253,6 +253,283 @@
                 ]
             },
             {
+                "pluginSlug": "AlrightDevices",
+                "moduleSlug": "Chronoblob2",
+                "autoMapped": false,
+                "pluginName": "Alright Devices",
+                "moduleName": "Chronoblob2",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 11,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 17,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "AlrightDevices",
+                "moduleSlug": "T-Wrex",
+                "autoMapped": false,
+                "pluginName": "Alright Devices",
+                "moduleName": "T-Wrex",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 11,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "AlrightDevices",
+                "moduleSlug": "Zzzorb",
+                "autoMapped": false,
+                "pluginName": "Alright Devices",
+                "moduleName": "Zzzorb",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 11,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
                 "pluginSlug": "AudibleInstruments",
                 "moduleSlug": "Blinds",
                 "autoMapped": false,
@@ -4350,6 +4627,65 @@
                     {
                         "paramId": 0,
                         "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Doepfer",
+                "moduleSlug": "A124",
+                "autoMapped": true,
+                "pluginName": "Doepfer",
+                "moduleName": "A-124 VCF5 Wasp Filter",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 4,
                         "nprnMode": 0,
                         "label": "",
                         "midiOptions": 0,
@@ -13352,6 +13688,65 @@
                     {
                         "paramId": 1,
                         "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "Venom",
+                "moduleSlug": "Knob5",
+                "autoMapped": true,
+                "pluginName": "Venom",
+                "moduleName": "Knob 5",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 4,
                         "nprnMode": 0,
                         "label": "",
                         "midiOptions": 0,
