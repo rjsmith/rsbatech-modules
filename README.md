@@ -25,10 +25,10 @@ Orestes-One is a VCV Rack module to control modules and parameters in a rack wit
 
 ## Key Features
 
-Functionally, Orestes-One is basically ([MIDI-CAT](https://library.vcvrack.com/Stoermelder-P1/MidiCat) minus MIDI CC7 & MIDI notes) + ([Oscelot](https://library.vcvrack.com/OSCelot/OSCelot) minus OSC) + MIDI NPRN + 2-way Electra-One SysEx + some of my own ideas
+Functionally, Orestes-One is basically ([MIDI-CAT](https://library.vcvrack.com/Stoermelder-P1/MidiCat) minus MIDI CC7 & MIDI notes) + ([Oscelot](https://library.vcvrack.com/OSCelot/OSCelot) minus OSC) + bi-directional Electra-One SysEx + some of my own ideas
 
 * Control individual rack module parameters with rich value and control label feedback on the Electra-One screen
-* Smooth 14-bit NPRN controller changes
+* Smooth 14-bit MIDI sysex controller changes
 * MIDI-CAT manual parameter mapping
 * Automap a single module
 * Automap all modules in a rack in one go, optionally skipping or overwriting existing module mappings
@@ -82,4 +82,4 @@ tail -f log.txt
 
 At least 80% of the code of Orestes-One was directly copied from the [MIDI-CAT MIDI controller module](https://library.vcvrack.com/Stoermelder-P1/MidiCat) which is part of the essential [stoermelder PackOne](https://github.com/stoermelder/vcvrack-packone) VCV Rack Plugin. 
 
-Thanks to TheModularMind for code and ideas from the [Oscelot](https://library.vcvrack.com/OSCelot/OSCelot) module. Orestes-One is basically (MIDI-CAT minus MIDI CC7 & notes) + (Oscelot minus OSC) + MIDI NPRN + Custom SysEx
+Thanks to TheModularMind for code and ideas from the [Oscelot](https://library.vcvrack.com/OSCelot/OSCelot) module. 
