@@ -719,6 +719,53 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		module->expMemSaveLibrary();
 	}
 
+	void importFactoryMidiMapPreset_action(bool skipPremappedModules) {
+
+		// Load factory default library
+		// It is stored in the plugin presets folder
+		std::string pluginPresetPath = module->model->getFactoryPresetDirectory();
+		std::string factoryLibraryFilename = system::join(pluginPresetPath, FACTORY_LIBRARY_FILENAME);
+
+		if (!system::exists(factoryLibraryFilename)) {
+			WARN("Factory library file %s does not exist, skipping", factoryLibraryFilename.c_str());
+			return;
+		}
+		
+		FILE* file = fopen(factoryLibraryFilename.c_str(), "r");
+		if (!file) {
+			WARN("Could not load factory library file %s, skipping", factoryLibraryFilename.c_str());
+			return;
+		}
+		DEFER({
+			fclose(file);
+		});
+
+		json_error_t error;
+		json_t* libraryJ = json_loadf(file, 0, &error);
+		DEFER({
+			json_decref(libraryJ);
+		});
+
+		if (!libraryJ) {
+			WARN("Factory library file is not a valid JSON file. Parsing error at %s %d:%d %s, skipping", error.source, error.line, error.column, error.text);
+			return;
+		}
+
+		json_t* currentStateJ = toJson();
+		if (mergeMidiMapPreset_convert(libraryJ, skipPremappedModules) == 0)
+			return;
+
+		// history::ModuleChange
+		history::ModuleChange* h = new history::ModuleChange;
+		h->name = "import mappings from factory library";
+		h->moduleId = module->id;
+		h->oldModuleJ = currentStateJ;
+		h->newModuleJ = toJson();
+		APP->history->push(h);
+
+		module->expMemSaveLibrary();
+	}
+
 	/**
 	 * Merge module midiMap entries from the importedPresetJ into the current midiMap of this OrestesOne module.
 	 * Entries from the imported presetJ will overwrite matching entries in the existing midiMap.	 * 
@@ -1242,10 +1289,16 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		menu->addChild(construct<MapMenuItem>(&MenuItem::text, "Manage library mappings", &MapMenuItem::module, module));
 
 
-		menu->addChild(createSubmenuItem("Import mappings into library", "",
+		menu->addChild(createSubmenuItem("Import module mappings from file", "",
 			[=](Menu* menu) {
 				menu->addChild(createMenuItem("Skip pre-mapped modules...", "", [=]() { loadMidiMapPreset_dialog(true); }));
 				menu->addChild(createMenuItem("Overwrite pre-mapped modules...", "", [=]() { loadMidiMapPreset_dialog(false); }));
+			}
+		));
+		menu->addChild(createSubmenuItem("Import module mappings from Factory Library", "",
+			[=](Menu* menu) {
+				menu->addChild(createMenuItem("Skip pre-mapped modules...", "", [=]() { importFactoryMidiMapPreset_action(true); }));
+				menu->addChild(createMenuItem("Overwrite pre-mapped modules...", "", [=]() { importFactoryMidiMapPreset_action(false); }));
 			}
 		));
 
