@@ -1982,14 +1982,6 @@ struct OrestesOneModule : Module {
 				rackMapping.paramMap.push_back(p);
 			}
 
-
-
-
-
-
-
-
-			// rackMappingJSONToRackMapping(rackMappingJ);
 		}
 
 		json_t* autosaveMappingLibraryJ = json_object_get(rootJ, "autosaveMidiMapLibrary");
@@ -2170,29 +2162,6 @@ struct OrestesOneModule : Module {
 
 		}
 		midiMap[std::pair<std::string, std::string>(pluginSlug, moduleSlug)] = a;
-	}
-
-	void rackMappingJSONToRackMapping(json_t* rackMappingJ) {
-		rackMapping.reset();
-		json_t* paramMapJ = json_object_get(rackMappingJ, "paramMap");
-		size_t j;
-		json_t* paramMapJJ;
-		json_array_foreach(paramMapJ, j, paramMapJJ) {
-			MemParam* p = new MemParam;
-			p->paramId = json_integer_value(json_object_get(paramMapJJ, "paramId"));
-			p->moduleId = json_integer_value(json_object_get(paramMapJJ, "moduleId"));
-			p->nprn = json_integer_value(json_object_get(paramMapJJ, "nprn"));
-			p->nprnMode = (NPRNMODE)json_integer_value(json_object_get(paramMapJJ, "nprnMode"));
-			p->label = json_string_value(json_object_get(paramMapJJ, "label"));
-			p->midiOptions = json_integer_value(json_object_get(paramMapJJ, "midiOptions"));
-			json_t* slewJ = json_object_get(paramMapJJ, "slew");
-			if (slewJ) p->slew = json_real_value(slewJ);
-			json_t* minJ = json_object_get(paramMapJJ, "min");
-			if (minJ) p->min = json_real_value(minJ);
-			json_t* maxJ = json_object_get(paramMapJJ, "max");
-			if (maxJ) p->max = json_real_value(maxJ);
-			rackMapping.paramMap.push_back(p);
-		}
 	}
 
 	/**
