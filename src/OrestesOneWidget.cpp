@@ -1221,7 +1221,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 						midimapPluginItem->text = string::f("%s", a->pluginName.c_str());
 						midimapPluginItem->module = module;
 						midimapPluginItem->pluginSlug = it.first.first;
-						l[it.first.first] = midimapPluginItem;	
+						l[midimapPluginItem->text] = midimapPluginItem;	
 					}
 				}
 				Menu* menu = new Menu;
