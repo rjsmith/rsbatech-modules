@@ -606,6 +606,40 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		loadMidiMapLibrary_action(path);
 	}
 
+	void expMemCreateLibrary() {
+
+		osdialog_filters* filters = osdialog_filters_parse(LOAD_MIDIMAP_FILTERS);
+		DEFER({
+			osdialog_filters_free(filters);
+		});
+
+		std::string currentLibraryFilePath;
+		if (!module->midiMapLibraryFilename.empty()) {
+			currentLibraryFilePath = system::getDirectory(module->midiMapLibraryFilename);
+		} else {
+			currentLibraryFilePath = module->model->getUserPresetDirectory();
+		}
+
+		std::string currentLibraryFilename;
+		if (!module->midiMapLibraryFilename.empty()) {
+			currentLibraryFilename = system::getFilename(module->midiMapLibraryFilename);
+		} else {
+			currentLibraryFilename = DEFAULT_LIBRARY_FILENAME;
+		}
+
+		char* path = osdialog_file(OSDIALOG_SAVE, currentLibraryFilePath.c_str(), currentLibraryFilename.c_str(), filters);
+		if (!path) {
+			return;
+		}
+		DEFER({
+			free(path);
+		});
+
+		// Update library filename
+		module->midiMapLibraryFilename = path;
+		module->expMemSaveLibrary(true);
+	}
+
 	void loadMidiMapLibrary_dialog() {
 		osdialog_filters* filters = osdialog_filters_parse(LOAD_MIDIMAP_FILTERS);
 		DEFER({
@@ -1302,7 +1336,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 			}
 		));
 
-		menu->addChild(createMenuItem("Save mapping library file", "", [=]() { module->expMemSaveLibrary(true); }));
+		menu->addChild(createMenuItem("Save mapping library file...", "", [=]() { expMemCreateLibrary(); }));
 		menu->addChild(createMenuItem("Change mapping library file...", "", [=]() { expMemSelectLibrary(); }));
 
 		menu->addChild(createMenuLabel(system::getFilename(module->midiMapLibraryFilename)));
