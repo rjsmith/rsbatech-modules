@@ -31,16 +31,18 @@ jobs:
 
   build:
     name: ${{ matrix.platform }}
+    needs: modify-plugin-version
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/qno/rack-plugin-toolchain-win-linux
       options: --user root
     strategy:
-      fail-fast: false
       matrix:
         platform: [win-x64, lin-x64]
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
       - uses: actions/cache@v4
         id: plugin-version-cache
         with:
@@ -59,6 +61,7 @@ jobs:
 
   build-mac:
     name: mac
+    needs: modify-plugin-version
     runs-on: macos-latest
     strategy:
       fail-fast: false
@@ -76,7 +79,7 @@ jobs:
       - name: Get Rack-SDK
         run: |
           pushd $HOME
-          wget -O Rack-SDK.zip https://vcvrack.com/downloads/Rack-SDK-${{ env.rack-sdk-version }}-mac-x64%2barm64.zip
+          wget -O Rack-SDK.zip https://vcvrack.com/downloads/Rack-SDK-${{ env.rack-sdk-version }}-mac-x64+arm64.zip
           unzip Rack-SDK.zip
       - name: Build plugin
         run: |
@@ -110,7 +113,7 @@ jobs:
             exit 1
           fi
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref }}
           name: Release ${{ env.CI_REF_NAME }}
