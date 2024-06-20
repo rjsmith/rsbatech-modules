@@ -1087,13 +1087,13 @@ struct OrestesOneModule : Module {
 	                }
 	                // Apply Rack Mapping
 	            	case 0x08: {
-	            		DEBUG("Received an E1 Apply Rack Mapping Command");
+	            		// DEBUG("Received an E1 Apply Rack Mapping Command");
 	            		e1ProcessApplyRackMapping = true;
 	            		return true;
 	            	}
 	            	// Version Poll
 	            	case 0x09: {
-	            		DEBUG("Received an E1 Version Poll Command");
+	            		// DEBUG("Received an E1 Version Poll Command");
 	            		e1VersionPoll = true;
 	            	}
                     default: {
