@@ -51,7 +51,7 @@ Please see the [Change Log](CHANGELOG.md).
 
 ## Installation from repo - built installers
 
-Until this plugin is made available in the VCV Rack library, download the latest RSBATechModules installer for your platform from the releases list in this git repository, and copy the extracted .vcvrackplugin file into the Rack2 modules folder for your machine's architecture e.g. ```plugins-mac-arm64```.  Restart VCV rack and it should unpack and install the module. 
+Until this plugin is made available in the VCV Rack library, download the latest RSBATechModules installer for your platform from the [releases list](https://github.com/rjsmith/rsbatech-modules/releases) in this git repository, and copy the extracted .vcvrackplugin file into the Rack2 modules folder for your machine's architecture e.g. ```plugins-mac-arm64```.  Restart VCV rack and it should unpack and install the module. 
 
 
 ## Building & Installation from Source Code
