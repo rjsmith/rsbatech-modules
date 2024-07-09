@@ -13650,6 +13650,1198 @@
                 ]
             },
             {
+                "pluginSlug": "FLAG-Free",
+                "moduleSlug": "Electric-Ensemble",
+                "autoMapped": false,
+                "pluginName": "FLAG Free",
+                "moduleName": "Electric Ensemble",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 11,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "FLAG-Free",
+                "moduleSlug": "Oppressor",
+                "autoMapped": false,
+                "pluginName": "FLAG Free",
+                "moduleName": "Oppressor",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "FLAG-Free",
+                "moduleSlug": "Prince-Of-Perception",
+                "autoMapped": false,
+                "pluginName": "FLAG Free",
+                "moduleName": "Prince Of Perception",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 13,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 19,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 10,
+                        "nprn": 12,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 11,
+                        "nprn": 15,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 12,
+                        "nprn": 16,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 13,
+                        "nprn": 21,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 14,
+                        "nprn": 22,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "FLAG-Free",
+                "moduleSlug": "Prodigal-Son",
+                "autoMapped": false,
+                "pluginName": "FLAG Free",
+                "moduleName": "Prodigal Son",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 20,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 18,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 10,
+                        "nprn": 19,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 11,
+                        "nprn": 12,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 12,
+                        "nprn": 13,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 13,
+                        "nprn": 14,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 14,
+                        "nprn": 15,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 15,
+                        "nprn": 22,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 16,
+                        "nprn": 23,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "FLAG-Free",
+                "moduleSlug": "Stems",
+                "autoMapped": false,
+                "pluginName": "FLAG Free",
+                "moduleName": "Stems",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 10,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 11,
+                        "nprn": 11,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 12,
+                        "nprn": 18,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 13,
+                        "nprn": 19,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 14,
+                        "nprn": 20,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 15,
+                        "nprn": 21,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 16,
+                        "nprn": 22,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 17,
+                        "nprn": 17,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "FLAG-Free",
+                "moduleSlug": "Tap-Dancer",
+                "autoMapped": false,
+                "pluginName": "FLAG Free",
+                "moduleName": "Tap Dancer",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 18,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 12,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 20,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 10,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 11,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 12,
+                        "nprn": 21,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 13,
+                        "nprn": 17,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 14,
+                        "nprn": 14,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 15,
+                        "nprn": 16,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 16,
+                        "nprn": 15,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 17,
+                        "nprn": 13,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 18,
+                        "nprn": 29,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 19,
+                        "nprn": 35,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "FLAG-Free",
+                "moduleSlug": "Thorns",
+                "autoMapped": false,
+                "pluginName": "FLAG Free",
+                "moduleName": "Thorns",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "FLAG-Prism-Of-Perception",
+                "moduleSlug": "Prism-Of-Perception",
+                "autoMapped": false,
+                "pluginName": "FLAG Prism of Perception",
+                "moduleName": "Prism of Perception",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 17,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 11,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 23,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 12,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 18,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 14,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 10,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 11,
+                        "nprn": 20,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 12,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 13,
+                        "nprn": 16,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 14,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 15,
+                        "nprn": 22,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 16,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 17,
+                        "nprn": 15,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 18,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 19,
+                        "nprn": 21,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 20,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 21,
+                        "nprn": 19,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 22,
+                        "nprn": 24,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 23,
+                        "nprn": 27,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 24,
+                        "nprn": 33,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 25,
+                        "nprn": 30,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
                 "pluginSlug": "Fundamental",
                 "moduleSlug": "8vert",
                 "autoMapped": false,
