@@ -22535,6 +22535,611 @@
                 ]
             },
             {
+                "pluginSlug": "NANOModules",
+                "moduleSlug": "FONT",
+                "autoMapped": false,
+                "pluginName": "NANO Modules",
+                "moduleName": "FONT",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "NANOModules",
+                "moduleSlug": "ONA",
+                "autoMapped": false,
+                "pluginName": "NANO Modules",
+                "moduleName": "ONA",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 4,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "NANOModules",
+                "moduleSlug": "PerformanceMixer",
+                "autoMapped": false,
+                "pluginName": "NANO Modules",
+                "moduleName": "Performance Mixer",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 12,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 13,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 10,
+                        "nprn": 14,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 11,
+                        "nprn": 15,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 12,
+                        "nprn": 18,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 13,
+                        "nprn": 19,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 14,
+                        "nprn": 20,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 15,
+                        "nprn": 21,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 16,
+                        "nprn": 24,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 17,
+                        "nprn": 25,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 18,
+                        "nprn": 26,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 19,
+                        "nprn": 27,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 20,
+                        "nprn": 22,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 21,
+                        "nprn": 23,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 22,
+                        "nprn": 33,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 23,
+                        "nprn": 34,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 24,
+                        "nprn": 16,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 25,
+                        "nprn": 17,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 26,
+                        "nprn": 35,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "NANOModules",
+                "moduleSlug": "SERRA",
+                "autoMapped": false,
+                "pluginName": "NANO Modules",
+                "moduleName": "SERRA",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 10,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 11,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
+                "pluginSlug": "NANOModules",
+                "moduleSlug": "VCVRANDOM",
+                "autoMapped": false,
+                "pluginName": "NANO Modules",
+                "moduleName": "VCV Random",
+                "paramMap": [
+                    {
+                        "paramId": 0,
+                        "nprn": 0,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 1,
+                        "nprn": 1,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 2,
+                        "nprn": 2,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 3,
+                        "nprn": 3,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 4,
+                        "nprn": 5,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 5,
+                        "nprn": 6,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 6,
+                        "nprn": 7,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 7,
+                        "nprn": 8,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 8,
+                        "nprn": 9,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    },
+                    {
+                        "paramId": 9,
+                        "nprn": 11,
+                        "nprnMode": 0,
+                        "label": "",
+                        "midiOptions": 0,
+                        "slew": 0.0,
+                        "min": 0.0,
+                        "max": 1.0
+                    }
+                ]
+            },
+            {
                 "pluginSlug": "VCV-Drums",
                 "moduleSlug": "Clap",
                 "autoMapped": false,
