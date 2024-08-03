@@ -1542,20 +1542,20 @@ struct OrestesOneModule : Module {
 	void expMemSaveRackMapping() {
 		rackMapping.reset();
 		for (size_t i = 0; i < MAX_CHANNELS; i++) {
-			if (paramHandles[i].moduleId < 0) continue;
-			MemParam* p = new MemParam;
-			p->paramId = paramHandles[i].paramId;
-			p->nprn = nprns[i].getNprn();
-			p->nprnMode = nprns[i].nprnMode;
-			p->label = textLabel[i];
-			p->midiOptions = midiOptions[i];
-			p->slew = midiParam[i].getSlew();
-			p->min = midiParam[i].getMin();
-			p->max = midiParam[i].getMax();
-			p->moduleId = paramHandles[i].moduleId;
-			rackMapping.paramMap.push_back(p);
+			if (nprns[i].getNprn() >= 0 || paramHandles[i].moduleId >= 0) {
+                MemParam* p = new MemParam;
+                p->paramId = paramHandles[i].paramId;
+                p->nprn = nprns[i].getNprn();
+                p->nprnMode = nprns[i].nprnMode;
+                p->label = textLabel[i];
+                p->midiOptions = midiOptions[i];
+                p->slew = midiParam[i].getSlew();
+                p->min = midiParam[i].getMin();
+                p->max = midiParam[i].getMax();
+                p->moduleId = paramHandles[i].moduleId;
+                rackMapping.paramMap.push_back(p);    
+            }
 		}
-
 	}
 
 
@@ -1789,17 +1789,20 @@ struct OrestesOneModule : Module {
 		json_t* rackMappingJJ = json_object();		
 		json_t* paramMapJ = json_array();
 		for (auto p : rackMapping.paramMap) {
-			json_t* paramMapJJ = json_object();
-			json_object_set_new(paramMapJJ, "paramId", json_integer(p->paramId));
-			json_object_set_new(paramMapJJ, "nprn", json_integer(p->nprn));
-			json_object_set_new(paramMapJJ, "nprnMode", json_integer((int)p->nprnMode));
-			json_object_set_new(paramMapJJ, "label", json_string(p->label.c_str()));
-			json_object_set_new(paramMapJJ, "midiOptions", json_integer(p->midiOptions));
-			json_object_set_new(paramMapJJ, "slew", json_real(p->slew));
-			json_object_set_new(paramMapJJ, "min", json_real(p->min));
-			json_object_set_new(paramMapJJ, "max", json_real(p->max));
-			json_object_set_new(paramMapJJ, "moduleId", json_integer(p->moduleId));
-			json_array_append_new(paramMapJ, paramMapJJ);
+            if (p->paramId >= 0 && p->nprn >= 0 && p->nprn < MAX_NPRN_ID && p->moduleId > 0) {
+                json_t* paramMapJJ = json_object();
+                json_object_set_new(paramMapJJ, "paramId", json_integer(p->paramId));
+                json_object_set_new(paramMapJJ, "nprn", json_integer(p->nprn));
+                json_object_set_new(paramMapJJ, "nprnMode", json_integer((int)p->nprnMode));
+                json_object_set_new(paramMapJJ, "label", json_string(p->label.c_str()));
+                json_object_set_new(paramMapJJ, "midiOptions", json_integer(p->midiOptions));
+                json_object_set_new(paramMapJJ, "slew", json_real(p->slew));
+                json_object_set_new(paramMapJJ, "min", json_real(p->min));
+                json_object_set_new(paramMapJJ, "max", json_real(p->max));
+                json_object_set_new(paramMapJJ, "moduleId", json_integer(p->moduleId));
+                json_array_append_new(paramMapJ, paramMapJJ);
+            }
+			
 		}
 		json_object_set_new(rackMappingJJ, "paramMap", paramMapJ);
 
@@ -1842,26 +1845,6 @@ struct OrestesOneModule : Module {
 			json_array_append_new(midiMapJ, midiMapJJ);
 		}
 		return midiMapJ;
-	}
-
-	json_t* rackMappingToJson(MemModule& aRackMapping) {
-		json_t* midiMapJJ = json_object();			
-		json_t* paramMapJ = json_array();
-		for (auto p : aRackMapping.paramMap) {
-			json_t* paramMapJJ = json_object();
-			json_object_set_new(paramMapJJ, "paramId", json_integer(p->paramId));
-			json_object_set_new(paramMapJJ, "nprn", json_integer(p->nprn));
-			json_object_set_new(paramMapJJ, "nprnMode", json_integer((int)p->nprnMode));
-			json_object_set_new(paramMapJJ, "label", json_string(p->label.c_str()));
-			json_object_set_new(paramMapJJ, "midiOptions", json_integer(p->midiOptions));
-			json_object_set_new(paramMapJJ, "slew", json_real(p->slew));
-			json_object_set_new(paramMapJJ, "min", json_real(p->min));
-			json_object_set_new(paramMapJJ, "max", json_real(p->max));
-			json_object_set_new(paramMapJJ, "moduleId", json_integer(p->moduleId));
-			json_array_append_new(paramMapJ, paramMapJJ);
-		}
-		json_object_set_new(midiMapJJ, "paramMap", paramMapJ);
-		return midiMapJJ;
 	}
 
 	void dataFromJson(json_t* rootJ) override {
@@ -1968,18 +1951,21 @@ struct OrestesOneModule : Module {
 			json_array_foreach(paramMapJ, j, paramMapJJ) {
 				MemParam* p = new MemParam;
 				p->paramId = json_integer_value(json_object_get(paramMapJJ, "paramId"));
-				p->moduleId = json_integer_value(json_object_get(paramMapJJ, "moduleId"));
-				p->nprn = json_integer_value(json_object_get(paramMapJJ, "nprn"));
-				p->nprnMode = (NPRNMODE)json_integer_value(json_object_get(paramMapJJ, "nprnMode"));
-				p->label = json_string_value(json_object_get(paramMapJJ, "label"));
-				p->midiOptions = json_integer_value(json_object_get(paramMapJJ, "midiOptions"));
-				json_t* slewJ = json_object_get(paramMapJJ, "slew");
-				if (slewJ) p->slew = json_real_value(slewJ);
-				json_t* minJ = json_object_get(paramMapJJ, "min");
-				if (minJ) p->min = json_real_value(minJ);
-				json_t* maxJ = json_object_get(paramMapJJ, "max");
-				if (maxJ) p->max = json_real_value(maxJ);
-				rackMapping.paramMap.push_back(p);
+                p->moduleId = json_integer_value(json_object_get(paramMapJJ, "moduleId"));
+                p->nprn = json_integer_value(json_object_get(paramMapJJ, "nprn"));
+                if (p->nprn >= 0 && p->nprn <= MAX_NPRN_ID && p->paramId >= 0 && p->moduleId > 0) {
+                    p->nprnMode = (NPRNMODE)json_integer_value(json_object_get(paramMapJJ, "nprnMode"));
+                    p->label = json_string_value(json_object_get(paramMapJJ, "label"));
+                    p->midiOptions = json_integer_value(json_object_get(paramMapJJ, "midiOptions"));
+                    json_t* slewJ = json_object_get(paramMapJJ, "slew");
+                    if (slewJ) p->slew = json_real_value(slewJ);
+                    json_t* minJ = json_object_get(paramMapJJ, "min");
+                    if (minJ) p->min = json_real_value(minJ);
+                    json_t* maxJ = json_object_get(paramMapJJ, "max");
+                    if (maxJ) p->max = json_real_value(maxJ);
+                    rackMapping.paramMap.push_back(p);
+                }
+				
 			}
 
 		}

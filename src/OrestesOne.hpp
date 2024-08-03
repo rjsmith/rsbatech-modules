@@ -50,6 +50,7 @@ struct MemModule {
 	}
 	void reset() {
 		for (auto it : paramMap) delete it;
+		paramMap.clear();	
 	}
 
 };
