@@ -1821,26 +1821,26 @@ struct OrestesOneModule : Module {
 		json_t* midiMapJ = json_array();
 		for (auto it : aMidiMap) {
 			json_t* midiMapJJ = json_object();
-			json_object_set_new(midiMapJJ, "pluginSlug", json_string(it.first.first.c_str()));
-			json_object_set_new(midiMapJJ, "moduleSlug", json_string(it.first.second.c_str()));
+			json_object_set_new(midiMapJJ, "ps", json_string(it.first.first.c_str())); // pluginSlug
+			json_object_set_new(midiMapJJ, "ms", json_string(it.first.second.c_str())); // moduleSlug
 			auto a = it.second;
-			json_object_set_new(midiMapJJ, "autoMapped", json_boolean(a->autoMapped));
-			json_object_set_new(midiMapJJ, "pluginName", json_string(a->pluginName.c_str()));
-			json_object_set_new(midiMapJJ, "moduleName", json_string(a->moduleName.c_str()));
+			json_object_set_new(midiMapJJ, "am", json_boolean(a->autoMapped)); // autoMapped
+			json_object_set_new(midiMapJJ, "pn", json_string(a->pluginName.c_str())); // pluginName
+			json_object_set_new(midiMapJJ, "mn", json_string(a->moduleName.c_str())); // moduleName
 			json_t* paramMapJ = json_array();
 			for (auto p : a->paramMap) {
 				json_t* paramMapJJ = json_object();
-				json_object_set_new(paramMapJJ, "paramId", json_integer(p->paramId));
-				json_object_set_new(paramMapJJ, "nprn", json_integer(p->nprn));
-				json_object_set_new(paramMapJJ, "nprnMode", json_integer((int)p->nprnMode));
-				json_object_set_new(paramMapJJ, "label", json_string(p->label.c_str()));
-				json_object_set_new(paramMapJJ, "midiOptions", json_integer(p->midiOptions));
-				json_object_set_new(paramMapJJ, "slew", json_real(p->slew));
-				json_object_set_new(paramMapJJ, "min", json_real(p->min));
-				json_object_set_new(paramMapJJ, "max", json_real(p->max));
+				json_object_set_new(paramMapJJ, "p", json_integer(p->paramId));
+				json_object_set_new(paramMapJJ, "n", json_integer(p->nprn));
+				json_object_set_new(paramMapJJ, "nm", json_integer((int)p->nprnMode));
+				json_object_set_new(paramMapJJ, "l", json_string(p->label.c_str()));
+				json_object_set_new(paramMapJJ, "o", json_integer(p->midiOptions));
+				json_object_set_new(paramMapJJ, "s", json_real(p->slew));
+				json_object_set_new(paramMapJJ, "m", json_real(p->min));
+				json_object_set_new(paramMapJJ, "x", json_real(p->max));
 				json_array_append_new(paramMapJ, paramMapJJ);
 			}
-			json_object_set_new(midiMapJJ, "paramMap", paramMapJ);
+			json_object_set_new(midiMapJJ, "pm", paramMapJ); // paramMap
 
 			json_array_append_new(midiMapJ, midiMapJJ);
 		}
@@ -2116,33 +2116,33 @@ struct OrestesOneModule : Module {
 	}
 
 	void midiMapJSONToMidiMap(json_t* midiMapJJ) {
-		std::string pluginSlug = json_string_value(json_object_get(midiMapJJ, "pluginSlug"));
-		std::string moduleSlug = json_string_value(json_object_get(midiMapJJ, "moduleSlug"));
+		std::string pluginSlug = json_string_value(json_object_get(midiMapJJ, "ps")); // pluginSlug
+		std::string moduleSlug = json_string_value(json_object_get(midiMapJJ, "ms")); // moduleSlug
 
 		MemModule* a = new MemModule;
-		a->pluginName = json_string_value(json_object_get(midiMapJJ, "pluginName"));
-		a->moduleName = json_string_value(json_object_get(midiMapJJ, "moduleName"));
-		json_t* autoMappedJ = json_object_get(midiMapJJ, "autoMapped");
+		a->pluginName = json_string_value(json_object_get(midiMapJJ, "pn")); // pluginName
+		a->moduleName = json_string_value(json_object_get(midiMapJJ, "mn")); // moduleName
+		json_t* autoMappedJ = json_object_get(midiMapJJ, "am"); // autoMapped
 		if (autoMappedJ) {
 			a->autoMapped = json_boolean_value(autoMappedJ);
 		} else {
 			a->autoMapped = false; // default
 		}
-		json_t* paramMapJ = json_object_get(midiMapJJ, "paramMap");
+		json_t* paramMapJ = json_object_get(midiMapJJ, "pm"); // paramMap
 		size_t j;
 		json_t* paramMapJJ;
 		json_array_foreach(paramMapJ, j, paramMapJJ) {
 			MemParam* p = new MemParam;
-			p->paramId = json_integer_value(json_object_get(paramMapJJ, "paramId"));
-			p->nprn = json_integer_value(json_object_get(paramMapJJ, "nprn"));
-			p->nprnMode = (NPRNMODE)json_integer_value(json_object_get(paramMapJJ, "nprnMode"));
-			p->label = json_string_value(json_object_get(paramMapJJ, "label"));
-			p->midiOptions = json_integer_value(json_object_get(paramMapJJ, "midiOptions"));
-			json_t* slewJ = json_object_get(paramMapJJ, "slew");
+			p->paramId = json_integer_value(json_object_get(paramMapJJ, "p")); // paramId
+			p->nprn = json_integer_value(json_object_get(paramMapJJ, "n")); // nprnId
+			p->nprnMode = (NPRNMODE)json_integer_value(json_object_get(paramMapJJ, "nm")); // nprnMode
+			p->label = json_string_value(json_object_get(paramMapJJ, "l")); // label
+			p->midiOptions = json_integer_value(json_object_get(paramMapJJ, "o")); // midiOptions
+			json_t* slewJ = json_object_get(paramMapJJ, "s"); // slew
 			if (slewJ) p->slew = json_real_value(slewJ);
-			json_t* minJ = json_object_get(paramMapJJ, "min");
+			json_t* minJ = json_object_get(paramMapJJ, "m"); // min
 			if (minJ) p->min = json_real_value(minJ);
-			json_t* maxJ = json_object_get(paramMapJJ, "max");
+			json_t* maxJ = json_object_get(paramMapJJ, "x"); // max
 			if (maxJ) p->max = json_real_value(maxJ);
 			a->paramMap.push_back(p);
 
@@ -2179,7 +2179,9 @@ struct OrestesOneModule : Module {
 			fclose(file);
 		});
 
-		if (json_dumpf(rootJ, file, JSON_INDENT(4)) < 0) {
+        // Save midimap library JSON in a relatively compact form.
+        // Assume can be expanded in text editors if anyone needs to read and edit them directly.
+		if (json_dumpf(rootJ, file, 0) < 0) {
 			std::string message = string::f("File could not be written to %s", filename.c_str());
 			osdialog_message(OSDIALOG_ERROR, OSDIALOG_OK, message.c_str());
 			return false;
