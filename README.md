@@ -1,7 +1,7 @@
 # RSBATech-Modules
 
 <!-- Version and License Badges -->
-![Version](https://img.shields.io/badge/version-2.0.0--alpha1-green.svg?style=flat-square)
+![Version](https://img.shields.io/badge/version-2.0.0--beta4-green.svg?style=flat-square)
 ![License](https://img.shields.io/badge/license-GPLv3+-blue.svg?style=flat-square)
 ![Language](https://img.shields.io/badge/language-C++-yellow.svg?style=flat-square)
 
@@ -39,7 +39,7 @@ Functionally, Orestes-One is basically ([MIDI-CAT](https://library.vcvrack.com/S
 * Export and import module mappings, so they can be shared and curated by the user community (there are over 3000 modules to be mapped after all!)
 * [Factory - provided module mappings](https://github.com/rjsmith/rsbatech-modules/wiki/Orestes%E2%80%90One-Module-User-Guide#factory-mapping-library) included
 
-Plus most MIDI-CAT features (up to [v2.0.beta4](https://github.com/stoermelder/vcvrack-packone/blob/v2/CHANGELOG.md#20beta4))
+Plus most MIDI-CAT features (up to its [v2.0.beta4](https://github.com/stoermelder/vcvrack-packone/blob/v2/CHANGELOG.md#20beta4))
 
 ## Documentation
 

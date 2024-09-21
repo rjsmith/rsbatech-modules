@@ -1,3 +1,8 @@
+## 2.0.0-beta4 21 Sep 2024
+
+- Added more module mappiongs including the Vult plugins
+- Reduced size of mapping library JSON text files by shortening JSON key strings and saving without pretty-printed spaces .. from 1.2Mb to 300Kb.
+
 ## 2.0.0-beta3 12 July 2024
 
 - Added more module mappings to factory library (ChowDSP, Nonlinear Circuits, Valley)
