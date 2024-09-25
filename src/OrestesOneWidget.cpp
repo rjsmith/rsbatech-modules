@@ -821,8 +821,8 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		json_t* midiMapJJ;
 		int importedModules = 0;
 		json_array_foreach(midiMapJ, i, midiMapJJ) {
-			std::string importedPluginSlug = json_string_value(json_object_get(midiMapJJ, "pluginSlug"));
-			std::string importedModuleSlug = json_string_value(json_object_get(midiMapJJ, "moduleSlug"));
+			std::string importedPluginSlug = json_string_value(json_object_get(midiMapJJ, "ps"));
+			std::string importedModuleSlug = json_string_value(json_object_get(midiMapJJ, "ms"));
 
 			// Find this mapped module in the current Orestes module midiMap
 			auto p = std::pair<std::string, std::string>(importedPluginSlug, importedModuleSlug);
