@@ -1,3 +1,7 @@
+## 2.0.0-beta5 29 Sep 2024
+
+- Added module mappings for ProkModular premium plugin
+
 ## 2.0.0-beta4 21 Sep 2024
 
 - Added more module mappings including the Vult free and premium plugins
