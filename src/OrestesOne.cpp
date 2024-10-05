@@ -117,7 +117,7 @@ struct E1MidiOutput : OrestesOneOutput {
    }
 
  	/**
- 	 * Inform E1 that a chang emodule sequence has completed
+ 	 * Inform E1 that a change module sequence has completed
  	 */
    void endChangeE1Module() {
          std::stringstream ss;
