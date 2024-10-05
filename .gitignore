@@ -13,6 +13,9 @@
 *.sublime-project
 *.sublime-workspace
 
+# IntelliJ
+/.idea
+
 # Prerequisites
 *.d
 
