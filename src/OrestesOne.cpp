@@ -2051,7 +2051,7 @@ struct OrestesOneModule : Module {
 
 	bool readMappingLibraryFile(std::string filename) {
 
-		DEBUG ("Reading mapping library file at %s", filename.c_str());
+		// DEBUG ("Reading mapping library file at %s", filename.c_str());
 		FILE* file = fopen(filename.c_str(), "r");
 		if (!file) {
 			WARN("Could not load mapping library file %s", filename.c_str());
