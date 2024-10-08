@@ -197,6 +197,7 @@ private:
 	int panelTheme = 0;
 
 	enum ParamIds {
+		PARAM_RECV, PARAM_SEND, 
 		PARAM_APPLY,
 		PARAM_PREV,
 		PARAM_NEXT,
@@ -209,6 +210,8 @@ private:
 		NUM_OUTPUTS
 	};
 	enum LightIds {
+		ENUMS(LIGHT_RECV, 3), 
+		ENUMS(LIGHT_SEND, 3),
 		LIGHT_APPLY,
 		NUM_LIGHTS
 	};
@@ -364,6 +367,7 @@ private:
 	/** [Stored to Json] */
 	int processDivision;
 	dsp::ClockDivider indicatorDivider;
+	dsp::ClockDivider lightDivider;
 
 	// MEM-
 	// Pointer of the MEM's attribute
@@ -388,6 +392,8 @@ private:
 		panelTheme = pluginSettings.panelThemeDefault;
 
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+		configParam(PARAM_RECV, 0.0f, 1.0f, 0.0f, "Enable Receiver");
+		configParam(PARAM_SEND, 0.0f, 1.0f, 0.0f, "Enable Sender");
 		configParam<BufferedTriggerParamQuantity>(PARAM_PREV, 0.f, 1.f, 0.f, "Scan for previous module mapping");
 		configParam<BufferedTriggerParamQuantity>(PARAM_NEXT, 0.f, 1.f, 0.f, "Scan for next module mapping");
 		configParam<BufferedTriggerParamQuantity>(PARAM_APPLY, 0.f, 1.f, 0.f, "Apply mapping");
@@ -400,6 +406,7 @@ private:
 			nprns[id].id = id;
 		}
 		indicatorDivider.setDivision(2048);
+		lightDivider.setDivision(2048);
 		midiResendDivider.setDivision(APP->engine->getSampleRate() / 2);
 		onReset();
 		e1MappedModuleList.reserve(INITIAL_MAPPED_MODULE_LIST_SIZE);
@@ -531,12 +538,12 @@ private:
 		ts++;
 
 		// Aquire new OSC message from the Receiver
-		bool midiReceived = false;
-
+		bool oscReceived = false;
+		bool oscSent = false;
 		TheModularMind::OscMessage rxMessage;
 		while (oscReceiver.shift(&rxMessage)) {
 			bool r = processOscMessage(rxMessage);
-			midiReceived = midiReceived || r;
+			oscReceived = oscReceived || r;
 		}
 
 		// Handle indicators - blinking
@@ -552,15 +559,61 @@ private:
 
 		if (e1ProcessResendMIDIFeedback || (midiResendPeriodically && midiResendDivider.process())) {
 			midiResendFeedback();
+			oscSent = true;
 		}
+
+
+		// This block from Oscelot https://github.com/The-Modular-Mind/oscelot
+		// Process lights
+		if (lightDivider.process() || oscReceived) {
+			if (receiving) {
+				if (oscReceived) {
+					// Blue
+					lights[LIGHT_RECV].setBrightness(0.0f);
+					lights[LIGHT_RECV + 1].setBrightness(0.0f);
+					lights[LIGHT_RECV + 2].setBrightness(1.0f);
+				} else {
+					// Green
+					lights[LIGHT_RECV].setBrightness(0.0f);
+					lights[LIGHT_RECV + 1].setBrightness(1.0f);
+					lights[LIGHT_RECV + 2].setBrightness(0.0f);
+				}
+			} else {
+				// Orange
+				lights[LIGHT_RECV].setBrightness(1.0f);
+				lights[LIGHT_RECV + 1].setBrightness(0.4f);
+				lights[LIGHT_RECV + 2].setBrightness(0.0f);
+			}
+
+			if (sending) {
+				if (oscSent) {
+					// Blue
+					lights[LIGHT_SEND].setBrightness(0.0f);
+					lights[LIGHT_SEND + 1].setBrightness(0.0f);
+					lights[LIGHT_SEND + 2].setBrightness(1.0f);
+					oscSent = false;
+				} else {
+					// Green
+					lights[LIGHT_SEND].setBrightness(0.0f);
+					lights[LIGHT_SEND + 1].setBrightness(1.0f);
+					lights[LIGHT_SEND + 2].setBrightness(0.0f);
+				}
+			} else {
+				// Orange
+				lights[LIGHT_SEND].setBrightness(1.0f);
+				lights[LIGHT_SEND + 1].setBrightness(0.4f);
+				lights[LIGHT_SEND + 2].setBrightness(0.0f);
+			}
+		}
+
 
         // Only step channels when some midi event has been received. Additionally
         // step channels for parameter changes made manually at a lower frequency . Notice
         // that midi allows about 1000 messages per second, so checking for changes more often
         // won't lead to higher precision on midi output.
         bool stepParameterChange = processDivider.process();
-        if (stepParameterChange || midiReceived) {
-            processMappings(args.sampleTime, stepParameterChange, midiReceived);
+        if (stepParameterChange || oscReceived) {
+            processMappings(args.sampleTime, stepParameterChange, oscReceived);
             processOscCommands();
         }
 
@@ -882,7 +935,7 @@ private:
         oscOutput.sendModuleList(e1MappedModuleList.begin(), e1MappedModuleList.end());
 
     }
-    
+
 	void midiResendFeedback() {
 		for (int i = 0; i < MAX_CHANNELS; i++) {
 			lastValueOut[i] = -1;

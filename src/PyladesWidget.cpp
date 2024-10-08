@@ -1,12 +1,13 @@
-#include "OrestesOneWidget.hpp"
+#include "PyladesWidget.hpp"
 #include "MapModuleBase.hpp"
+#include "components/LedTextField.hpp"
 #include "plugin.hpp"
 
 namespace RSBATechModules {
-namespace OrestesOne {
+namespace Pylades {
 
-struct OrestesOneChoice : MapModuleChoice<MAX_CHANNELS, OrestesOneModule> {
-	OrestesOneChoice() {
+struct PyladesChoice : MapModuleChoice<MAX_CHANNELS, PyladesModule> {
+	PyladesChoice() {
 		textOffset = Vec(6.f, 14.7f);
 		color = nvgRGB(0xf0, 0xf0, 0xf0);
 	}
@@ -14,7 +15,7 @@ struct OrestesOneChoice : MapModuleChoice<MAX_CHANNELS, OrestesOneModule> {
 	std::string getSlotPrefix() override {
 
 		if (module->nprns[id].getNprn() >= 0) {
-             return string::f("nprn%03d ", module->nprns[id].getNprn());
+             return string::f("FDR%03d ", module->nprns[id].getNprn());
         }
 		else if (module->paramHandles[id].moduleId >= 0) {
 			return ".... ";
@@ -30,7 +31,7 @@ struct OrestesOneChoice : MapModuleChoice<MAX_CHANNELS, OrestesOneModule> {
 
 	void appendContextMenu(Menu* menu) override {
 		struct UnmapMidiItem : MenuItem {
-			OrestesOneModule* module;
+			PyladesModule* module;
 			int id;
 			void onAction(const event::Action& e) override {
 				module->clearMap(id, true);
@@ -38,7 +39,7 @@ struct OrestesOneChoice : MapModuleChoice<MAX_CHANNELS, OrestesOneModule> {
 		}; // struct UnmapMidiItem
 
 		struct NprnModeMenuItem : MenuItem {
-			OrestesOneModule* module;
+			PyladesModule* module;
 			int id;
 
 			NprnModeMenuItem() {
@@ -46,7 +47,7 @@ struct OrestesOneChoice : MapModuleChoice<MAX_CHANNELS, OrestesOneModule> {
 			}
 
 			struct NprnModeItem : MenuItem {
-				OrestesOneModule* module;
+				PyladesModule* module;
 				int id;
 				NPRNMODE nprnMode;
 
@@ -81,7 +82,7 @@ struct OrestesOneChoice : MapModuleChoice<MAX_CHANNELS, OrestesOneModule> {
 		}
 
 		struct PresetMenuItem : MenuItem {
-			OrestesOneModule* module;
+			PyladesModule* module;
 			int id;
 			PresetMenuItem() {
 				rightText = RIGHT_ARROW;
@@ -107,7 +108,7 @@ struct OrestesOneChoice : MapModuleChoice<MAX_CHANNELS, OrestesOneModule> {
 		}; // struct PresetMenuItem
 
 		struct LabelMenuItem : MenuItem {
-			OrestesOneModule* module;
+			PyladesModule* module;
 			int id;
 
 			LabelMenuItem() {
@@ -115,7 +116,7 @@ struct OrestesOneChoice : MapModuleChoice<MAX_CHANNELS, OrestesOneModule> {
 			}
 
 			struct LabelField : ui::TextField {
-				OrestesOneModule* module;
+				PyladesModule* module;
 				int id;
 				void onSelectKey(const event::SelectKey& e) override {
 					if (e.action == GLFW_PRESS && e.key == GLFW_KEY_ENTER) {
@@ -133,7 +134,7 @@ struct OrestesOneChoice : MapModuleChoice<MAX_CHANNELS, OrestesOneModule> {
 			};
 
 			struct ResetItem : ui::MenuItem {
-				OrestesOneModule* module;
+				PyladesModule* module;
 				int id;
 				void onAction(const event::Action& e) override {
 					module->textLabel[id] = "";
@@ -176,8 +177,66 @@ struct OrestesOneChoice : MapModuleChoice<MAX_CHANNELS, OrestesOneModule> {
 };
 
 
+struct OscWidget : widget::OpaqueWidget {
+	PyladesModule* module;
+	TheModularMind::OscelotTextField* ip;
+	TheModularMind::OscelotTextField* txPort;
+	TheModularMind::OscelotTextField* rxPort;
+	NVGcolor color = nvgRGB(0xDA, 0xa5, 0x20);
+	NVGcolor white = nvgRGB(0xfe, 0xff, 0xe0);
 
-struct OrestesOneDisplay : MapModuleDisplay<MAX_CHANNELS, OrestesOneModule, OrestesOneChoice>, OverlayMessageProvider {
+	void step() override {
+		if (!module) return;
+
+		ip->step();
+		if (ip->isFocused)
+			module->ip = ip->text;
+		else
+			ip->text = module->ip;
+
+		txPort->step();
+		if (txPort->isFocused)
+			module->txPort = txPort->text;
+		else
+			txPort->text = module->txPort;
+
+		rxPort->step();
+		if (rxPort->isFocused)
+			module->rxPort = rxPort->text;
+		else
+			rxPort->text = module->rxPort;
+	}
+
+	void setOSCPort(std::string ipT, std::string rPort, std::string tPort) {
+		clearChildren();
+		math::Vec pos;
+
+		TheModularMind::OscelotTextField* ip = createWidget<TheModularMind::OscelotTextField>(pos);
+		ip->box.size = mm2px(Vec(32, 5));
+		ip->maxTextLength = 15;
+		ip->text = ipT;
+		addChild(ip);
+		this->ip = ip;
+
+		pos = ip->box.getTopRight();
+		pos.x = pos.x + 1;
+		TheModularMind::OscelotTextField* txPort = createWidget<TheModularMind::OscelotTextField>(pos);
+		txPort->box.size = mm2px(Vec(12.5, 5));
+		txPort->text = tPort;
+		addChild(txPort);
+		this->txPort = txPort;
+
+		pos = txPort->box.getTopRight();
+		pos.x = pos.x + 37;
+		TheModularMind::OscelotTextField* rxPort = createWidget<TheModularMind::OscelotTextField>(pos);
+		rxPort->box.size = mm2px(Vec(12.5, 5));
+		rxPort->text = rPort;
+		addChild(rxPort);
+		this->rxPort = rxPort;
+	}
+};
+
+struct PyladesDisplay : MapModuleDisplay<MAX_CHANNELS, PyladesModule, PyladesChoice>, OverlayMessageProvider {
 	void step() override {
 		if (module) {
 			int mapLen = module->mapLen;
@@ -186,7 +245,7 @@ struct OrestesOneDisplay : MapModuleDisplay<MAX_CHANNELS, OrestesOneModule, Ores
 				separators[id]->visible = (id < mapLen);
 			}
 		}
-		MapModuleDisplay<MAX_CHANNELS, OrestesOneModule, OrestesOneChoice>::step();
+		MapModuleDisplay<MAX_CHANNELS, PyladesModule, PyladesChoice>::step();
 	}
 
 	int nextOverlayMessageId() override {
@@ -209,7 +268,7 @@ struct OrestesOneDisplay : MapModuleDisplay<MAX_CHANNELS, OrestesOneModule, Ores
 };
 
 struct MemDisplay : OrestesLedDisplay {
-	OrestesOneModule* module;
+	PyladesModule* module;
 	void step() override {
 		OrestesLedDisplay::step();
 		if (!module) return;
@@ -217,9 +276,9 @@ struct MemDisplay : OrestesLedDisplay {
 	}
 };
 
-struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetContextExtender {
-	OrestesOneModule* module;
-	OrestesOneDisplay* mapWidget;
+struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExtender {
+	PyladesModule* module;
+	PyladesDisplay* mapWidget;
 
 	dsp::SchmittTrigger expMemPrevTrigger;
 	dsp::SchmittTrigger expMemNextTrigger;
@@ -235,8 +294,8 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 
 	LEARN_MODE learnMode = LEARN_MODE::OFF;
 
-	OrestesOneWidget(OrestesOneModule* module)
-		: ThemedModuleWidget<OrestesOneModule>(module, "OrestesOne") {
+	PyladesWidget(PyladesModule* module)
+		: ThemedModuleWidget<PyladesModule>(module, "Pylades") {
 		setModule(module);
 		this->module = module;
 		box.size.x = 300;
@@ -246,35 +305,35 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		addChild(createWidget<OrestesBlackScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 		addChild(createWidget<OrestesBlackScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-		MidiWidget<>* midiInputWidget = createWidget<MidiWidget<>>(Vec(10.0f, 36.4f));
-		midiInputWidget->box.size = Vec(130.0f, 67.0f);
-		midiInputWidget->setMidiPort(module ? &module->midiInput : NULL);
-		addChild(midiInputWidget);
+		OscWidget* oscConfigWidget = createWidget<OscWidget>(mm2px(Vec(10.0f, 12.0f)));
+		oscConfigWidget->box.size = mm2px(Vec(77, 5));
+		oscConfigWidget->module = module;
+		if (module) {
+			oscConfigWidget->setOSCPort(module ? module->ip : NULL, module ? module->rxPort : NULL, module ? module->txPort : NULL);
+		}
+		addChild(oscConfigWidget);
 
-		MidiWidget<>* midiCtrlInputWidget = createWidget<MidiWidget<>>(Vec(160.0f, 36.4f));
-		midiCtrlInputWidget->box.size = Vec(130.0f, 67.0f);
-		midiCtrlInputWidget->setMidiPort(module ? &module->midiCtrlInput : NULL);
-		addChild(midiCtrlInputWidget);
+		// Send switch
+		math::Vec inpPos = mm2px(Vec(54, 14.5));
+		addChild(createParamCentered<TL1105>(inpPos, module, PyladesModule::PARAM_SEND));
+		addChild(createLightCentered<SmallLight<RedGreenBlueLight>>(inpPos, module, PyladesModule::LIGHT_SEND));
 
-		MidiWidget<>* midiOutputWidget = createWidget<MidiWidget<>>(Vec(10.0f, 107.4f));
-		midiOutputWidget->box.size = Vec(130.0f, 67.0f);
-		midiOutputWidget->setMidiPort(module ? &module->midiOutput : NULL);
-		addChild(midiOutputWidget);
+		// Receive switch
+		inpPos = mm2px(Vec(79, 14.5));
+		addChild(createParamCentered<TL1105>(inpPos, module, PyladesModule::PARAM_RECV));
+		addChild(createLightCentered<SmallLight<RedGreenBlueLight>>(inpPos, module, PyladesModule::LIGHT_RECV));
 
-		MidiWidget<>* midiCtrlOutputWidget = createWidget<MidiWidget<>>(Vec(160.0f, 107.4f));
-		midiCtrlOutputWidget->box.size = Vec(130.0f, 67.0f);
-		midiCtrlOutputWidget->setMidiPort(module ? &module->midiCtrlOutput : NULL);
-		addChild(midiCtrlOutputWidget);
-
-		mapWidget = createWidget<OrestesOneDisplay>(Vec(10.0f, 178.5f));
-		mapWidget->box.size = Vec(280.0f, 164.7f);
+		mapWidget = createWidget<PyladesDisplay>(Vec(10.0f, 75.0f));
+		mapWidget->box.size = Vec(280.0f, 260.0f);
 		mapWidget->setModule(module);
 		addChild(mapWidget);
 
-		addChild(createParamCentered<TL1105>(Vec(40.0f, 360.0f), module, OrestesOneModule::PARAM_PREV));
-		addChild(createParamCentered<TL1105>(Vec(80.0f, 360.0f), module, OrestesOneModule::PARAM_NEXT));
-		addChild(createLightCentered<TinyLight<WhiteLight>>(Vec(190.f, 360.f), module, OrestesOneModule::LIGHT_APPLY));
-		addChild(createParamCentered<TL1105>(Vec(210.0f, 360.f), module, OrestesOneModule::PARAM_APPLY));
+	
+
+		addChild(createParamCentered<TL1105>(Vec(40.0f, 360.0f), module, PyladesModule::PARAM_PREV));
+		addChild(createParamCentered<TL1105>(Vec(80.0f, 360.0f), module, PyladesModule::PARAM_NEXT));
+		addChild(createLightCentered<TinyLight<WhiteLight>>(Vec(190.f, 360.f), module, PyladesModule::LIGHT_APPLY));
+		addChild(createParamCentered<TL1105>(Vec(210.0f, 360.f), module, PyladesModule::PARAM_APPLY));
 		
 		MemDisplay* memDisplay = createWidgetCentered<MemDisplay>(Vec(260.0f, 360.f));
 		memDisplay->module = module;
@@ -285,7 +344,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		}
 	}
 
-	~OrestesOneWidget() {
+	~PyladesWidget() {
 		if (learnMode != LEARN_MODE::OFF) {
 			glfwSetCursor(APP->window->win, NULL);
 		}
@@ -297,14 +356,14 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 
 
 	void step() override {
-		ThemedModuleWidget<OrestesOneModule>::step();
+		ThemedModuleWidget<PyladesModule>::step();
 		if (module) {
 			// MEM
-			if (module->e1ProcessPrev || expMemPrevTrigger.process(module->params[OrestesOneModule::PARAM_PREV].getValue())) {
+			if (module->e1ProcessPrev || expMemPrevTrigger.process(module->params[PyladesModule::PARAM_PREV].getValue())) {
 			    module->e1ProcessPrev = false;
 				expMemPrevModule();
 			}
-			if (module->e1ProcessNext || expMemNextTrigger.process(module->params[OrestesOneModule::PARAM_NEXT].getValue())) {
+			if (module->e1ProcessNext || expMemNextTrigger.process(module->params[PyladesModule::PARAM_NEXT].getValue())) {
 			    module->e1ProcessNext = false;
 				expMemNextModule();
 			}
@@ -313,7 +372,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 			    expMemSelectModule(module->e1SelectedModulePos);
 			    module->e1SelectedModulePos = Vec(0,0);
 			}
-			if (module->e1ProcessApply || expMemParamTrigger.process(module->params[OrestesOneModule::PARAM_APPLY].getValue())) {
+			if (module->e1ProcessApply || expMemParamTrigger.process(module->params[PyladesModule::PARAM_APPLY].getValue())) {
 				module->e1ProcessApply = false;
 				enableLearn(LEARN_MODE::MEM);
 			}
@@ -641,14 +700,14 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 	}
 
 	/**
-	 * Merge module midiMap entries from the importedPresetJ into the current midiMap of this OrestesOne module.
+	 * Merge module midiMap entries from the importedPresetJ into the current midiMap of this Pylades module.
 	 * Entries from the imported presetJ will overwrite matching entries in the existing midiMap.	 * 
 	 */
 	int mergeMidiMapPreset_convert(json_t* importedPresetJ, bool skipPremappedModules) {
 		std::string pluginSlug = json_string_value(json_object_get(importedPresetJ, "plugin"));
 		std::string modelSlug = json_string_value(json_object_get(importedPresetJ, "model"));
 
-		// Only handle presets or midimap JSON files from OrestesOne
+		// Only handle presets or midimap JSON files from Pylades
 		if (!(pluginSlug == module->model->plugin->slug && modelSlug == module->model->slug))
 			return 0;
 
@@ -692,20 +751,20 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		ParamQuantity* pq = pw->getParamQuantity();
 		if (!pq) return;
 		
-		struct OrestesOneBeginItem : MenuLabel {
-			OrestesOneBeginItem() {
+		struct PyladesBeginItem : MenuLabel {
+			PyladesBeginItem() {
 				text = "ORESTES-ONE";
 			}
 		};
 
-		struct OrestesOneEndItem : MenuEntry {
-			OrestesOneEndItem() {
+		struct PyladesEndItem : MenuEntry {
+			PyladesEndItem() {
 				box.size = Vec();
 			}
 		};
 
 		struct MapMenuItem : MenuItem {
-			OrestesOneModule* module;
+			PyladesModule* module;
 			ParamQuantity* pq;
 			int currentId = -1;
 
@@ -715,7 +774,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 
 			Menu* createChildMenu() override {
 				struct MapItem : MenuItem {
-					OrestesOneModule* module;
+					PyladesModule* module;
 					int currentId;
 					void onAction(const event::Action& e) override {
 						module->enableLearn(currentId, true);
@@ -723,7 +782,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 				};
 
 				struct MapEmptyItem : MenuItem {
-					OrestesOneModule* module;
+					PyladesModule* module;
 					ParamQuantity* pq;
 					void onAction(const event::Action& e) override {
 						int id = module->enableLearn(-1, true);
@@ -732,7 +791,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 				};
 
 				struct RemapItem : MenuItem {
-					OrestesOneModule* module;
+					PyladesModule* module;
 					ParamQuantity* pq;
 					int id;
 					int currentId;
@@ -779,11 +838,11 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		
 		for (auto it = beg; it != end; it++) {
 			if (itCvBegin == end) {
-				OrestesOneBeginItem* ml = dynamic_cast<OrestesOneBeginItem*>(*it);
+				PyladesBeginItem* ml = dynamic_cast<PyladesBeginItem*>(*it);
 				if (ml) { itCvBegin = it; continue; }
 			}
 			else {
-				OrestesOneEndItem* ml = dynamic_cast<OrestesOneEndItem*>(*it);
+				PyladesEndItem* ml = dynamic_cast<PyladesEndItem*>(*it);
 				if (ml) { itCvEnd = it; break; }
 			}
 		}
@@ -801,11 +860,11 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 				w.push_back(new MinSlider(&module->midiParam[id]));
 				w.push_back(new MaxSlider(&module->midiParam[id]));
 				w.push_back(construct<CenterModuleItem>(&MenuItem::text, "Go to mapping module", &CenterModuleItem::mw, this));
-				w.push_back(new OrestesOneEndItem);
+				w.push_back(new PyladesEndItem);
 
 				if (itCvBegin == end) {
 					menu->addChild(new MenuSeparator);
-					menu->addChild(construct<OrestesOneBeginItem>());
+					menu->addChild(construct<PyladesBeginItem>());
 					for (Widget* wm : w) {
 						menu->addChild(wm);
 					}
@@ -840,7 +899,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 			Module* m = mw->module;
 			if (!m) return;
 
-			OrestesOneModule* module = dynamic_cast<OrestesOneModule*>(this->module);
+			PyladesModule* module = dynamic_cast<PyladesModule*>(this->module);
 			switch (learnMode) {
 				case LEARN_MODE::BIND_CLEAR:
 					module->moduleBind(m, false, false); break;
@@ -880,7 +939,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 					break;
 				}
 				case GLFW_KEY_ESCAPE: {
-					OrestesOneModule* module = dynamic_cast<OrestesOneModule*>(this->module);
+					PyladesModule* module = dynamic_cast<PyladesModule*>(this->module);
 					disableLearn();
 					module->disableLearn();
 					e.consume(this);
@@ -888,7 +947,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 				}
 				case GLFW_KEY_SPACE: {
 					if (module->learningId >= 0) {
-						OrestesOneModule* module = dynamic_cast<OrestesOneModule*>(this->module);
+						PyladesModule* module = dynamic_cast<PyladesModule*>(this->module);
 						int currentLearningId = module->learningId;
 						if ((e.mods & RACK_MOD_MASK) == GLFW_MOD_SHIFT) {
 							module->clearMap(module->learningId, false);
@@ -903,7 +962,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 				}
 			}
 		}
-		ThemedModuleWidget<OrestesOneModule>::onHoverKey(e);
+		ThemedModuleWidget<PyladesModule>::onHoverKey(e);
 	}
 
 	void enableLearn(LEARN_MODE mode) {
@@ -922,7 +981,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 	}
 
 	void appendContextMenu(Menu* menu) override {
-		ThemedModuleWidget<OrestesOneModule>::appendContextMenu(menu);
+		ThemedModuleWidget<PyladesModule>::appendContextMenu(menu);
 		int sampleRate = int(APP->engine->getSampleRate());
 
 		menu->addChild(new MenuSeparator());
@@ -991,18 +1050,18 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 	}
 
 	void appendContextMenuMem(Menu* menu) {
-		OrestesOneModule* module = dynamic_cast<OrestesOneModule*>(this->module);
+		PyladesModule* module = dynamic_cast<PyladesModule*>(this->module);
 		assert(module);
 
 		struct MapMenuItem : MenuItem {
-			OrestesOneModule* module;
+			PyladesModule* module;
 			MapMenuItem() {
 				rightText = RIGHT_ARROW;
 			}
 
 			Menu* createChildMenu() override {
 				struct MidimapModuleItem : MenuItem {
-					OrestesOneModule* module;
+					PyladesModule* module;
 					std::string pluginSlug;
 					std::string moduleSlug;
 					MemModule* midimapModule;
@@ -1011,7 +1070,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 					}
 					Menu* createChildMenu() override {
 						struct DeleteItem : MenuItem {
-							OrestesOneModule* module;
+							PyladesModule* module;
 							std::string pluginSlug;
 							std::string moduleSlug;
 							void onAction(const event::Action& e) override {
@@ -1027,7 +1086,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 				}; // MidimapModuleItem
 
 				struct MidimapPluginItem: MenuItem {
-					OrestesOneModule* module;
+					PyladesModule* module;
 					std::string pluginSlug;
 					MidimapPluginItem() {
 						rightText = RIGHT_ARROW;
@@ -1035,7 +1094,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 					// Create child menu listing all modules in this plugin
 					Menu* createChildMenu() override {
 						struct DeletePluginItem : MenuItem {
-							OrestesOneModule* module;
+							PyladesModule* module;
 							std::string pluginSlug;
 							void onAction(const event::Action& e) override {
 								module->expMemPluginDelete(pluginSlug);
@@ -1044,7 +1103,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 						}; // DeletePluginItem
 
 						struct ExportPluginItem : MenuItem {
-							OrestesOneModule* module;
+							PyladesModule* module;
 							std::string pluginSlug;
 							void onAction(const event::Action& e) override {
 								module->expMemExportPlugin(pluginSlug);
@@ -1107,14 +1166,14 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		}; // MapMenuItem
 
 		struct SaveMenuItem : MenuItem {
-			OrestesOneModule* module;
+			PyladesModule* module;
 			SaveMenuItem() {
 				rightText = RIGHT_ARROW;
 			}
 
 			Menu* createChildMenu() override {
 				struct SaveItem : MenuItem {
-					OrestesOneModule* module;
+					PyladesModule* module;
 					std::string pluginSlug;
 					std::string moduleSlug;
 					void onAction(const event::Action& e) override {
@@ -1184,7 +1243,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 	}
 };
 
-}  // namespace OrestesOne
-}  // namespace Orestes
+}  // namespace Pylades
+}  // namespace RSBATechModules
 
-Model* modelOrestesOne = createModel<RSBATechModules::OrestesOne::OrestesOneModule, RSBATechModules::OrestesOne::OrestesOneWidget>("OrestesOne");
+Model* modelPylades = createModel<RSBATechModules::Pylades::PyladesModule, RSBATechModules::Pylades::PyladesWidget>("Pylades");

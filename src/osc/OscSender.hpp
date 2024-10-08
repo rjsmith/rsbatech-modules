@@ -2,6 +2,7 @@
 #include "OscBundle.hpp"
 #include "oscpack/ip/UdpSocket.h"
 #include "oscpack/osc/OscOutboundPacketStream.h"
+#include "oscpack/osc/OscTypes.h"
 
 /*
 This file was copied from https://github.com/The-Modular-Mind/oscelot

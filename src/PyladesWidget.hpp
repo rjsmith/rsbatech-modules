@@ -1,11 +1,11 @@
 #pragma once
 
-#include "OrestesOne.cpp"
+#include "Pylades.cpp"
 #include "RSBATechModulesWidget.hpp"
 #include "ui/ParamWidgetContextExtender.hpp"
 
 namespace RSBATechModules {
-namespace OrestesOne {
+namespace Pylades {
 
-}  // namespace OrestesOne
-}  // namespace Orestes
+}  // namespace Pylades
+}  // namespace RSBATechModules
