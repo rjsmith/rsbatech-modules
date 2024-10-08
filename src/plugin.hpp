@@ -11,4 +11,4 @@ extern Plugin* pluginInstance;
 extern OrestesSettings pluginSettings;
 
 extern Model* modelOrestesOne;
-
+extern Model* modelPylades;

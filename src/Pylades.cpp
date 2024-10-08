@@ -1,6 +1,7 @@
 #include "plugin.hpp"
-#include "OrestesOne.hpp"
+#include "Pylades.hpp"
 #include "MapModuleBase.hpp"
+#include "digital/ScaledMapParam.hpp"
 #include "components/MenuLabelEx.hpp"
 #include "components/SubMenuSlider.hpp"
 #include "components/MidiWidget.hpp"
@@ -14,76 +15,42 @@
 #include <array>
 
 namespace RSBATechModules {
-namespace OrestesOne {
-
-struct OrestesOneOutput : midi::Output {
-
-    void sendCCMsg(int cc, int value) {
-        midi::Message m;
-        m.setStatus(0xb);
-        m.setNote(cc);
-        m.setValue(value);
-        sendMessage(m);
-    }
-
-};
+namespace Pylades {
 
 
-struct E1MidiOutput : OrestesOneOutput {
-	std::array<int, MAX_CHANNELS> lastNPRNValues{};
-    midi::Message m;
 
-    E1MidiOutput() {
+struct PyladesModule : Module {
+
+struct OscOutput {
+	public:
+
+    OscOutput(PyladesModule& module): moduleRef(module) {
 		reset();
-		m.bytes.reserve(512);
+		b.reserve(1, 2);
 	}
 
 	void reset() {
 		std::fill_n(lastNPRNValues.begin(), MAX_CHANNELS, -1);
-    	m.bytes.clear();
+    	b.clear();
 	}
 
-    void sendE1ControlUpdate(int id, const char* name, const char* displayValue) {
-        // See https://docs.electra.one/developers/midiimplementation.html#control-update
+	/**
+	 * Send fader value, and optionally rich display value and name
+	 */
+    void sendOscControlUpdate(int id, const char* name, const char* displayValue) {
+        
+		TheModularMind::OscBundle feedbackBundle;
+		TheModularMind::OscMessage infoMessage;
 
-        // E1 VCVRack preset controls NPRM parameter numbers are offset by 2 from their preset controller Id
-        int e1ControllerId = id + 2;
+		infoMessage.setAddress("/fader/info");
+		infoMessage.addIntArg(id); // controller id
+		infoMessage.addStringArg(displayValue); // displayValue
+	    infoMessage.addIntArg(1); // visible
+	    infoMessage.addStringArg(name); // parameter display name
+		feedbackBundle.addMessage(infoMessage);
+	
 
-        m.bytes.clear();
-        m.bytes.resize(0);
-        // SysEx header byte
-        m.bytes.push_back(0xF0);
-        // SysEx header byte
-        // Electra One MIDI manufacturer Id
-        m.bytes.push_back(0x00);
-        m.bytes.push_back(0x21);
-        m.bytes.push_back(0x45);
-        // Update runtime command
-        m.bytes.push_back(0x14);
-        // Control
-        m.bytes.push_back(0x07);
-        // controlId LSB
-        m.bytes.push_back(e1ControllerId & 0x7F);
-        // controlId MSB
-        m.bytes.push_back(e1ControllerId >> 7);
-
-        // Build control-update-json-data
-        // {"name":name,"value":{"id":"value","text":displayValue}}
-        json_t* valueJ = json_object();
-        json_object_set_new(valueJ, "text", json_string(displayValue));
-        json_object_set_new(valueJ, "visible", json_boolean(true));
-        json_t* rootJ = json_object();
-        json_object_set_new(rootJ, "name", json_string(name));
-        json_object_set_new(rootJ, "value", valueJ);
-        char* json = json_dumps(rootJ, JSON_COMPACT | JSON_ENSURE_ASCII);
-
-        for( char* it = json; *it; ++it )
-          m.bytes.push_back((uint8_t)*it);
-
-        // SysEx closing byte
-        m.bytes.push_back(0xf7);
-        // DEBUG("Sending control update e1 ctrl %id, value %s", id, displayValue);
-        sendMessage(m);
+		moduleRef.oscSender.sendBundle(feedbackBundle);
 
    }
 
@@ -92,9 +59,20 @@ struct E1MidiOutput : OrestesOneOutput {
     */
    void changeE1Module(const char* moduleDisplayName, float moduleY, float moduleX, int maxNprnId) {
 
-        std::stringstream ss;
-        ss << "changeE1Module(\"" << moduleDisplayName << "\", " << string::f("%g, %g, %d", moduleY, moduleX, maxNprnId) << ")";
-        sendE1ExecuteLua(ss.str().c_str());
+   		TheModularMind::OscBundle feedbackBundle;
+		TheModularMind::OscMessage infoMessage;
+
+		infoMessage.setAddress("/module/changing");
+		infoMessage.addStringArg(moduleDisplayName);
+		infoMessage.addFloatArg(moduleY);
+		infoMessage.addFloatArg(moduleX);
+		infoMessage.addIntArg(maxNprnId);
+		feedbackBundle.addMessage(infoMessage);
+	
+
+		moduleRef.oscSender.sendBundle(feedbackBundle);
+
+		// TODO: Combine into one bundled message with the control updates
 
    }
 
@@ -102,9 +80,14 @@ struct E1MidiOutput : OrestesOneOutput {
  	 * Inform E1 that a change module sequence has completed
  	 */
    void endChangeE1Module() {
-         std::stringstream ss;
-         ss << "endChangeE1Module()";
-         sendE1ExecuteLua(ss.str().c_str());
+       	TheModularMind::OscBundle feedbackBundle;
+		TheModularMind::OscMessage infoMessage;
+
+		infoMessage.setAddress("/module/end");
+		feedbackBundle.addMessage(infoMessage);
+	
+		moduleRef.oscSender.sendBundle(feedbackBundle);
+
    }
 
    /**
@@ -114,37 +97,50 @@ struct E1MidiOutput : OrestesOneOutput {
    template <class Iterator>
    void sendModuleList(Iterator begin, Iterator end) {
 
-        // 1. Send a startMappedModuleList lua command
-        startMappedModuleList();
+		TheModularMind::OscBundle mappedModulesBundle;
 
-        // 2. Loop over iterator, send a mappedModuleInfo lua command for each
+        // 1. Add a startmml to the bundle
+        startMappedModuleList(mappedModulesBundle);
+
+        // 2. Loop over iterator, add a OscMessage to the bundle
         for (Iterator it = begin; it != end; ++it) {
-            mappedModuleInfo(*it);
+            mappedModuleInfo(*it, mappedModulesBundle);
         }
 
-        // 3. Finish with a endMappedModuleList lua command
-        endMappedModuleList();
+        // 3. Finish with a endMappedModuleList OscMessage
+        endMappedModuleList(mappedModulesBundle);
+        moduleRef.oscSender.sendBundle(mappedModulesBundle);
    }
 
-    void startMappedModuleList() {
-        std::stringstream ss;
-        ss << "startMML()";
-        sendE1ExecuteLua(ss.str().c_str());
+    void startMappedModuleList(TheModularMind::OscBundle& mappedModulesBundle) {
+    	TheModularMind::OscMessage moduleMessage;
+		moduleMessage.setAddress("/module/startmml");
+		mappedModulesBundle.addMessage(moduleMessage);
     }
-    void mappedModuleInfo(RackMappedModuleListItem& m) {
-        std::stringstream ss;
-        ss << "mappedMI(\"" << m.getModuleKey() << "\", \"" << m.getModuleDisplayName() <<  "\", " << string::f("%g", m.getY()) << ", " << string::f("%g", m.getX()) << ")";
-        sendE1ExecuteLua(ss.str().c_str());
+    void mappedModuleInfo(RackMappedModuleListItem& m, TheModularMind::OscBundle& mappedModulesBundle) {
+		TheModularMind::OscMessage moduleMessage;
+		moduleMessage.setAddress("/module/mappedmodule");
+		moduleMessage.addStringArg(m.getModuleKey());
+		moduleMessage.addStringArg(m.getModuleDisplayName());
+		moduleMessage.addFloatArg(m.getY());
+		moduleMessage.addFloatArg(m.getX());
+		mappedModulesBundle.addMessage(moduleMessage);
     }
-    void endMappedModuleList() {
-         std::stringstream ss;
-         ss << "endMML()";
-         sendE1ExecuteLua(ss.str().c_str());
+    void endMappedModuleList(TheModularMind::OscBundle& mappedModulesBundle) {
+       	TheModularMind::OscMessage moduleMessage;
+		moduleMessage.setAddress("/module/endmml");
+		mappedModulesBundle.addMessage(moduleMessage);
     }
+    
     void sendOrestesOneVersion(std::string o1Version) {
-    	std::stringstream ss;
-    	ss << "o1Version(\"" << o1Version << "\")";
-        sendE1ExecuteLua(ss.str().c_str());
+    	TheModularMind::OscBundle feedbackBundle;
+		TheModularMind::OscMessage infoMessage;
+
+		infoMessage.setAddress("/pylades/version");
+		infoMessage.addStringArg(o1Version);
+		feedbackBundle.addMessage(infoMessage);
+	
+		moduleRef.oscSender.sendBundle(feedbackBundle);
 
     } 
 
@@ -167,87 +163,35 @@ struct E1MidiOutput : OrestesOneOutput {
 			return;
 		lastNPRNValues[nprn] = value;
 
-  		m.bytes.clear();
-        // SysEx header byte
-        m.bytes.push_back(0xF0);
-        // SysEx header byte
-        // Custom MIDI manufacturer Id
-        m.bytes.push_back(0x00);
-        m.bytes.push_back(0x7F);
-        m.bytes.push_back(0x7F);
-        // Packed NPRN
-        m.bytes.push_back(0x00);
-        // controlId MSB
- 		m.bytes.push_back(nprn >> 7);
-        // controlId LSB
-        m.bytes.push_back(nprn & 0x7F);
-      	// value MSB
- 		m.bytes.push_back(value >> 7);
-        // value LSB
-        m.bytes.push_back(value & 0x7F);
-        // SysEx closing byte
- 		m.bytes.push_back(0xf7);
+		TheModularMind::OscBundle valueBundle;
+		TheModularMind::OscMessage valueMessage;
+	
+		valueMessage.setAddress("/fader");
+		valueMessage.addIntArg(nprn);
+		valueMessage.addIntArg(valueNprnIn);
+		valueBundle.addMessage(valueMessage);
 
- 		// DEBUG("Sending bytes %s", hexStr(m.bytes.data(), m.getSize()).data());
-        sendMessage(m);
+		moduleRef.oscSender.sendBundle(valueBundle);
 
     }
-    
 
-   /**
-    * Execute a Lua command on the Electra One
-    * @see https://docs.electra.one/developers/midiimplementation.html#execute-lua-command
-    */
-   void sendE1ExecuteLua(const char* luaCommand) {
-        // DEBUG("Execute Lua %s", luaCommand);
-
-        m.bytes.clear();
-        // SysEx header byte
-        m.bytes.push_back(0xF0);
-        // SysEx header byte
-        // Electra One MIDI manufacturer Id
-        m.bytes.push_back(0x00);
-        m.bytes.push_back(0x21);
-        m.bytes.push_back(0x45);
-        // Execute command
-        m.bytes.push_back(0x8);
-        // Lua command
-        m.bytes.push_back(0xD);
-        for( char* it = (char*)luaCommand; *it; ++it )
-                  m.bytes.push_back((uint8_t)*it);
-        // SysEx closing byte
-        m.bytes.push_back(0xf7);
-
-        // DEBUG("Sending bytes %s", hexStr(m.bytes.data(), m.getSize()).data());
-        sendMessage(m);
-
-
-   }
-
-    std::string hexStr(const uint8_t *data, int len)
-    {
-        std::stringstream ss;
-        ss << std::hex;
-
-        for( int i(0) ; i < len; ++i )
-             ss << std::setw(2) << std::setfill('0') << (int)data[i];
-
-        return ss.str();
-    }
+private:
+	std::array<int, MAX_CHANNELS> lastNPRNValues{};
+	// Assume can re-use a single OscBundle, maybe not thread safe ?
+    TheModularMind::OscBundle b;
+	PyladesModule& moduleRef;
 
 };
 
+	// TODO: OSC output structs
 
-struct OrestesOneModule : Module {
-	/** [Stored to Json] */
-	midi::InputQueue midiInput;
-	/** [Stored to Json] */
-	E1MidiOutput midiOutput;
+	TheModularMind::OscReceiver oscReceiver;
+	TheModularMind::OscSender oscSender;
+	std::string ip = "localhost";
+	std::string rxPort = RXPORT_DEFAULT;
+	std::string txPort = TXPORT_DEFAULT;
 
-	/** [Stored to Json] */
-	midi::InputQueue midiCtrlInput;
-	/** [Stored to Json] */
-	E1MidiOutput midiCtrlOutput;
+
 
 	/** [Stored to JSON] */
 	int panelTheme = 0;
@@ -269,9 +213,8 @@ struct OrestesOneModule : Module {
 		NUM_LIGHTS
 	};
 
-
-	struct MidiNPRNAdapter {
-        OrestesOneModule* module;
+	struct OscNPRNAdapter {
+        PyladesModule* module;
         int id;
         int current = -1;
         uint32_t lastTs = 0;
@@ -298,7 +241,7 @@ struct OrestesOneModule : Module {
 
         void setValue(int value, bool sendOnly) {
             if (nprn == -1) return;
-            module->midiOutput.setPackedNPRNValue(value, nprn, module->valuesNprn[nprn], current == -1);
+            module->oscOutput.setPackedNPRNValue(value, nprn, module->valuesNprn[nprn], current == -1);
             if (!sendOnly) current = value;
         }
 
@@ -329,15 +272,22 @@ struct OrestesOneModule : Module {
         }
     };
 
+    OscOutput oscOutput = OscOutput(*this); 
+
 	/** Number of maps */
 	int mapLen = 0;
-    MidiNPRNAdapter nprns[MAX_CHANNELS];
+    OscNPRNAdapter nprns[MAX_CHANNELS];
 	/** [Stored to JSON] */
 	int midiOptions[MAX_CHANNELS];
 	/** [Stored to JSON] */
 	bool midiIgnoreDevices;
 	/** [Stored to JSON] */
 	bool clearMapsOnLoad;
+
+	/** [Stored to JSON] */
+	bool receiving;
+	/** [Stored to JSON] */
+	bool sending;
 
     // Flags to indicate command received from E1 to be processed in widget tick() thread
     bool e1ProcessNext;
@@ -433,7 +383,8 @@ struct OrestesOneModule : Module {
 	 */
 	MemModule rackMapping = MemModule();
 
-	OrestesOneModule() {
+
+	PyladesModule() {
 		panelTheme = pluginSettings.panelThemeDefault;
 
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -454,7 +405,7 @@ struct OrestesOneModule : Module {
 		e1MappedModuleList.reserve(INITIAL_MAPPED_MODULE_LIST_SIZE);
 	}
 
-	~OrestesOneModule() {
+	~PyladesModule() {
 		for (int id = 0; id < MAX_CHANNELS; id++) {
 			APP->engine->removeParamHandle(&paramHandles[id]);
 		}
@@ -481,12 +432,8 @@ struct OrestesOneModule : Module {
 			midiParam[i].reset();
 		}
 		locked = false;
-		midiInput.reset();
-		midiOutput.reset();
-		midiOutput.midi::Output::reset();
-		midiCtrlInput.reset();
-		midiCtrlOutput.reset();
-		midiCtrlOutput.midi::Output::reset();
+		oscOutput.reset();
+		
 		midiIgnoreDevices = false;
 		midiResendPeriodically = false;
 		midiResendDivider.reset();
@@ -521,6 +468,44 @@ struct OrestesOneModule : Module {
 		midiResendDivider.setDivision(APP->engine->getSampleRate() / 2);
 	}
 
+	bool isValidPort(std::string port) {
+		bool isValid = false;
+		try {
+			if (port.length() > 0) {
+				int portNumber = std::stoi(port);
+				isValid = portNumber > 1023 && portNumber <= 65535;
+			}
+		} catch (const std::exception& ex) {
+			isValid = false;
+		}
+		return isValid;
+	}
+
+	void receiverPower() {
+		if (receiving) {
+			if (!isValidPort(rxPort)) rxPort = RXPORT_DEFAULT;
+			int port = std::stoi(rxPort);
+			receiving = oscReceiver.start(port);
+			if (receiving) INFO("Started OSC Receiver on port: %i", port);
+		} else {
+			oscReceiver.stop();
+		}
+	}
+
+	void senderPower() {
+		if (sending) {
+			if (!isValidPort(txPort)) txPort = TXPORT_DEFAULT;
+			int port = std::stoi(txPort);
+			sending = oscSender.start(ip, port);
+			if (sending) {
+				INFO("Started OSC Sender on port: %i", port);
+				midiResendFeedback();
+			}
+		} else {
+			oscSender.stop();
+		}
+	}
+
     void sendE1Feedback(int id) {
 
        if (id >= mapLen) return;
@@ -539,18 +524,18 @@ struct OrestesOneModule : Module {
        ParamQuantity* paramQuantity = m->paramQuantities[paramId];
        std::stringstream ss;
        ss << paramQuantity->getDisplayValueString() << " " << paramQuantity->getUnit();
-       midiCtrlOutput.sendE1ControlUpdate(nprns[id].getNprn(), paramQuantity->getLabel().c_str(), ss.str().c_str());
+       oscOutput.sendOscControlUpdate(nprns[id].getNprn(), paramQuantity->getLabel().c_str(), ss.str().c_str());
     }
 
-
-	void process(const ProcessArgs &args) override {
+    void process(const ProcessArgs &args) override {
 		ts++;
 
-		// Aquire new MIDI messages from the queue
-		midi::Message msg;
+		// Aquire new OSC message from the Receiver
 		bool midiReceived = false;
-		while (midiInput.tryPop(&msg, args.frame)) {
-			bool r = midiProcessMessage(msg);
+
+		TheModularMind::OscMessage rxMessage;
+		while (oscReceiver.shift(&rxMessage)) {
+			bool r = processOscMessage(rxMessage);
 			midiReceived = midiReceived || r;
 		}
 
@@ -576,7 +561,7 @@ struct OrestesOneModule : Module {
         bool stepParameterChange = processDivider.process();
         if (stepParameterChange || midiReceived) {
             processMappings(args.sampleTime, stepParameterChange, midiReceived);
-            processE1Commands();
+            processOscCommands();
         }
 
 	}
@@ -746,30 +731,98 @@ struct OrestesOneModule : Module {
         }
 	}
 
-	bool midiProcessMessage(midi::Message msg) {
-		switch (msg.getStatus()) {
-			// cc
-			case 0xb: {
-			    if (isPendingNPRN) {
-			        return midiNPRN(msg);
-			    } else {
-				    return midiCc(msg);
-				}
-			}
-			// sysex
-			case 0xf: {
-			  return parseE1SysEx(msg);
-			}
-			default: {
-				return false;
-			}
-		}
-	}
+	/**
+	 * Parses OSC commands sent from TouchOSC.
+	 * 
+	 * Processing for the non-fader commands are deferred to later in the process() function
+	 * 
+	 * OSC Messages and arguments
+	 * 
+	 * /fader (updated fader value from TouchOSC)
+	 * ======
+	 * [0] 		Controller Id (int)
+	 * [1]		Value (int, 0-16535 14 bit integer)
+	 * 
+	 * /pylades/next (jump to next mapped module to right of current selected module in rack)
+	 * =============
+	 * []
+	 * 
+	 * /pylades/prev (jump to next mapped module to left of current selected module in rack)
+	 * =============
+	 * []
+	 * 
+	 * /pylades/select (jump to select mapped module)
+	 * ===============
+	 * [0]		Module Y (row) rack co-ordinate (float)
+	 * [1]		Module X (column) rack co-ordinate (float)
+	 * 
+	 * /pylades/list (return list of mapped modules in the rack)
+	 * =============
+	 * []
+	 * 
+	 * TODO: Other commands
+	 * 
+	 * 
+	 */ 
+	bool processOscMessage(TheModularMind::OscMessage msg) {
 
-    /**
-     * Additional process() handlers for commands received from E1
+		std::string address = msg.getAddress();
+		bool oscReceived = false;
+
+		if (address == OSCMSG_FADER) {
+			int nprn = msg.getArgAsInt(0);
+			float value = msg.getArgAsFloat(1);
+			if (learningId >= 0 && learnedNprnLast != nprn && valuesNprn[nprn] != value) {                    
+	            nprns[learningId].setNprn(nprn);
+	            nprns[learningId].nprnMode = NPRNMODE::DIRECT;
+	            nprns[learningId].set14bit(true);
+	            learnedNprn = true;
+	            learnedNprnLast = nprn;
+	            commitLearn();
+	            updateMapLen();
+	            refreshParamHandleText(learningId);
+	        }
+	        oscReceived = valuesNprn[nprn] != value;
+	        valuesNprn[nprn] = value;
+	        valuesNprnTs[nprn] = ts;
+			return oscReceived;
+		} else if (address == OSCMSG_NEXT_MODULE) {
+			DEBUG("Received an OSC Next Command");
+            e1ProcessNext = true;
+            return true;
+		} else if (address == OSCMSG_PREV_MODULE) {
+            DEBUG("Received an OSC Prev Command");
+            e1ProcessNext = false;
+            e1ProcessPrev = true;
+            return true;
+		} else if (address == OSCMSG_SELECT_MODULE) {
+            DEBUG ("Received an OSC Module Select Command");
+            e1ProcessSelect = true;
+            float moduleY = msg.getArgAsFloat(0);
+            float moduleX = msg.getArgAsFloat(1);
+            e1SelectedModulePos = Vec(moduleX, moduleY);
+            return true;
+		} else if (address == OSCMSG_LIST_MODULES) {
+            // DEBUG("Received an E1 List Mapped Modules Command");
+            e1ProcessListMappedModules = true;
+            return true;
+
+      	// TODO: Other OSC commands	
+
+
+
+		} else {
+			WARN("Discarding unknown OSC message. OSC message had address: %s and %i args", msg.getAddress().c_str(), (int)msg.getNumArgs());
+			return oscReceived;
+		}
+
+
+	};
+
+ 	/**
+     * Additional process() handlers for commands received from OSC
      */
-    void processE1Commands() {
+    void processOscCommands() {
 
         if (e1ProcessListMappedModules) {
             e1ProcessListMappedModules = false;
@@ -784,13 +837,13 @@ struct OrestesOneModule : Module {
         if (e1VersionPoll) {
         	// Send the OrestesOne plugin version to E1
         	std::string o1PluginVersion = model->plugin->version;
-        	midiCtrlOutput.sendOrestesOneVersion(o1PluginVersion);
+        	oscOutput.sendOrestesOneVersion(o1PluginVersion);
         	e1VersionPoll = false;
         }
 
     }
 
-    /**
+   /**
      * Build list of mapped Rack modules and transmit to E1
      */
     void sendE1MappedModulesList() {
@@ -826,270 +879,10 @@ struct OrestesOneModule : Module {
             }
         }
 
-        midiCtrlOutput.sendModuleList(e1MappedModuleList.begin(), e1MappedModuleList.end());
+        oscOutput.sendModuleList(e1MappedModuleList.begin(), e1MappedModuleList.end());
 
     }
-
-    /**
-     * Parses VCVRack E1 Sysex sent from the Electra One
-     * Message Format:
-     *
-     * Byte(s)
-     * =======
-     * [0 ]       	 0xF0 SysEx header byte
-     * [1-3]       	0x00 0x7F 0x7F Placeholder MIDI Manufacturer Id
-     * 
-     * Packed NPRN
-     * ===========
-     * [4]			0x00 Packed NPRN
-     * [5]         	NPRN id MSB (0-127)
-     * [6]         	NPRN id LSB (0-127)
-     * [7]			value id MSB (0-127)
-     * [8]			value id LSB (0-127)
-     * [9]       	0xF7 SysEx end byte
-     * 
-     * Commands
-     * ========
-     * [4]         	0x01 Command
-     * [...]
-     * [end]       	0xF7 SysEx end byte
-     * ---
-     * Command: Next
-     * [5]         	0x01 Next mapped module
-     *
-     * Command: Prev
-     * [5]         	0x02 Prev mapped module
-     *
-     * Command: Select
-     * [5]         	0x03 Select mapped module
-     * [6-x]      	Module rack y position as a length byte + ascii string byte array,
-     * [x+1-y]     	Module rack x position as a length byte + ascii string byte array
-     *
-     * Command: List mapped modules
-     * [5]         	0x04 List mapped modules
-     *
-     * Command: Reset mapped parameter to its default
-     * [5]         	0x05 Reset Parameter
-     * [6]         	NPRN id MSB (0-127)
-     * [7]         	NPRN id LSB (0-127)
-     * 
-     * Command: Re-send MIDI feedback
-     * [5]			0x06 Re-send MIDI
-     *
-     * Command: Apply module mapping
-     * [5]			0x07 Re-send MIDI
-     * 
-     * Command: Apply rack mapping
-     * [5]			0x08 Re-send MIDI
-     * 
-     * Command: Version Poll
-     * [5]			0x09 Version Poll
-     * 
-     */
-    bool parseE1SysEx(midi::Message msg) {
-        if (msg.getSize() < 7)
-            return false;
-        // Check this is one of our SysEx messages from our E1 preset
-        if (msg.bytes.at(1) != 0x00 || msg.bytes.at(2) != 0x7f || msg.bytes.at(3) != 0x7f)
-            return false;
-
-        switch(msg.bytes.at(4)) {
-        	// Packed NPRN
-        	case 0x00: {
-				int nprn = (msg.bytes.at(5) << 7) + msg.bytes.at(6);
-                int value = (msg.bytes.at(7) << 7) + msg.bytes.at(8);
-                isPendingNPRN = false;
-
-                // Guard to limit max recognised NPRN Parameter Id
-                if (nprn > MAX_NPRN_ID) {
-                	return false;
-                }
-                // Learn
-                if (learningId >= 0 && learnedNprnLast != nprn && valuesNprn[nprn] != value) {                    
-                    nprns[learningId].setNprn(nprn);
-                    nprns[learningId].nprnMode = NPRNMODE::DIRECT;
-                    nprns[learningId].set14bit(true);
-                    learnedNprn = true;
-                    learnedNprnLast = nprn;
-                    commitLearn();
-                    updateMapLen();
-                    refreshParamHandleText(learningId);
-                }
-                bool midiReceived = valuesNprn[nprn] != value;
-                valuesNprn[nprn] = value;
-                valuesNprnTs[nprn] = ts;
-                return midiReceived;
-        	}
-            // Command
-            case 0x01: {
-                switch(msg.bytes.at(5)) {
-                    // Next
-                    case 0x01: {
-                        // DEBUG("Received an E1 Next Command");
-                        e1ProcessNext = true;
-                        return true;
-                    }
-                    // Prev
-                    case 0x02: {
-                        // DEBUG("Received an E1 Prev Command");
-                        e1ProcessNext = false;
-                        e1ProcessPrev = true;
-                        return true;
-                    }
-                    // Module Select
-                    case 0x03: {
-                        // DEBUG ("Received an E1 Module Select Command");
-                        e1ProcessSelect = true;
-                        // Convert bytes 7 to float
-                        std::vector<uint8_t>::const_iterator vit = msg.bytes.begin() + 6;
-                        float moduleY = floatFromSysEx(vit);
-                        vit++;
-                        float moduleX = floatFromSysEx(vit);
-                        e1SelectedModulePos = Vec(moduleX, moduleY);
-                        return true;
-                    }
-                    // List Mapped Modules
-                    case 0x04: {
-                        // DEBUG("Received an E1 List Mapped Modules Command");
-                        e1ProcessListMappedModules = true;
-                        return true;
-                    }
-                    // Reset parameter to its default
-                    case 0x05: {
-                        e1ProcessResetParameter = true;
-                        e1ProcessResetParameterNPRN = ((int) msg.bytes.at(6) << 7) + ((int) msg.bytes.at(7));
-
-                        // DEBUG("Received an E1 Reset Parameter Command for NPRN %d", e1ProcessResetParameterNPRN);
-                        return true;
-                    }
-                    // Re-send MIDI feedback
-                    case 0x06: {
-                        // DEBUG("Received an E1 Re-send MIDI Feedback Command");
-                        e1ProcessResendMIDIFeedback = true;
-                        return true;
-                    }
-                    // Apply Module
-	                case 0x07: {
-	                	// DEBUG("Received an E1 Apply Module Command");
-	                	e1ProcessApply = true;
-	                	return true;	
-	                }
-	                // Apply Rack Mapping
-	            	case 0x08: {
-	            		// DEBUG("Received an E1 Apply Rack Mapping Command");
-	            		e1ProcessApplyRackMapping = true;
-	            		return true;
-	            	}
-	            	// Version Poll
-	            	case 0x09: {
-	            		// DEBUG("Received an E1 Version Poll Command");
-	            		e1VersionPoll = true;
-	            	}
-                    default: {
-                        return false;
-                    }
-                }
-            }
-            default: {
-                return false;
-            }
-        }
-
-    }
-
-    float floatFromSysEx(std::vector<uint8_t>::const_iterator & vit) {
-        // Decode string length byte
-        uint8_t strLen = *vit;
-
-        // Check <= remaining midi message length
-        std::string s;
-        // Read string len bytes, convert to string
-        for (int i = 0; i < strLen; ++i) {
-            vit++;
-            uint8_t b = *vit;
-            char c = (char) b;
-            s += c;
-        }
-        // Convert string to float (std::stdof)
-        return std::stof(s);
-    }
-
-    /**
-     * Builds a 14 bit controllerId and 14Bit Value from a series of received CC messages following the NPRN standard
-     *
-     * See http://www.philrees.co.uk/nrpnq.htm
-     * [1]. CC 99 NPRN Parameter Order high order 7 bits (MSB)
-     * [2]. CC 98 NPRN Parameter Order low order 7 bitss (LSB)
-     * [3]. CC 6 Parameter Value high order 7 bits (MSB)
-     * [4]. CC 38 Parameter Value low order 7 bits (LSB)
-     * [5]. CC 101 Null (127)
-     * [6]. CC 100 Null (127)
-     */
-    bool midiNPRN(midi::Message msg) {
-        uint8_t cc = msg.getNote();
-        uint8_t value = msg.getValue();
-        switch (cc) {
-            case 99:
-                if (isPendingNPRN) {
-                    // Still processing a previous NPRN 6-message sequence, so reset and start again
-                    std::fill_n(nprnMsg.begin(), 4, 0);
-                }
-                nprnMsg[0] = value;
-                isPendingNPRN = true;
-                break;
-            case 98:
-                if (isPendingNPRN) nprnMsg[1] = value;
-                break;
-            case 6:
-                if (isPendingNPRN) nprnMsg[2] = value;
-                break;
-            case 38:
-                if (isPendingNPRN) nprnMsg[3] = value;
-                break;
-            case 101:
-                // Ignore
-                break;
-            case 100:
-                if (isPendingNPRN) {
-                    int nprn = (nprnMsg[0] << 7) + nprnMsg[1];
-                    int value = (nprnMsg[2] << 7) + nprnMsg[3];
-                    isPendingNPRN = false;
-
-                    // Guard to limit max recognised NPRN Parameter Id
-                    if (nprn > MAX_NPRN_ID) {
-                    	return false;
-                    }
-
-                    // Learn
-                    if (learningId >= 0 && learnedNprnLast != nprn && valuesNprn[nprn] != value) {                    
-                        nprns[learningId].setNprn(nprn);
-                        nprns[learningId].nprnMode = NPRNMODE::DIRECT;
-                        nprns[learningId].set14bit(true);
-                        learnedNprn = true;
-                        learnedNprnLast = nprn;
-                        commitLearn();
-                        updateMapLen();
-                        refreshParamHandleText(learningId);
-                    }
-                    bool midiReceived = valuesNprn[nprn] != value;
-                    valuesNprn[nprn] = value;
-                    valuesNprnTs[nprn] = ts;
-                    return midiReceived;
-                }
-
-        }
-        return false;
-    }
-
-	bool midiCc(midi::Message msg) {
-		uint8_t cc = msg.getNote();
-		if (cc == 99 && !isPendingNPRN) {
-		    // Start of a new NPRN message sequence
-		    return midiNPRN(msg);
-		}
-		return false;
-	}
-
+    
 	void midiResendFeedback() {
 		for (int i = 0; i < MAX_CHANNELS; i++) {
 			lastValueOut[i] = -1;
@@ -1099,14 +892,13 @@ struct OrestesOneModule : Module {
 
 	void changeE1Module(const char* moduleName, float moduleY, float moduleX, int maxNprnId) {
 	    // DEBUG("changeE1Module to %s", moduleName);
-	    midiCtrlOutput.changeE1Module(moduleName, moduleY, moduleX, maxNprnId);
+	    oscOutput.changeE1Module(moduleName, moduleY, moduleX, maxNprnId);
 	}
 
 	void endChangeE1Module() {
 	    // DEBUG("endChangeE1Module");
-	    midiCtrlOutput.endChangeE1Module();
+	    oscOutput.endChangeE1Module();
     }
-
 
 	void clearMap(int id, bool midiOnly = false) {
 		learningId = -1;
@@ -1163,7 +955,7 @@ struct OrestesOneModule : Module {
 		}
 	}
 
-	void commitLearn() {
+		void commitLearn() {
 		if (learningId < 0)
 			return;
 		if (!learnedNprn)
@@ -1339,9 +1131,9 @@ struct OrestesOneModule : Module {
     }
 
 	void refreshParamHandleText(int id) {
-		std::string text = "ORESTES-ONE";
+		std::string text = "PYLADES";
 		if (nprns[id].getNprn() >= 0) {
-        	text += string::f(" nprn%03d", nprns[id].getNprn());
+        	text += string::f(" FDR%03d", nprns[id].getNprn());
         }
 		paramHandles[id].text = text;
 	}
@@ -1465,8 +1257,7 @@ struct OrestesOneModule : Module {
 		changeE1Module(m->model->getFullName().c_str(), pos.y, pos.x, maxNprnId);
 
 		clearMaps_WithLock();
-		midiOutput.reset();
-		midiCtrlOutput.reset();
+		oscOutput.reset();
 
 		expMemModuleId = m->id;
 		int i = 0;
@@ -1508,8 +1299,7 @@ struct OrestesOneModule : Module {
         }
 		changeE1Module("Rack Mapping", 0, 0, maxNprnId);
 		clearMaps_WithLock();
-		midiOutput.reset();
-		midiCtrlOutput.reset();
+		oscOutput.reset();
 		expMemModuleId = -1;
 
 		int i = 0;
@@ -1538,8 +1328,7 @@ struct OrestesOneModule : Module {
 
 	}
 
-
-	void expMemExportPlugin(std::string pluginSlug) {
+		void expMemExportPlugin(std::string pluginSlug) {
 
 		osdialog_filters* filters = osdialog_filters_parse(SAVE_JSON_FILTERS);
 		DEFER({
@@ -1669,10 +1458,13 @@ struct OrestesOneModule : Module {
 
 		json_object_set_new(rootJ, "midiResendPeriodically", json_boolean(midiResendPeriodically));
 		json_object_set_new(rootJ, "midiIgnoreDevices", json_boolean(midiIgnoreDevices));
-		json_object_set_new(rootJ, "midiInput", midiInput.toJson());
-		json_object_set_new(rootJ, "midiOutput", midiOutput.toJson());
-		json_object_set_new(rootJ, "midiCtrlInput", midiCtrlInput.toJson());
-		json_object_set_new(rootJ, "midiCtrlOutput", midiCtrlOutput.toJson());
+		
+		// OSC connection
+		json_object_set_new(rootJ, "receiving", json_boolean(receiving));
+		json_object_set_new(rootJ, "sending", json_boolean(sending));
+		json_object_set_new(rootJ, "ip", json_string(ip.c_str()));
+		json_object_set_new(rootJ, "txPort", json_string(txPort.c_str()));
+		json_object_set_new(rootJ, "rxPort", json_string(rxPort.c_str()));
 
 
 		json_t* rackMappingJJ = json_object();		
@@ -1819,14 +1611,13 @@ struct OrestesOneModule : Module {
 		if (!midiIgnoreDevices) {
 			json_t* midiIgnoreDevicesJ = json_object_get(rootJ, "midiIgnoreDevices");
 			if (midiIgnoreDevicesJ)	midiIgnoreDevices = json_boolean_value(midiIgnoreDevicesJ);
-			json_t* midiInputJ = json_object_get(rootJ, "midiInput");
-			if (midiInputJ) midiInput.fromJson(midiInputJ);
-			json_t* midiOutputJ = json_object_get(rootJ, "midiOutput");
-			if (midiOutputJ) midiOutput.fromJson(midiOutputJ);
-			json_t* midiCtrlInputJ = json_object_get(rootJ, "midiCtrlInput");
-			if (midiCtrlInputJ) midiCtrlInput.fromJson(midiCtrlInputJ);
-			json_t* midiCtrlOutputJ = json_object_get(rootJ, "midiCtrlOutput");
-			if (midiCtrlOutputJ) midiCtrlOutput.fromJson(midiCtrlOutputJ);
+			receiving = json_boolean_value(json_object_get(rootJ, "receiving"));
+			sending = json_boolean_value(json_object_get(rootJ, "sending"));
+			ip = json_string_value(json_object_get(rootJ, "ip"));
+			txPort = json_string_value(json_object_get(rootJ, "txPort"));
+			rxPort = json_string_value(json_object_get(rootJ, "rxPort"));
+			receiverPower();
+			senderPower();
 		}
 
 		// Rack Mapping
@@ -2098,10 +1889,13 @@ struct OrestesOneModule : Module {
 				break;
 		}
 	}
+
 };
 
 
 
 
-} // namespace OrestesOne
-} // namespace Orestes
+
+
+}
+}

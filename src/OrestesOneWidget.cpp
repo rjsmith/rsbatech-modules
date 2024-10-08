@@ -9,7 +9,7 @@ struct SlewSlider : ui::Slider {
 	struct SlewQuantity : Quantity {
 		const float SLEW_MIN = 0.f;
 		const float SLEW_MAX = 5.f;
-		OrestesOneParam* p;
+		RackParam* p;
 		void setValue(float value) override {
 			value = clamp(value, SLEW_MIN, SLEW_MAX);
 			p->setSlew(value);
@@ -34,7 +34,7 @@ struct SlewSlider : ui::Slider {
 		}
 	}; // struct SlewQuantity
 
-	SlewSlider(OrestesOneParam* p) {
+	SlewSlider(RackParam* p) {
 		box.size.x = 220.0f;
 		quantity = construct<SlewQuantity>(&SlewQuantity::p, p);
 	}
@@ -44,7 +44,7 @@ struct SlewSlider : ui::Slider {
 }; // struct SlewSlider
 
 struct ScalingInputLabel : MenuLabelEx {
-	OrestesOneParam* p;
+	RackParam* p;
 	void step() override {
 		float min = std::min(p->getMin(), p->getMax());
 		float max = std::max(p->getMin(), p->getMax());
@@ -61,7 +61,7 @@ struct ScalingInputLabel : MenuLabelEx {
 }; // struct ScalingInputLabel
 
 struct ScalingOutputLabel : MenuLabelEx {
-	OrestesOneParam* p;
+	RackParam* p;
 	void step() override {
 		float min = p->getMin();
 		float max = p->getMax();
@@ -77,7 +77,7 @@ struct ScalingOutputLabel : MenuLabelEx {
 
 struct MinSlider : SubMenuSlider {
 	struct MinQuantity : Quantity {
-		OrestesOneParam* p;
+		RackParam* p;
 		void setValue(float value) override {
 			value = clamp(value, -1.f, 2.f);
 			p->setMin(value);
@@ -111,7 +111,7 @@ struct MinSlider : SubMenuSlider {
 		}
 	}; // struct MinQuantity
 
-	MinSlider(OrestesOneParam* p) {
+	MinSlider(RackParam* p) {
 		box.size.x = 220.0f;
 		quantity = construct<MinQuantity>(&MinQuantity::p, p);
 	}
@@ -122,7 +122,7 @@ struct MinSlider : SubMenuSlider {
 
 struct MaxSlider : SubMenuSlider {
 	struct MaxQuantity : Quantity {
-		OrestesOneParam* p;
+		RackParam* p;
 		void setValue(float value) override {
 			value = clamp(value, -1.f, 2.f);
 			p->setMax(value);
@@ -156,7 +156,7 @@ struct MaxSlider : SubMenuSlider {
 		}
 	}; // struct MaxQuantity
 
-	MaxSlider(OrestesOneParam* p) {
+	MaxSlider(RackParam* p) {
 		box.size.x = 220.0f;
 		quantity = construct<MaxQuantity>(&MaxQuantity::p, p);
 	}
@@ -224,9 +224,9 @@ struct OrestesOneChoice : MapModuleChoice<MAX_CHANNELS, OrestesOneModule> {
 				Menu* menu = new Menu;
 				menu->addChild(construct<NprnModeItem>(&MenuItem::text, "Direct", &NprnModeItem::module, module, &NprnModeItem::id, id, &NprnModeItem::nprnMode, NPRNMODE::DIRECT));
 				menu->addChild(construct<NprnModeItem>(&MenuItem::text, "Pickup (snap)", &NprnModeItem::module, module, &NprnModeItem::id, id, &NprnModeItem::nprnMode, NPRNMODE::PICKUP1));
-				reinterpret_cast<MenuItem*>(menu->children.back())->disabled = module->midiParam[id].clockMode != OrestesOneParam::CLOCKMODE::OFF;
+				reinterpret_cast<MenuItem*>(menu->children.back())->disabled = module->midiParam[id].clockMode != RackParam::CLOCKMODE::OFF;
 				menu->addChild(construct<NprnModeItem>(&MenuItem::text, "Pickup (jump)", &NprnModeItem::module, module, &NprnModeItem::id, id, &NprnModeItem::nprnMode, NPRNMODE::PICKUP2));
-				reinterpret_cast<MenuItem*>(menu->children.back())->disabled = module->midiParam[id].clockMode != OrestesOneParam::CLOCKMODE::OFF;
+				reinterpret_cast<MenuItem*>(menu->children.back())->disabled = module->midiParam[id].clockMode != RackParam::CLOCKMODE::OFF;
 				menu->addChild(construct<NprnModeItem>(&MenuItem::text, "Toggle", &NprnModeItem::module, module, &NprnModeItem::id, id, &NprnModeItem::nprnMode, NPRNMODE::TOGGLE));
 				menu->addChild(construct<NprnModeItem>(&MenuItem::text, "Toggle + Value", &NprnModeItem::module, module, &NprnModeItem::id, id, &NprnModeItem::nprnMode, NPRNMODE::TOGGLE_VALUE));
 				return menu;
@@ -250,7 +250,7 @@ struct OrestesOneChoice : MapModuleChoice<MAX_CHANNELS, OrestesOneModule> {
 
 			Menu* createChildMenu() override {
 				struct PresetItem : MenuItem {
-					OrestesOneParam* p;
+					RackParam* p;
 					float min, max;
 					void onAction(const event::Action& e) override {
 						p->setMin(min);

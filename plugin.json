@@ -16,8 +16,14 @@
     {
       "slug": "OrestesOne",
       "name": "Orestes One",
-      "description": "MIDI control from Electra One",
-      "tags": ["Utility", "MIDI"]
+      "description": "Module control from Electra One",
+      "tags": ["Utility", "MIDI", "Controller"]
+    },
+    {
+      "slug": "Pylades",
+      "name": "Pylades",
+      "description": "Module control from TouchOSC",
+      "tags": ["Utility", "MIDI", "Controller"]
     }
   ]
 }
