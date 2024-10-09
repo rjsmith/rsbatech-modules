@@ -280,6 +280,8 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 	PyladesModule* module;
 	PyladesDisplay* mapWidget;
 
+	dsp::BooleanTrigger receiveTrigger;
+	dsp::BooleanTrigger sendTrigger;
 	dsp::SchmittTrigger expMemPrevTrigger;
 	dsp::SchmittTrigger expMemNextTrigger;
 	dsp::SchmittTrigger expMemParamTrigger;
@@ -358,6 +360,17 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 	void step() override {
 		ThemedModuleWidget<PyladesModule>::step();
 		if (module) {
+
+			if (receiveTrigger.process(module->params[PyladesModule::PARAM_RECV].getValue() > 0.0f)) {
+				module->receiving ^= true;
+				module->receiverPower();
+			}
+
+			if (sendTrigger.process(module->params[PyladesModule::PARAM_SEND].getValue() > 0.0f)) {
+				module->sending ^= true;
+				module->senderPower();
+			}
+
 			// MEM
 			if (module->e1ProcessPrev || expMemPrevTrigger.process(module->params[PyladesModule::PARAM_PREV].getValue())) {
 			    module->e1ProcessPrev = false;

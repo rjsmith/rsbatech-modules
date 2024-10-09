@@ -301,6 +301,8 @@ private:
     math::Vec e1SelectedModulePos;
     bool e1ProcessResendMIDIFeedback;
     bool e1VersionPoll;
+	bool oscReceived = false;
+	bool oscSent = false;
 
     // E1 Process flags
     int sendE1EndMessage = 0;
@@ -538,8 +540,6 @@ private:
 		ts++;
 
 		// Aquire new OSC message from the Receiver
-		bool oscReceived = false;
-		bool oscSent = false;
 		TheModularMind::OscMessage rxMessage;
 		while (oscReceiver.shift(&rxMessage)) {
 			bool r = processOscMessage(rxMessage);
@@ -559,7 +559,6 @@ private:
 
 		if (e1ProcessResendMIDIFeedback || (midiResendPeriodically && midiResendDivider.process())) {
 			midiResendFeedback();
-			oscSent = true;
 		}
 
 
@@ -749,7 +748,7 @@ private:
 							// Send manually altered parameter change out to MIDI
 						    nprns[id].setValue(v, lastValueIn[id] < 0);
 							lastValueOut[id] = v;
-
+							oscSent = true;
 							// DEBUG("Sending MIDI feedback for %d, value %d", id, v);
 							sendE1Feedback(id);
                         	e1ProcessResetParameter = false;
@@ -820,7 +819,8 @@ private:
 	bool processOscMessage(TheModularMind::OscMessage msg) {
 
 		std::string address = msg.getAddress();
-		bool oscReceived = false;
+
+		// DEBUG("OSC message %s", address.c_str());
 
 		if (address == OSCMSG_FADER) {
 			int nprn = msg.getArgAsInt(0);
