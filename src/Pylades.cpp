@@ -812,7 +812,9 @@ private:
 	 * =============
 	 * []
 	 * 
-	 * TODO: Other commands
+	 * /pylades/resetparam (resets mapped parameter to its default value)
+	 * ===================
+	 * [0] 		Controller Id (int)
 	 * 
 	 * 
 	 */ 
@@ -820,11 +822,11 @@ private:
 
 		std::string address = msg.getAddress();
 
-		// DEBUG("OSC message %s", address.c_str());
+		DEBUG("OSC message %s", address.c_str());
 
 		if (address == OSCMSG_FADER) {
 			int nprn = msg.getArgAsInt(0);
-			float value = msg.getArgAsFloat(1);
+			int value = msg.getArgAsInt(1);
 			if (learningId >= 0 && learnedNprnLast != nprn && valuesNprn[nprn] != value) {                    
 	            nprns[learningId].setNprn(nprn);
 	            nprns[learningId].nprnMode = NPRNMODE::DIRECT;
@@ -856,10 +858,14 @@ private:
             e1SelectedModulePos = Vec(moduleX, moduleY);
             return true;
 		} else if (address == OSCMSG_LIST_MODULES) {
-            // DEBUG("Received an E1 List Mapped Modules Command");
+            DEBUG("Received an OSC List Mapped Modules Command");
             e1ProcessListMappedModules = true;
             return true;
-
+        } else if (address == OSCMSG_RESET_PARAM) {
+        	DEBUG("Received an E1 Reset Parameter Command for NPRN %d", e1ProcessResetParameterNPRN);
+ 			e1ProcessResetParameter = true;
+            e1ProcessResetParameterNPRN = msg.getArgAsInt(0);            
+            return true;
       	// TODO: Other OSC commands	
 
 
@@ -1819,8 +1825,8 @@ private:
 
 		std::string modelSlug = json_string_value(json_object_get(libraryJ, "model"));
 
-		// Only handle midimap library JSON files created by OrestesOne
-		if (!(pluginSlug == this->model->plugin->slug && modelSlug == this->model->slug))
+		// Only handle midimap library JSON files created by RSBATechModule
+		if (!(pluginSlug == this->model->plugin->slug))
 			return false;
 
 		// Get the midiMap in the imported library Json
