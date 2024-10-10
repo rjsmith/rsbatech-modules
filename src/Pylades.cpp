@@ -144,20 +144,6 @@ struct OscOutput {
 
     } 
 
-    /**
-     * Packs a 14 bit NPRN parameter update to E1 encoded in a single 9-byte output Sysex message
-     * 
- 	 * Byte(s)
-     * =======
-     * [0 ]        0xF0 SysEx header byte
-     * [1-3]       0x00 0x7F 0x7F Placeholder MIDI Manufacturer Id
-     * [4]         0x01 Control update
-     * [5]         NPRN id MSB (0-127)
-     * [6]         NPRN id LSB (0-127)
-     * [7]         Value MSB (0-127)
-     * [8]         Value LSB (0-127)
-     * [9]       0xF7 SysEx end byte
-     */
     void setPackedNPRNValue(int value, int nprn, int valueNprnIn, bool force = false) {
 		if ((value == lastNPRNValues[nprn] || value == valueNprnIn) && !force)
 			return;
@@ -168,7 +154,7 @@ struct OscOutput {
 	
 		valueMessage.setAddress("/fader");
 		valueMessage.addIntArg(nprn);
-		valueMessage.addIntArg(valueNprnIn);
+		valueMessage.addIntArg(value);
 		valueBundle.addMessage(valueMessage);
 
 		moduleRef.oscSender.sendBundle(valueBundle);
