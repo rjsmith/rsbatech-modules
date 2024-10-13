@@ -39,18 +39,21 @@ struct OscOutput {
 	 */
     void sendOscControlUpdate(int id, const char* name, const char* displayValue) {
         
-		TheModularMind::OscBundle feedbackBundle;
-		TheModularMind::OscMessage infoMessage;
+        if (moduleRef.sending) {
+	        TheModularMind::OscBundle feedbackBundle;
+			TheModularMind::OscMessage infoMessage;
 
-		infoMessage.setAddress("/fader/info");
-		infoMessage.addIntArg(id); // controller id
-		infoMessage.addStringArg(displayValue); // displayValue
-	    infoMessage.addIntArg(1); // visible
-	    infoMessage.addStringArg(name); // parameter display name
-		feedbackBundle.addMessage(infoMessage);
-	
+			infoMessage.setAddress("/fader/info");
+			infoMessage.addIntArg(id); // controller id
+			infoMessage.addStringArg(displayValue); // displayValue
+		    infoMessage.addIntArg(1); // visible
+		    infoMessage.addStringArg(name); // parameter display name
+			feedbackBundle.addMessage(infoMessage);
+		
 
-		moduleRef.oscSender.sendBundle(feedbackBundle);
+			moduleRef.oscSender.sendBundle(feedbackBundle);	
+        }
+		
 
    }
 
@@ -59,35 +62,38 @@ struct OscOutput {
     */
    void changeE1Module(const char* moduleName, const char* moduleDisplayName, float moduleY, float moduleX, int maxNprnId) {
 
-   		TheModularMind::OscBundle feedbackBundle;
-		TheModularMind::OscMessage infoMessage;
+		if (moduleRef.sending) {
+	   		TheModularMind::OscBundle feedbackBundle;
+			TheModularMind::OscMessage infoMessage;
 
-		infoMessage.setAddress("/module/changing");
-		infoMessage.addStringArg(moduleName);
-		infoMessage.addStringArg(moduleDisplayName);
-		infoMessage.addFloatArg(moduleY);
-		infoMessage.addFloatArg(moduleX);
-		infoMessage.addIntArg(maxNprnId);
-		feedbackBundle.addMessage(infoMessage);
-	
+			infoMessage.setAddress("/module/changing");
+			infoMessage.addStringArg(moduleName);
+			infoMessage.addStringArg(moduleDisplayName);
+			infoMessage.addFloatArg(moduleY);
+			infoMessage.addFloatArg(moduleX);
+			infoMessage.addIntArg(maxNprnId);
+			feedbackBundle.addMessage(infoMessage);
+		
 
-		moduleRef.oscSender.sendBundle(feedbackBundle);
+			moduleRef.oscSender.sendBundle(feedbackBundle);
 
-		// TODO: Combine into one bundled message with the control updates
-
+		}
    }
 
  	/**
  	 * Inform E1 that a change module sequence has completed
  	 */
    void endChangeE1Module() {
-       	TheModularMind::OscBundle feedbackBundle;
-		TheModularMind::OscMessage infoMessage;
 
-		infoMessage.setAddress("/module/end");
-		feedbackBundle.addMessage(infoMessage);
-	
-		moduleRef.oscSender.sendBundle(feedbackBundle);
+   		if (moduleRef.sending) {
+	       	TheModularMind::OscBundle feedbackBundle;
+			TheModularMind::OscMessage infoMessage;
+
+			infoMessage.setAddress("/module/end");
+			feedbackBundle.addMessage(infoMessage);
+		
+			moduleRef.oscSender.sendBundle(feedbackBundle);
+		}
 
    }
 
@@ -98,19 +104,21 @@ struct OscOutput {
    template <class Iterator>
    void sendModuleList(Iterator begin, Iterator end) {
 
-		TheModularMind::OscBundle mappedModulesBundle;
+		if (moduleRef.sending) {
+			TheModularMind::OscBundle mappedModulesBundle;
 
-        // 1. Add a startmml to the bundle
-        startMappedModuleList(mappedModulesBundle);
+	        // 1. Add a startmml to the bundle
+	        startMappedModuleList(mappedModulesBundle);
 
-        // 2. Loop over iterator, add a OscMessage to the bundle
-        for (Iterator it = begin; it != end; ++it) {
-            mappedModuleInfo(*it, mappedModulesBundle);
-        }
+	        // 2. Loop over iterator, add a OscMessage to the bundle
+	        for (Iterator it = begin; it != end; ++it) {
+	            mappedModuleInfo(*it, mappedModulesBundle);
+	        }
 
-        // 3. Finish with a endMappedModuleList OscMessage
-        endMappedModuleList(mappedModulesBundle);
-        moduleRef.oscSender.sendBundle(mappedModulesBundle);
+	        // 3. Finish with a endMappedModuleList OscMessage
+	        endMappedModuleList(mappedModulesBundle);
+	        moduleRef.oscSender.sendBundle(mappedModulesBundle);
+	    }
    }
 
     void startMappedModuleList(TheModularMind::OscBundle& mappedModulesBundle) {
@@ -134,19 +142,22 @@ struct OscOutput {
     }
     
     void sendOrestesOneVersion(std::string o1Version) {
-    	TheModularMind::OscBundle feedbackBundle;
-		TheModularMind::OscMessage infoMessage;
 
-		infoMessage.setAddress("/pylades/version");
-		infoMessage.addStringArg(o1Version);
-		feedbackBundle.addMessage(infoMessage);
-	
-		moduleRef.oscSender.sendBundle(feedbackBundle);
+    	if (moduleRef.sending) {
+	    	TheModularMind::OscBundle feedbackBundle;
+			TheModularMind::OscMessage infoMessage;
+
+			infoMessage.setAddress("/pylades/version");
+			infoMessage.addStringArg(o1Version);
+			feedbackBundle.addMessage(infoMessage);
+		
+			moduleRef.oscSender.sendBundle(feedbackBundle);
+		}
 
     } 
 
     void setPackedNPRNValue(int value, int nprn, int valueNprnIn, bool force = false) {
-		if ((value == lastNPRNValues[nprn] || value == valueNprnIn) && !force)
+		if ((value == lastNPRNValues[nprn] || value == valueNprnIn || !moduleRef.sending) && !force)
 			return;
 		lastNPRNValues[nprn] = value;
 
@@ -566,10 +577,10 @@ private:
 					lights[LIGHT_RECV + 2].setBrightness(0.0f);
 				}
 			} else {
-				// Orange
-				lights[LIGHT_RECV].setBrightness(1.0f);
-				lights[LIGHT_RECV + 1].setBrightness(0.4f);
-				lights[LIGHT_RECV + 2].setBrightness(0.0f);
+				// Grey
+				lights[LIGHT_RECV].setBrightness(0.028f);
+				lights[LIGHT_RECV + 1].setBrightness(0.028f);
+				lights[LIGHT_RECV + 2].setBrightness(0.028f);
 			}
 
 			if (sending) {
@@ -586,10 +597,10 @@ private:
 					lights[LIGHT_SEND + 2].setBrightness(0.0f);
 				}
 			} else {
-				// Orange
-				lights[LIGHT_SEND].setBrightness(1.0f);
-				lights[LIGHT_SEND + 1].setBrightness(0.4f);
-				lights[LIGHT_SEND + 2].setBrightness(0.0f);
+				// Grey
+				lights[LIGHT_SEND].setBrightness(0.028f);
+				lights[LIGHT_SEND + 1].setBrightness(0.028f);
+				lights[LIGHT_SEND + 2].setBrightness(0.028f);
 			}
 		}
 
