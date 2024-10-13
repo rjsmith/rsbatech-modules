@@ -57,12 +57,13 @@ struct OscOutput {
    /**
     * Inform E1 that a change module action is starting
     */
-   void changeE1Module(const char* moduleDisplayName, float moduleY, float moduleX, int maxNprnId) {
+   void changeE1Module(const char* moduleName, const char* moduleDisplayName, float moduleY, float moduleX, int maxNprnId) {
 
    		TheModularMind::OscBundle feedbackBundle;
 		TheModularMind::OscMessage infoMessage;
 
 		infoMessage.setAddress("/module/changing");
+		infoMessage.addStringArg(moduleName);
 		infoMessage.addStringArg(moduleDisplayName);
 		infoMessage.addFloatArg(moduleY);
 		infoMessage.addFloatArg(moduleX);
@@ -527,6 +528,7 @@ private:
 
 		// Aquire new OSC message from the Receiver
 		TheModularMind::OscMessage rxMessage;
+		oscReceived = false;
 		while (oscReceiver.shift(&rxMessage)) {
 			bool r = processOscMessage(rxMessage);
 			oscReceived = oscReceived || r;
@@ -794,8 +796,8 @@ private:
 	 * [0]		Module Y (row) rack co-ordinate (float)
 	 * [1]		Module X (column) rack co-ordinate (float)
 	 * 
-	 * /pylades/list (return list of mapped modules in the rack)
-	 * =============
+	 * /pylades/listmodules (return list of mapped modules in the rack)
+	 * ====================
 	 * []
 	 * 
 	 * /pylades/resetparam (resets mapped parameter to its default value)
@@ -935,9 +937,9 @@ private:
 		}
 	}
 
-	void changeE1Module(const char* moduleName, float moduleY, float moduleX, int maxNprnId) {
+	void changeE1Module(const char* moduleName, const char* moduleDisplayName, float moduleY, float moduleX, int maxNprnId) {
 	    // DEBUG("changeE1Module to %s", moduleName);
-	    oscOutput.changeE1Module(moduleName, moduleY, moduleX, maxNprnId);
+	    oscOutput.changeE1Module(moduleName, moduleDisplayName, moduleY, moduleX, maxNprnId);
 	}
 
 	void endChangeE1Module() {
@@ -1299,7 +1301,7 @@ private:
         		maxNprnId = it->nprn;
         	}
         }
-		changeE1Module(m->model->getFullName().c_str(), pos.y, pos.x, maxNprnId);
+		changeE1Module(m->model->name.c_str(), m->model->getFullName().c_str(), pos.y, pos.x, maxNprnId);
 
 		clearMaps_WithLock();
 		oscOutput.reset();
@@ -1342,7 +1344,7 @@ private:
         		maxNprnId = it->nprn;
         	}
         }
-		changeE1Module("Rack Mapping", 0, 0, maxNprnId);
+		changeE1Module("RackMapping", "Rack Mapping", 0, 0, maxNprnId);
 		clearMaps_WithLock();
 		oscOutput.reset();
 		expMemModuleId = -1;
