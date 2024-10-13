@@ -307,7 +307,7 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 		addChild(createWidget<OrestesBlackScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 		addChild(createWidget<OrestesBlackScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-		OscWidget* oscConfigWidget = createWidget<OscWidget>(mm2px(Vec(10.0f, 12.0f)));
+		OscWidget* oscConfigWidget = createWidget<OscWidget>(mm2px(Vec(5.0f, 12.0f)));
 		oscConfigWidget->box.size = mm2px(Vec(77, 5));
 		oscConfigWidget->module = module;
 		if (module) {
@@ -316,14 +316,14 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 		addChild(oscConfigWidget);
 
 		// Send switch
-		math::Vec inpPos = mm2px(Vec(54, 14.5));
+		math::Vec inpPos = mm2px(Vec(55, 14.5));
 		addChild(createParamCentered<TL1105>(inpPos, module, PyladesModule::PARAM_SEND));
-		addChild(createLightCentered<SmallLight<RedGreenBlueLight>>(inpPos, module, PyladesModule::LIGHT_SEND));
+		addChild(createLightCentered<MediumLight<RedGreenBlueLight>>(inpPos, module, PyladesModule::LIGHT_SEND));
 
 		// Receive switch
-		inpPos = mm2px(Vec(79, 14.5));
+		inpPos = mm2px(Vec(80, 14.5));
 		addChild(createParamCentered<TL1105>(inpPos, module, PyladesModule::PARAM_RECV));
-		addChild(createLightCentered<SmallLight<RedGreenBlueLight>>(inpPos, module, PyladesModule::LIGHT_RECV));
+		addChild(createLightCentered<MediumLight<RedGreenBlueLight>>(inpPos, module, PyladesModule::LIGHT_RECV));
 
 		mapWidget = createWidget<PyladesDisplay>(Vec(10.0f, 75.0f));
 		mapWidget->box.size = Vec(280.0f, 260.0f);
