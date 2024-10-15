@@ -595,10 +595,10 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 
 	void importFactoryMidiMapPreset_action(bool skipPremappedModules) {
 
-		// Load factory default library
-		// It is stored in the plugin presets folder
-		std::string pluginPresetPath = module->model->getFactoryPresetDirectory();
-		std::string factoryLibraryFilename = system::join(pluginPresetPath, FACTORY_LIBRARY_FILENAME);
+        // Load factory default library
+        // It is stored in the RSBATechModules plugin presets folder
+        std::string factoryLibraryFilename = asset::plugin(this->model->plugin, system::join("presets", FACTORY_LIBRARY_FILENAME));
+
 
 		if (!system::exists(factoryLibraryFilename)) {
 			WARN("Factory library file %s does not exist, skipping", factoryLibraryFilename.c_str());

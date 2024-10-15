@@ -1731,7 +1731,7 @@ private:
 			}
 		}
 
-		// No loaded midimap library file either from Orestes-One state or loaded preset
+		// No loaded midimap library file either from Pylades state or loaded preset
 		// So try and load default factory mapping library
 		if (!midiMapLoaded && loadMidiMapFromFactoryLibraryFile()) {
 			// factory library loaded OK, now save copy of factory midimap to user preset folder if there is not already one in there
@@ -1739,6 +1739,7 @@ private:
 			std::string defaultMidiMapLibraryFilename = system::join(userPresetPath, DEFAULT_LIBRARY_FILENAME);
 
 			if (!system::exists(defaultMidiMapLibraryFilename)) {
+				system::createDirectories(userPresetPath); // NB: no-op if model preset folder already exists
 				midiMapLibraryFilename = defaultMidiMapLibraryFilename;
 				saveMappingLibraryFile(defaultMidiMapLibraryFilename);
 			}
@@ -1748,9 +1749,8 @@ private:
 
 	bool loadMidiMapFromFactoryLibraryFile() {
 		// Load factory default library
-		// It is stored in the plugin presets folder
-		std::string pluginPresetPath = this->model->getFactoryPresetDirectory();
-		std::string factoryLibraryFilename = system::join(pluginPresetPath, FACTORY_LIBRARY_FILENAME);
+		// It is stored in the RSBATechModules plugin presets folder
+		std::string factoryLibraryFilename = asset::plugin(this->model->plugin, system::join("presets", FACTORY_LIBRARY_FILENAME));
 
 		if (!system::exists(factoryLibraryFilename)) {
 			WARN("Factory library file %s does not exist, skipping", factoryLibraryFilename.c_str());
@@ -1778,6 +1778,7 @@ private:
 		}
 	
 		if (loadMidiMapFromLibrary(libraryJ)) {
+			INFO("Loaded factory library file %s", factoryLibraryFilename.c_str());
 			return true;
 		} else {
 			return false;
@@ -1893,7 +1894,7 @@ private:
 	 */
 	bool saveMappingLibraryFile(std::string filename) {
 
-		DEBUG ("Saving library to %s", filename.c_str());
+		INFO ("Saving mapping library to %s", filename.c_str());
 		json_t* rootJ = json_object();
 		DEFER({
 			json_decref(rootJ);

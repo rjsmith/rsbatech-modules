@@ -1890,6 +1890,7 @@ struct OrestesOneModule : Module {
 			std::string defaultMidiMapLibraryFilename = system::join(userPresetPath, DEFAULT_LIBRARY_FILENAME);
 
 			if (!system::exists(defaultMidiMapLibraryFilename)) {
+                system::createDirectories(userPresetPath); // NB: no-op if model preset folder already exists
 				midiMapLibraryFilename = defaultMidiMapLibraryFilename;
 				saveMappingLibraryFile(defaultMidiMapLibraryFilename);
 			}
@@ -1898,10 +1899,9 @@ struct OrestesOneModule : Module {
 	}
 
 	bool loadMidiMapFromFactoryLibraryFile() {
-		// Load factory default library
-		// It is stored in the plugin presets folder
-		std::string pluginPresetPath = this->model->getFactoryPresetDirectory();
-		std::string factoryLibraryFilename = system::join(pluginPresetPath, FACTORY_LIBRARY_FILENAME);
+        // Load factory default library
+        // It is stored in the RSBATechModules plugin presets folder
+        std::string factoryLibraryFilename = asset::plugin(this->model->plugin, system::join("presets", FACTORY_LIBRARY_FILENAME));
 
 		if (!system::exists(factoryLibraryFilename)) {
 			WARN("Factory library file %s does not exist, skipping", factoryLibraryFilename.c_str());
@@ -1929,6 +1929,7 @@ struct OrestesOneModule : Module {
 		}
 	
 		if (loadMidiMapFromLibrary(libraryJ)) {
+            INFO("Loaded factory library file %s", factoryLibraryFilename.c_str());
 			return true;
 		} else {
 			return false;
@@ -2044,7 +2045,7 @@ struct OrestesOneModule : Module {
 	 */
 	bool saveMappingLibraryFile(std::string filename) {
 
-		DEBUG ("Saving library to %s", filename.c_str());
+		INFO ("Saving library to %s", filename.c_str());
 		json_t* rootJ = json_object();
 		DEFER({
 			json_decref(rootJ);
