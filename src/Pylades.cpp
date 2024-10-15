@@ -815,6 +815,9 @@ private:
 	 * ===================
 	 * [0] 		Controller Id (int)
 	 * 
+	 * /pylades/resend (re-sends info on current mapped parameters)
+	 * ===============
+	 * []
 	 * 
 	 */ 
 	bool processOscMessage(TheModularMind::OscMessage msg) {
@@ -861,18 +864,31 @@ private:
             e1ProcessListMappedModules = true;
             return true;
         } else if (address == OSCMSG_RESET_PARAM) {
-        	DEBUG("Received an E1 Reset Parameter Command for NPRN %d", e1ProcessResetParameterNPRN);
+        	DEBUG("Received an OSC Reset Parameter Command for id %d", e1ProcessResetParameterNPRN);
  			e1ProcessResetParameter = true;
             e1ProcessResetParameterNPRN = msg.getArgAsInt(0);            
             return true;
-      	// TODO: Other OSC commands	
-
-
-
+        } else if (address == OSCMSG_RESEND) {
+        	DEBUG("Received an OSC Re-send OSC Feedback Command");
+            e1ProcessResendMIDIFeedback = true;
+            return true;
+        } else if (address == OSCMSG_APPLY_MODULE) {
+        	// Remotely switch on the "apply" mode, so next mouse click will apply mapped settings for selected module
+        	DEBUG("Received an OSC Apply Module Command");
+	        e1ProcessApply = true;
+	        return true;	
+        } else if (address == OSCMSG_APPLY_RACK_MAPPING) {
+        	DEBUG("Received an OSC Apply Rack Mapping Command");
+	        e1ProcessApplyRackMapping = true;
+	        return true;
+        } else if (address == OSCMSG_VERSION_POLL) {
+        	DEBUG("Received an OSC Version Poll Command");
+	        e1VersionPoll = true;
+	        return true;
 		} else {
 			WARN("Discarding unknown OSC message. OSC message had address: %s and %i args", msg.getAddress().c_str(), (int)msg.getNumArgs());
-			return oscReceived;
-		}
+			return false;
+		};
 
 
 	};

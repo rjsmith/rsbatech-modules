@@ -984,6 +984,7 @@ struct OrestesOneModule : Module {
 	            	case 0x09: {
 	            		// DEBUG("Received an E1 Version Poll Command");
 	            		e1VersionPoll = true;
+                        return true;
 	            	}
                     default: {
                         return false;
