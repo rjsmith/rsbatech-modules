@@ -102,29 +102,46 @@ struct OscOutput {
     * Pass a begin() and end() of a list or vector of MappedModule objects.
     */
    template <class Iterator>
-   void sendModuleList(Iterator begin, Iterator end) {
+   void sendModuleList(Iterator begin, Iterator end, int numMappedModules) {
 
 		if (moduleRef.sending) {
-			TheModularMind::OscBundle mappedModulesBundle;
+			
+	        // 1. Send a startmml message
+	        sendStartMappedModuleList();
 
-	        // 1. Add a startmml to the bundle
-	        startMappedModuleList(mappedModulesBundle);
-
-	        // 2. Loop over iterator, add a OscMessage to the bundle
+	        TheModularMind::OscBundle modulesBundle;
+	        modulesBundle.reserve(1,10);
+	        int bundleMessageCount = 0;
+	        // 2. Loop over iterator, Send a OscMessage for each mapped module
 	        for (Iterator it = begin; it != end; ++it) {
-	            mappedModuleInfo(*it, mappedModulesBundle);
+	            mappedModuleInfo(*it, modulesBundle);
+	            bundleMessageCount++;
+	            if (bundleMessageCount == 10) {
+	            	// flush bundle
+	            	moduleRef.oscSender.sendBundle(modulesBundle);
+	            	modulesBundle.clear();
+	            	bundleMessageCount = 0;
+	            } 
+	        }
+	        // Flush last module bundle
+	        if (bundleMessageCount > 0) {
+	        	moduleRef.oscSender.sendBundle(modulesBundle);
 	        }
 
 	        // 3. Finish with a endMappedModuleList OscMessage
-	        endMappedModuleList(mappedModulesBundle);
-	        moduleRef.oscSender.sendBundle(mappedModulesBundle);
+	        sendEndMappedModuleList();
+
+	    } else {
+	    	WARN("Cannot send module list whilst not connected");
 	    }
    }
 
-    void startMappedModuleList(TheModularMind::OscBundle& mappedModulesBundle) {
+    void sendStartMappedModuleList() {
+    	TheModularMind::OscBundle moduleBundle;
     	TheModularMind::OscMessage moduleMessage;
 		moduleMessage.setAddress("/module/startmml");
-		mappedModulesBundle.addMessage(moduleMessage);
+		moduleBundle.addMessage(moduleMessage);
+		moduleRef.oscSender.sendBundle(moduleBundle);
     }
     void mappedModuleInfo(RackMappedModuleListItem& m, TheModularMind::OscBundle& mappedModulesBundle) {
 		TheModularMind::OscMessage moduleMessage;
@@ -135,10 +152,12 @@ struct OscOutput {
 		moduleMessage.addFloatArg(m.getX());
 		mappedModulesBundle.addMessage(moduleMessage);
     }
-    void endMappedModuleList(TheModularMind::OscBundle& mappedModulesBundle) {
+    void sendEndMappedModuleList() {
+    	TheModularMind::OscBundle moduleBundle;
        	TheModularMind::OscMessage moduleMessage;
-		moduleMessage.setAddress("/module/endmml");
-		mappedModulesBundle.addMessage(moduleMessage);
+       	moduleMessage.setAddress("/module/endmml");
+		moduleBundle.addMessage(moduleMessage);
+		moduleRef.oscSender.sendBundle(moduleBundle);
     }
     
     void sendOrestesOneVersion(std::string o1Version) {
@@ -935,6 +954,7 @@ private:
         std::list<Widget*>::iterator it = modules.begin();
 
         e1MappedModuleList.clear();
+        int count = 0;
         // Scan over all rack modules, determine if each is parameter-mapped
         for (; it != modules.end(); it++) {
             ModuleWidget* mw = dynamic_cast<ModuleWidget*>(*it);
@@ -950,10 +970,11 @@ private:
                     mw->box.pos.x
                 };
                 e1MappedModuleList.push_back(item);
+                count++;
             }
         }
-
-        oscOutput.sendModuleList(e1MappedModuleList.begin(), e1MappedModuleList.end());
+        DEBUG("Sending mapped module list with %d modules", count);
+        oscOutput.sendModuleList(e1MappedModuleList.begin(), e1MappedModuleList.end(), count);
 
     }
 
