@@ -382,6 +382,9 @@ struct OrestesOneModule : Module {
 	std::string textLabel[MAX_CHANNELS];
 	/** [Stored to Json] */
 	bool locked;
+	/** [Stored to Json] */
+	bool scrollToModule;
+
 
 	NVGcolor mappingIndicatorColor = nvgRGB(0xff, 0xff, 0x40);
 	/** [Stored to Json] */
@@ -1649,6 +1652,7 @@ struct OrestesOneModule : Module {
 		json_object_set_new(rootJ, "processDivision", json_integer(processDivision));
 		json_object_set_new(rootJ, "overlayEnabled", json_boolean(overlayEnabled));
 		json_object_set_new(rootJ, "clearMapsOnLoad", json_boolean(clearMapsOnLoad));
+		json_object_set_new(rootJ, "scrollToModule", json_boolean(scrollToModule));
 
 		json_t* mapsJ = json_array();
 		for (int id = 0; id < mapLen; id++) {
@@ -1758,6 +1762,9 @@ struct OrestesOneModule : Module {
 			// Use NoLock because we're already in an Engine write-lock.
 			clearMaps_NoLock();
 		}
+
+		json_t* scrollToModuleJ = json_object_get(rootJ, "scrollToModule");
+		if (scrollToModuleJ) scrollToModule = json_boolean_value(scrollToModuleJ);
 
 		json_t* mapsJ = json_object_get(rootJ, "maps");
 		if (mapsJ) {

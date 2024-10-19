@@ -440,6 +440,10 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 			if (modulePos.equals(mw->box.pos)) {
 				Module* m = mw->module;
 			    if (module->expMemTest(m)) {
+			    	// Optionally move viewport to selected module
+				    if (module->scrollToModule) {
+				    	RSBATechModules::Rack::ViewportCenter{mw};	
+				    }
 			  	    // If module at matched position is mapped in extMem, we can safely apply its current mappings
 				    module->expMemApply(m, mw->box.pos);
 				}
@@ -471,6 +475,10 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 			ModuleWidget* mw = dynamic_cast<ModuleWidget*>(*it);
 			Module* m = mw->module;
 			if (module->expMemTest(m)) {
+				// Optionally move viewport to selected module
+			    if (module->scrollToModule) {
+			    	RSBATechModules::Rack::ViewportCenter{mw};	
+			    }
 				module->expMemApply(m, mw->box.pos);
 				return;
 			}
@@ -1041,6 +1049,7 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 				menu->addChild(createBoolPtrMenuItem("Lock mapping slots", "", &module->locked));
 			}
 		));
+		menu->addChild(createBoolPtrMenuItem("Scroll to selected module", "", &module->scrollToModule));
 		menu->addChild(createBoolPtrMenuItem("Status overlay", "", &module->overlayEnabled));
 		menu->addChild(new MenuSeparator());
 		menu->addChild(createSubmenuItem("Automap this rack", "",
