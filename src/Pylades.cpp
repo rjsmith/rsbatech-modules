@@ -200,8 +200,6 @@ private:
 
 };
 
-	// TODO: OSC output structs
-
 	TheModularMind::OscReceiver oscReceiver;
 	TheModularMind::OscSender oscSender;
 	std::string ip = "localhost";

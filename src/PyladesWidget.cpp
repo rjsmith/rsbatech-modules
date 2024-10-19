@@ -393,7 +393,7 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 				module->oscProcessApplyRackMapping = false;
 				module->expMemApplyRackMapping();
 			}
-			module->lights[0].setBrightness(learnMode == LEARN_MODE::MEM);
+			module->lights[PyladesModule::LIGHT_APPLY].setBrightness(learnMode == LEARN_MODE::MEM);
 		
 		}
 
