@@ -1,7 +1,7 @@
 # RSBATech-Modules
 
 <!-- Version and License Badges -->
-![Version](https://img.shields.io/badge/version-2.0.0--beta5-green.svg?style=flat-square)
+![Version](https://img.shields.io/badge/version-2.0.0--beta6-green.svg?style=flat-square)
 ![License](https://img.shields.io/badge/license-GPLv3+-blue.svg?style=flat-square)
 ![Language](https://img.shields.io/badge/language-C++-yellow.svg?style=flat-square)
 
@@ -10,11 +10,12 @@ A [VCV Rack](https://vcvrack.com/) Plugin.
 This Plugin includes the following modules:
 
 * Orestes-One
+* Pylades
 
 
 ## Orestes-One
 
-Orestes-One is a VCV Rack module to control modules and parameters in a rack with the [Electra-One MIDI controller](https://electra.one). It works together with a specific [Electra-One preset](https://app.electra.one/preset/4rIzUF8a60kXiYsyvlTN) to provide two-way control and parameter feedback using smooth 14bit value changes.  
+Orestes-One (the [brother of Electra](https://en.wikipedia.org/wiki/Orestes) in Greek mythology) is a VCV Rack module to control modules and parameters in a rack with the [Electra-One MIDI controller](https://electra.one). It works together with a specific [Electra-One preset](https://app.electra.one/preset/4rIzUF8a60kXiYsyvlTN) to provide two-way control and parameter feedback using smooth 14bit value changes.  
 
 
 ![Orestes-One controlling a Befaco Rampage module](/images/OrestesOne.png?raw=true "Orestes-One controlling a Befaco Rampage module")
@@ -23,17 +24,22 @@ Orestes-One is a VCV Rack module to control modules and parameters in a rack wit
 
 ![Electra-One preset showing module select page](/images/E1VCVRackPresetModuleGrid.png?raw=true "Electra-One preset showing the module select page")
 
+## Pylades
+
+Pylades (the [cousin of Orestes](https://en.wikipedia.org/wiki/Pylades) in Greek mythology) is a VCV Rack module to control modules and parameters in a rack with [TouchOSC](https://hexler.net/touchosc). It works together with a specific TouchOSC preset to provide two-way control and parameter feedback using smooth 14bit value changes.  
+
+
 ## Key Features
 
-Functionally, Orestes-One is basically ([MIDI-CAT](https://library.vcvrack.com/Stoermelder-P1/MidiCat) minus MIDI CC7 & MIDI notes) + ([Oscelot](https://library.vcvrack.com/OSCelot/OSCelot) minus OSC) + bi-directional Electra-One SysEx + some of my own ideas
+Functionally, Orestes-One and Pylades are basically ([MIDI-CAT](https://library.vcvrack.com/Stoermelder-P1/MidiCat) minus MIDI CC7 & MIDI notes) + ([Oscelot](https://library.vcvrack.com/OSCelot/OSCelot) minus OSC) + bi-directional Electra-One SysEx or OSC commands plus some of my own ideas
 
-* Control individual rack module parameters with rich value and control label feedback on the Electra-One screen
-* Smooth 14-bit MIDI sysex controller changes
+* Control individual rack module parameters with rich value and control label feedback on the Electra-One / TouchOSC screen
+* Smooth 14-bit value controller changes
 * Manual parameter mapping (from MIDI-CAT)
-* Navigate between the mapped modules in the current VCVRack patch using Electra-One's touch screen 
+* Navigate between the mapped modules in the current VCVRack patch using the touch screen of Electra One or TouchOSC
 * Automap a single module
 * Automap all modules in a rack in one go, optionally skipping or overwriting existing module mappings
-* Mouse-free rack module selection and navigation using Electra One
+* Mouse-free rack module selection and navigation using Electra One or TouchOSC
 * Special support designed for [MindMeld PatchMaster](https://library.vcvrack.com/MindMeldModular/PatchMaster) modules in a rack, allowing switching between a single rack-level mapping and individual module mappings.
 * Create and manage re-usable module-specific mappings stored in a module mapping library file
 * Export and import module mappings, so they can be shared and curated by the user community (there are over 3000 modules to be mapped after all!)
@@ -43,7 +49,7 @@ Plus most MIDI-CAT features (up to its [v2.0.beta4](https://github.com/stoermeld
 
 ## Documentation
 
-Please see the [Wiki](https://github.com/rjsmith/rsbatech-modules/wiki) for the Orestes-One and Electra-One preset user guide.
+Please see the [Wiki](https://github.com/rjsmith/rsbatech-modules/wiki) for the Pylades, Orestes-One and Electra-One preset user guide.
 
 ## Change History
 

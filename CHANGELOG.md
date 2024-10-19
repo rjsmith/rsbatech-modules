@@ -1,3 +1,9 @@
+## 2.0.0-beta6 19 Oct 2024
+
+- Implemented the Pylades module for VCV Rack control from any TouchOSC device
+- Added factory module mappings for SurgeXT
+- Added an optional "Scroll to selected module" rack navigation feature
+
 ## 2.0.0-beta5 29 Sep 2024
 
 - Added module mappings for ProkModular premium plugin
