@@ -74,11 +74,11 @@ struct PyladesChoice : MapModuleChoice<MAX_CHANNELS, PyladesModule> {
 		}; // struct NprnModeMenuItem
 
 		if (module->nprns[id].getNprn() >= 0) {
-			menu->addChild(construct<UnmapMidiItem>(&MenuItem::text, "Clear MIDI assignment", &UnmapMidiItem::module, module, &UnmapMidiItem::id, id));
+			menu->addChild(construct<UnmapMidiItem>(&MenuItem::text, "Clear OSC assignment", &UnmapMidiItem::module, module, &UnmapMidiItem::id, id));
 		}
 		if (module->nprns[id].getNprn() >= 0) {
 			menu->addChild(new MenuSeparator());
-			menu->addChild(construct<NprnModeMenuItem>(&MenuItem::text, "Input mode for NPRN", &NprnModeMenuItem::module, module, &NprnModeMenuItem::id, id));
+			menu->addChild(construct<NprnModeMenuItem>(&MenuItem::text, "Input mode for OSC", &NprnModeMenuItem::module, module, &NprnModeMenuItem::id, id));
 		}
 
 		struct PresetMenuItem : MenuItem {
@@ -765,7 +765,7 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 		
 		struct PyladesBeginItem : MenuLabel {
 			PyladesBeginItem() {
-				text = "ORESTES-ONE";
+				text = "PYLADES";
 			}
 		};
 
@@ -818,10 +818,10 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 
 				Menu* menu = new Menu;
 				if (currentId < 0) {
-					menu->addChild(construct<MapEmptyItem>(&MenuItem::text, "Learn MIDI", &MapEmptyItem::module, module, &MapEmptyItem::pq, pq));
+					menu->addChild(construct<MapEmptyItem>(&MenuItem::text, "Learn OSC", &MapEmptyItem::module, module, &MapEmptyItem::pq, pq));
 				}
 				else {
-					menu->addChild(construct<MapItem>(&MenuItem::text, "Learn MIDI", &MapItem::module, module, &MapItem::currentId, currentId));
+					menu->addChild(construct<MapItem>(&MenuItem::text, "Learn OSC", &MapItem::module, module, &MapItem::currentId, currentId));
 				}
 
 				if (module->mapLen > 0) {
@@ -833,7 +833,7 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 								text = module->textLabel[i];
 							}
 							else if (module->nprns[i].getNprn() >= 0) {
-                            	text = string::f("MIDI NPRN %03d", module->nprns[i].getNprn());
+                            	text = string::f("OSC %03d", module->nprns[i].getNprn());
                             }
 							menu->addChild(construct<RemapItem>(&MenuItem::text, text, &RemapItem::module, module, &RemapItem::pq, pq, &RemapItem::id, i, &RemapItem::currentId, currentId));
 						}
@@ -866,7 +866,7 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 				w.push_back(construct<MapMenuItem>(&MenuItem::text, string::f("Re-map %s", midiCatId.c_str()), &MapMenuItem::module, module, &MapMenuItem::pq, pq, &MapMenuItem::currentId, id));
 				w.push_back(new SlewSlider(&module->midiParam[id]));
 				w.push_back(construct<MenuLabel>(&MenuLabel::text, "Scaling"));
-				std::string l = string::f("Input %s", module->nprns[id].getNprn() >= 0 ? "MIDI NPRN" : "");
+				std::string l = string::f("Input %s", module->nprns[id].getNprn() >= 0 ? "OSC" : "");
 				w.push_back(construct<ScalingInputLabel>(&MenuLabel::text, l, &ScalingInputLabel::p, &module->midiParam[id]));
 				w.push_back(construct<ScalingOutputLabel>(&MenuLabel::text, "Parameter range", &ScalingOutputLabel::p, &module->midiParam[id]));
 				w.push_back(new MinSlider(&module->midiParam[id]));
@@ -999,7 +999,7 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 		menu->addChild(new MenuSeparator());
 		menu->addChild(createSubmenuItem("Preset load", "",
 			[=](Menu* menu) {
-				menu->addChild(createBoolPtrMenuItem("Ignore MIDI devices", "", &module->midiIgnoreDevices));
+				menu->addChild(createBoolPtrMenuItem("Ignore OSC devices", "", &module->midiIgnoreDevices));
 				menu->addChild(createBoolPtrMenuItem("Clear mapping slots", "", &module->clearMapsOnLoad));
 			}
 		));
@@ -1026,7 +1026,7 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 				module->setMode(midiMode);
 			}
 		));
-		menu->addChild(createSubmenuItem("Re-send MIDI feedback", "",
+		menu->addChild(createSubmenuItem("Re-send OSC feedback", "",
 			[=](Menu* menu) {
 				menu->addChild(createMenuItem("Now", "", [=]() { module->midiResendFeedback(); }));
 				menu->addChild(createBoolPtrMenuItem("Periodically", "", &module->midiResendPeriodically));
@@ -1053,7 +1053,7 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 			[=](Menu* menu) {
 				menu->addChild(createMenuItem("Automap", RACK_MOD_ALT_NAME "+" RACK_MOD_SHIFT_NAME "+D", [=]() { enableLearn(LEARN_MODE::BIND_AUTOMAP); }));
 				menu->addChild(createMenuItem("Clear first", RACK_MOD_CTRL_NAME "+" RACK_MOD_SHIFT_NAME "+D", [=]() { enableLearn(LEARN_MODE::BIND_CLEAR); }));
-				menu->addChild(createMenuItem("Keep MIDI assignments", RACK_MOD_SHIFT_NAME "+D", [=]() { enableLearn(LEARN_MODE::BIND_KEEP); }));
+				menu->addChild(createMenuItem("Keep OSC assignments", RACK_MOD_SHIFT_NAME "+D", [=]() { enableLearn(LEARN_MODE::BIND_KEEP); }));
 
 			}
 		));
