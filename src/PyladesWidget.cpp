@@ -372,25 +372,25 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 			}
 
 			// MEM
-			if (module->e1ProcessPrev || expMemPrevTrigger.process(module->params[PyladesModule::PARAM_PREV].getValue())) {
-			    module->e1ProcessPrev = false;
+			if (module->oscProcessPrev || expMemPrevTrigger.process(module->params[PyladesModule::PARAM_PREV].getValue())) {
+			    module->oscProcessPrev = false;
 				expMemPrevModule();
 			}
-			if (module->e1ProcessNext || expMemNextTrigger.process(module->params[PyladesModule::PARAM_NEXT].getValue())) {
-			    module->e1ProcessNext = false;
+			if (module->oscProcessNext || expMemNextTrigger.process(module->params[PyladesModule::PARAM_NEXT].getValue())) {
+			    module->oscProcessNext = false;
 				expMemNextModule();
 			}
-			if (module->e1ProcessSelect) {
-			    module->e1ProcessSelect = false;
-			    expMemSelectModule(module->e1SelectedModulePos);
-			    module->e1SelectedModulePos = Vec(0,0);
+			if (module->oscProcessSelect) {
+			    module->oscProcessSelect = false;
+			    expMemSelectModule(module->oscSelectedModulePos);
+			    module->oscSelectedModulePos = Vec(0,0);
 			}
-			if (module->e1ProcessApply || expMemParamTrigger.process(module->params[PyladesModule::PARAM_APPLY].getValue())) {
-				module->e1ProcessApply = false;
+			if (module->oscProcessApply || expMemParamTrigger.process(module->params[PyladesModule::PARAM_APPLY].getValue())) {
+				module->oscProcessApply = false;
 				enableLearn(LEARN_MODE::MEM);
 			}
-			if (module->e1ProcessApplyRackMapping) {
-				module->e1ProcessApplyRackMapping = false;
+			if (module->oscProcessApplyRackMapping) {
+				module->oscProcessApplyRackMapping = false;
 				module->expMemApplyRackMapping();
 			}
 			module->lights[0].setBrightness(learnMode == LEARN_MODE::MEM);
@@ -735,7 +735,7 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 			std::string importedPluginSlug = json_string_value(json_object_get(midiMapJJ, "ps"));
 			std::string importedModuleSlug = json_string_value(json_object_get(midiMapJJ, "ms"));
 
-			// Find this mapped module in the current Orestes module midiMap
+			// Find this mapped module in the current Pylades module midiMap
 			auto p = std::pair<std::string, std::string>(importedPluginSlug, importedModuleSlug);
 			auto it = module->midiMap.find(p);
 			if (it != module->midiMap.end()) {

@@ -160,7 +160,7 @@ struct OscOutput {
 		moduleRef.oscSender.sendBundle(moduleBundle);
     }
     
-    void sendOrestesOneVersion(std::string o1Version) {
+    void sendPyladesVersion(std::string o1Version) {
 
     	if (moduleRef.sending) {
 	    	TheModularMind::OscBundle feedbackBundle;
@@ -310,25 +310,25 @@ private:
 	bool sending;
 
     // Flags to indicate command received from E1 to be processed in widget tick() thread
-    bool e1ProcessNext;
-    bool e1ProcessPrev;
-    bool e1ProcessSelect;
-    bool e1ProcessApply;
-    bool e1ProcessApplyRackMapping;
-    math::Vec e1SelectedModulePos;
-    bool e1ProcessResendMIDIFeedback;
-    bool e1VersionPoll;
+    bool oscProcessNext;
+    bool oscProcessPrev;
+    bool oscProcessSelect;
+    bool oscProcessApply;
+    bool oscProcessApplyRackMapping;
+    math::Vec oscSelectedModulePos;
+    bool oscProcessResendMIDIFeedback;
+    bool oscVersionPoll;
 	bool oscReceived = false;
 	bool oscSent = false;
 
     // E1 Process flags
     int sendE1EndMessage = 0;
-    bool e1ProcessListMappedModules;
+    bool oscProcessListMappedModules;
     // Re-usable list of mapped modules
-    std::vector< RackMappedModuleListItem > e1MappedModuleList;
+    std::vector< RackMappedModuleListItem > oscMappedModuleList;
     size_t INITIAL_MAPPED_MODULE_LIST_SIZE = 100;
-    bool e1ProcessResetParameter;
-    int e1ProcessResetParameterNPRN;
+    bool oscProcessResetParameter;
+    int oscProcessResetParameterNPRN;
 
 	/** [Stored to Json] The mapped param handle of each channel */
 	ParamHandleIndicator paramHandles[MAX_CHANNELS];
@@ -428,7 +428,7 @@ private:
 		lightDivider.setDivision(2048);
 		midiResendDivider.setDivision(APP->engine->getSampleRate() / 2);
 		onReset();
-		e1MappedModuleList.reserve(INITIAL_MAPPED_MODULE_LIST_SIZE);
+		oscMappedModuleList.reserve(INITIAL_MAPPED_MODULE_LIST_SIZE);
 	}
 
 	~PyladesModule() {
@@ -469,14 +469,14 @@ private:
 		overlayEnabled = true;
 		clearMapsOnLoad = false;
 		
-		e1ProcessNext = false;
-		e1ProcessPrev = false;
-		e1ProcessSelect = false;
-		e1ProcessApply = false;
-		e1ProcessApplyRackMapping = false;
-		e1ProcessListMappedModules = false;
-		e1ProcessResetParameter = false;
-		e1VersionPoll = false;
+		oscProcessNext = false;
+		oscProcessPrev = false;
+		oscProcessSelect = false;
+		oscProcessApply = false;
+		oscProcessApplyRackMapping = false;
+		oscProcessListMappedModules = false;
+		oscProcessResetParameter = false;
+		oscVersionPoll = false;
 		midiMapLibraryFilename.clear();
 		autosaveMappingLibrary = true;
 		resetMap();
@@ -575,7 +575,7 @@ private:
 			}
 		}
 
-		if (e1ProcessResendMIDIFeedback || (midiResendPeriodically && midiResendDivider.process())) {
+		if (oscProcessResendMIDIFeedback || (midiResendPeriodically && midiResendDivider.process())) {
 			midiResendFeedback();
 		}
 
@@ -664,7 +664,7 @@ private:
 					int t = -1;
 
  
-                    if (!e1ProcessResetParameter && nprn >= 0 && nprns[id].process()) {
+                    if (!oscProcessResetParameter && nprn >= 0 && nprns[id].process()) {
 					    // Check if NPRN value has been set and changed
 						switch (nprns[id].nprnMode) {
 							case NPRNMODE::DIRECT:
@@ -733,9 +733,9 @@ private:
 			        int v;
 
 					// Set a new value for the mapped parameter
-					if (e1ProcessResetParameter && nprn == e1ProcessResetParameterNPRN) {
+					if (oscProcessResetParameter && nprn == oscProcessResetParameterNPRN) {
                         midiParam[id].setValueToDefault();
-                        e1ProcessResetParameterNPRN = -1;
+                        oscProcessResetParameterNPRN = -1;
                         lastValueOut[id] = -1;
                         nprns[id].resetValue(); // Forces NPRN adapter to emit NPRM message out
 
@@ -753,7 +753,7 @@ private:
 					// Midi feedback
 					if (lastValueOut[id] != v) {
 
-						if (!e1ProcessResetParameter && nprn >= 0 && nprns[id].nprnMode == NPRNMODE::DIRECT)
+						if (!oscProcessResetParameter && nprn >= 0 && nprns[id].nprnMode == NPRNMODE::DIRECT)
                         							lastValueIn[id] = v;
 				        
 
@@ -769,7 +769,7 @@ private:
 							oscSent = true;
 							// DEBUG("Sending MIDI feedback for %d, value %d", id, v);
 							sendE1Feedback(id);
-                        	e1ProcessResetParameter = false;
+                        	oscProcessResetParameter = false;
                        		 // If we are broadcasting parameter updates when switching modules,
                        		 // record that we have now sent this parameter
                         	if (sendE1EndMessage > 0) sendE1EndMessage--;
@@ -864,45 +864,45 @@ private:
 			return oscReceived;
 		} else if (address == OSCMSG_NEXT_MODULE) {
 			DEBUG("Received an OSC Next Command");
-            e1ProcessNext = true;
+            oscProcessNext = true;
             return true;
 		} else if (address == OSCMSG_PREV_MODULE) {
             DEBUG("Received an OSC Prev Command");
-            e1ProcessNext = false;
-            e1ProcessPrev = true;
+            oscProcessNext = false;
+            oscProcessPrev = true;
             return true;
 		} else if (address == OSCMSG_SELECT_MODULE) {
             DEBUG ("Received an OSC Module Select Command");
-            e1ProcessSelect = true;
+            oscProcessSelect = true;
             float moduleY = msg.getArgAsFloat(0);
             float moduleX = msg.getArgAsFloat(1);
-            e1SelectedModulePos = Vec(moduleX, moduleY);
+            oscSelectedModulePos = Vec(moduleX, moduleY);
             return true;
 		} else if (address == OSCMSG_LIST_MODULES) {
             DEBUG("Received an OSC List Mapped Modules Command");
-            e1ProcessListMappedModules = true;
+            oscProcessListMappedModules = true;
             return true;
         } else if (address == OSCMSG_RESET_PARAM) {
-        	DEBUG("Received an OSC Reset Parameter Command for id %d", e1ProcessResetParameterNPRN);
- 			e1ProcessResetParameter = true;
-            e1ProcessResetParameterNPRN = msg.getArgAsInt(0);            
+        	DEBUG("Received an OSC Reset Parameter Command for id %d", oscProcessResetParameterNPRN);
+ 			oscProcessResetParameter = true;
+            oscProcessResetParameterNPRN = msg.getArgAsInt(0);            
             return true;
         } else if (address == OSCMSG_RESEND) {
         	DEBUG("Received an OSC Re-send OSC Feedback Command");
-            e1ProcessResendMIDIFeedback = true;
+            oscProcessResendMIDIFeedback = true;
             return true;
         } else if (address == OSCMSG_APPLY_MODULE) {
         	// Remotely switch on the "apply" mode, so next mouse click will apply mapped settings for selected module
         	DEBUG("Received an OSC Apply Module Command");
-	        e1ProcessApply = true;
+	        oscProcessApply = true;
 	        return true;	
         } else if (address == OSCMSG_APPLY_RACK_MAPPING) {
         	DEBUG("Received an OSC Apply Rack Mapping Command");
-	        e1ProcessApplyRackMapping = true;
+	        oscProcessApplyRackMapping = true;
 	        return true;
         } else if (address == OSCMSG_VERSION_POLL) {
         	DEBUG("Received an OSC Version Poll Command");
-	        e1VersionPoll = true;
+	        oscVersionPoll = true;
 	        return true;
 		} else {
 			WARN("Discarding unknown OSC message. OSC message had address: %s and %i args", msg.getAddress().c_str(), (int)msg.getNumArgs());
@@ -917,21 +917,21 @@ private:
      */
     void processOscCommands() {
 
-        if (e1ProcessListMappedModules) {
-            e1ProcessListMappedModules = false;
+        if (oscProcessListMappedModules) {
+            oscProcessListMappedModules = false;
             sendE1MappedModulesList();
             return;
         }
 
-        if (e1ProcessResendMIDIFeedback) {
-            e1ProcessResendMIDIFeedback = false;
+        if (oscProcessResendMIDIFeedback) {
+            oscProcessResendMIDIFeedback = false;
         }
 
-        if (e1VersionPoll) {
-        	// Send the OrestesOne plugin version to E1
+        if (oscVersionPoll) {
+        	// Send the Pylades plugin version to TouchOSC
         	std::string o1PluginVersion = model->plugin->version;
-        	oscOutput.sendOrestesOneVersion(o1PluginVersion);
-        	e1VersionPoll = false;
+        	oscOutput.sendPyladesVersion(o1PluginVersion);
+        	oscVersionPoll = false;
         }
 
     }
@@ -941,7 +941,7 @@ private:
      */
     void sendE1MappedModulesList() {
 
-        e1MappedModuleList.clear();
+        oscMappedModuleList.clear();
 
         // Get list of all modules in current Rack, sorted by module y then x position
         std::list<Widget*> modules = APP->scene->rack->getModuleContainer()->children;
@@ -953,7 +953,7 @@ private:
         modules.sort(sort);
         std::list<Widget*>::iterator it = modules.begin();
 
-        e1MappedModuleList.clear();
+        oscMappedModuleList.clear();
         int count = 0;
         // Scan over all rack modules, determine if each is parameter-mapped
         for (; it != modules.end(); it++) {
@@ -969,12 +969,12 @@ private:
                     mw->box.pos.y,
                     mw->box.pos.x
                 };
-                e1MappedModuleList.push_back(item);
+                oscMappedModuleList.push_back(item);
                 count++;
             }
         }
         DEBUG("Sending mapped module list with %d modules", count);
-        oscOutput.sendModuleList(e1MappedModuleList.begin(), e1MappedModuleList.end(), count);
+        oscOutput.sendModuleList(oscMappedModuleList.begin(), oscMappedModuleList.end(), count);
 
     }
 
@@ -1169,7 +1169,7 @@ private:
 
     /**
      * Creates a new module mapping for every module in the current rack.
-     * Optionally skips modules which already have a mapping definition loaded into Orestes-One midiMap
+     * Optionally skips modules which already have a mapping definition loaded into Pylades midiMap
      */
     void autoMapAllModules(bool skipPremappedModules) {
 
