@@ -49,7 +49,7 @@ Functionally, Orestes-One and Pylades are basically ([MIDI-CAT](https://library.
 * Special support designed for [MindMeld PatchMaster](https://library.vcvrack.com/MindMeldModular/PatchMaster) modules in a rack, allowing switching between a single rack-level mapping and individual module mappings.
 * Create and manage re-usable module-specific mappings stored in a module mapping library file
 * Export and import module mappings, so they can be shared and curated by the user community (there are over 3000 modules to be mapped after all!)
-* [Factory - provided module mappings](https://github.com/rjsmith/rsbatech-modules/wiki/Orestes%E2%80%90One-Module-User-Guide#factory-mapping-library) included
+* [Factory - provided module mappings](https://github.com/rjsmith/rsbatech-modules/wiki/Factory-Module-Mapping-Library) included
 
 Plus most MIDI-CAT features (up to its [v2.0.beta4](https://github.com/stoermelder/vcvrack-packone/blob/v2/CHANGELOG.md#20beta4))
 
