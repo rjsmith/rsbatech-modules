@@ -843,7 +843,7 @@ private:
 
 		std::string address = msg.getAddress();
 
-		DEBUG("OSC message %s", address.c_str());
+		// DEBUG("OSC message %s", address.c_str());
 
 		if (address == OSCMSG_FADER) {
 			int nprn = msg.getArgAsInt(0);
@@ -863,45 +863,45 @@ private:
 	        valuesNprnTs[nprn] = ts;
 			return oscReceived;
 		} else if (address == OSCMSG_NEXT_MODULE) {
-			DEBUG("Received an OSC Next Command");
+			// DEBUG("Received an OSC Next Command");
             oscProcessNext = true;
             return true;
 		} else if (address == OSCMSG_PREV_MODULE) {
-            DEBUG("Received an OSC Prev Command");
+            // DEBUG("Received an OSC Prev Command");
             oscProcessNext = false;
             oscProcessPrev = true;
             return true;
 		} else if (address == OSCMSG_SELECT_MODULE) {
-            DEBUG ("Received an OSC Module Select Command");
+            // DEBUG ("Received an OSC Module Select Command");
             oscProcessSelect = true;
             float moduleY = msg.getArgAsFloat(0);
             float moduleX = msg.getArgAsFloat(1);
             oscSelectedModulePos = Vec(moduleX, moduleY);
             return true;
 		} else if (address == OSCMSG_LIST_MODULES) {
-            DEBUG("Received an OSC List Mapped Modules Command");
+            // DEBUG("Received an OSC List Mapped Modules Command");
             oscProcessListMappedModules = true;
             return true;
         } else if (address == OSCMSG_RESET_PARAM) {
-        	DEBUG("Received an OSC Reset Parameter Command for id %d", oscProcessResetParameterNPRN);
+        	// DEBUG("Received an OSC Reset Parameter Command for id %d", oscProcessResetParameterNPRN);
  			oscProcessResetParameter = true;
             oscProcessResetParameterNPRN = msg.getArgAsInt(0);            
             return true;
         } else if (address == OSCMSG_RESEND) {
-        	DEBUG("Received an OSC Re-send OSC Feedback Command");
+        	// DEBUG("Received an OSC Re-send OSC Feedback Command");
             oscProcessResendMIDIFeedback = true;
             return true;
         } else if (address == OSCMSG_APPLY_MODULE) {
         	// Remotely switch on the "apply" mode, so next mouse click will apply mapped settings for selected module
-        	DEBUG("Received an OSC Apply Module Command");
+        	// DEBUG("Received an OSC Apply Module Command");
 	        oscProcessApply = true;
 	        return true;	
         } else if (address == OSCMSG_APPLY_RACK_MAPPING) {
-        	DEBUG("Received an OSC Apply Rack Mapping Command");
+        	// DEBUG("Received an OSC Apply Rack Mapping Command");
 	        oscProcessApplyRackMapping = true;
 	        return true;
         } else if (address == OSCMSG_VERSION_POLL) {
-        	DEBUG("Received an OSC Version Poll Command");
+        	// DEBUG("Received an OSC Version Poll Command");
 	        oscVersionPoll = true;
 	        return true;
 		} else {
@@ -973,7 +973,6 @@ private:
                 count++;
             }
         }
-        DEBUG("Sending mapped module list with %d modules", count);
         oscOutput.sendModuleList(oscMappedModuleList.begin(), oscMappedModuleList.end(), count);
 
     }

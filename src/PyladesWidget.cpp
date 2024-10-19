@@ -753,7 +753,7 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 		};
 
 		// currentStateJ* now has the updated merged midimap
-		DEBUG("Imported mappings for %d modules", importedModules);
+		// DEBUG("Imported mappings for %d modules", importedModules);
 		return importedModules;
 	}
 
