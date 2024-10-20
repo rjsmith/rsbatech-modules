@@ -26,7 +26,7 @@ Orestes-One (the [brother of Electra](https://en.wikipedia.org/wiki/Orestes) in 
 
 ## Pylades
 
-Pylades (the [cousin of Orestes](https://en.wikipedia.org/wiki/Pylades) in Greek mythology) is a VCV Rack module to control modules and parameters in a rack with [TouchOSC](https://hexler.net/touchosc). It works together with a specific TouchOSC preset to provide two-way control and parameter feedback using smooth 14bit value changes.  
+Pylades (the [cousin of Orestes](https://en.wikipedia.org/wiki/Pylades) in Greek mythology) is a VCV Rack module to control modules and parameters in a rack with [TouchOSC](https://hexler.net/touchosc). It works together with a [specific TouchOSC preset](https://github.com/rjsmith/rsbatech-modules/tree/main/touchosc) to provide two-way control and parameter feedback using smooth 14bit value changes.  
 
 ![Pylades](/images/PyladesModule.png?raw=true "Pylades VCVRack module")
 
