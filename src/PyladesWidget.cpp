@@ -394,6 +394,17 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 				module->expMemApplyRackMapping();
 			}
 			module->lights[PyladesModule::LIGHT_APPLY].setBrightness(learnMode == LEARN_MODE::MEM);
+
+			if (module->midiMapLibraryFilename.empty()) {
+				// DEBUG("No known mapping library, so try and load default or factory library");
+				// Load default mapping library else load and save plugin factory library
+				bool midiMapLoaded = module->loadDefaultMappingLibraryFromPresetFolder();
+				if (!midiMapLoaded) {
+					module->createMappingLibraryFromFactory();
+				}
+			}
+
+
 		
 		}
 

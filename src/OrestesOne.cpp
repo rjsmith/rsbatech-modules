@@ -1881,29 +1881,44 @@ struct OrestesOneModule : Module {
 			if (!midiMapLibraryFilename.empty()) {
 				if (readMappingLibraryFile(midiMapLibraryFilename)) midiMapLoaded = true;
 			} else {
-				// If there is a default library file in the user presets, load that anyway
-				std::string userPresetPath = this->model->getUserPresetDirectory();
-				midiMapLibraryFilename = system::join(userPresetPath, DEFAULT_LIBRARY_FILENAME);
-
-				if (system::exists(midiMapLibraryFilename)) midiMapLoaded = readMappingLibraryFile(midiMapLibraryFilename);
-
+				midiMapLoaded = loadDefaultMappingLibraryFromPresetFolder();
 			}
 		}
 
-		// No loaded midimap library file either from Orestes-One state or loaded preset
+		// No loaded midimap library file either from Pylades state or loaded preset
 		// So try and load default factory mapping library
-		if (!midiMapLoaded && loadMidiMapFromFactoryLibraryFile()) {
-			// factory library loaded OK, now save copy of factory midimap to user preset folder if there is not already one in there
-			std::string userPresetPath = this->model->getUserPresetDirectory();
-			std::string defaultMidiMapLibraryFilename = system::join(userPresetPath, DEFAULT_LIBRARY_FILENAME);
-
-			if (!system::exists(defaultMidiMapLibraryFilename)) {
-                system::createDirectories(userPresetPath); // NB: no-op if model preset folder already exists
-				midiMapLibraryFilename = defaultMidiMapLibraryFilename;
-				saveMappingLibraryFile(defaultMidiMapLibraryFilename);
-			}
+		if (!midiMapLoaded) {
+			createMappingLibraryFromFactory();
 		}
 			
+	}
+
+	bool loadDefaultMappingLibraryFromPresetFolder() {
+		// If there is a default library file in the user presets, load that anyway
+		std::string userPresetPath = this->model->getUserPresetDirectory();
+		midiMapLibraryFilename = system::join(userPresetPath, DEFAULT_LIBRARY_FILENAME);
+
+		if (system::exists(midiMapLibraryFilename)) {
+			return readMappingLibraryFile(midiMapLibraryFilename);
+		}
+		return false;	
+
+	}
+
+	void createMappingLibraryFromFactory() {
+
+		if (loadMidiMapFromFactoryLibraryFile()) {
+			// factory library loaded OK, now save copy of factory midimap to user preset folder if there is not already one in there
+
+			std::string userPresetPath = this->model->getUserPresetDirectory();
+			std::string defaultMidiMapLibraryFilename = system::join(userPresetPath, DEFAULT_LIBRARY_FILENAME);
+			DEBUG("Factory library loaded, saving to preset library %s", defaultMidiMapLibraryFilename.c_str() );
+			if (!system::exists(midiMapLibraryFilename)) {
+				system::createDirectories(userPresetPath); // NB: no-op if model preset folder already exists
+				midiMapLibraryFilename = defaultMidiMapLibraryFilename;
+				saveMappingLibraryFile(defaultMidiMapLibraryFilename);
+			} 
+		}
 	}
 
 	bool loadMidiMapFromFactoryLibraryFile() {
@@ -1982,10 +1997,8 @@ struct OrestesOneModule : Module {
 
 		std::string pluginSlug = json_string_value(json_object_get(libraryJ, "plugin"));
 
-		std::string modelSlug = json_string_value(json_object_get(libraryJ, "model"));
-
 		// Only handle midimap library JSON files created by OrestesOne
-		if (!(pluginSlug == this->model->plugin->slug && modelSlug == this->model->slug))
+		if (!(pluginSlug == this->model->plugin->slug))
 			return false;
 
 		// Get the midiMap in the imported library Json
@@ -2060,7 +2073,6 @@ struct OrestesOneModule : Module {
 		});
 
 		json_object_set_new(rootJ, "plugin", json_string(this->model->plugin->slug.c_str()));
-		json_object_set_new(rootJ, "model", json_string(this->model->slug.c_str()));
 		json_t* dataJ = json_object();
 		json_t* midiMapJ = midiMapToJsonArray(midiMap);
 
