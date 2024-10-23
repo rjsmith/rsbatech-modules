@@ -50,6 +50,7 @@ Functionally, Orestes-One and Pylades are basically ([MIDI-CAT](https://library.
 * Create and manage re-usable module-specific mappings stored in a module mapping library file
 * Export and import module mappings, so they can be shared and curated by the user community (there are over 3000 modules to be mapped after all!)
 * [Factory - provided module mappings](https://github.com/rjsmith/rsbatech-modules/wiki/Factory-Module-Mapping-Library) included
+* Use multiple Pylades and Orestes-One modules connected to different TouchOSC and Electra-One controllers in the same Rack (e.g. dedicate one iPad to controlling a Mix Master, another iPad for controlling other modules and an Electra-One controlling a Rack-wide mapping, all at the same time)
 
 Plus most MIDI-CAT features (up to its [v2.0.beta4](https://github.com/stoermelder/vcvrack-packone/blob/v2/CHANGELOG.md#20beta4))
 
