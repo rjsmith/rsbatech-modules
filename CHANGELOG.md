@@ -1,6 +1,12 @@
+## 2.0.0-beta7 25 Oct 2024
+
+- [MAP] Mapped Instruō modules
+- [MAP] Mapped Synthesizer.com modules
+- [FIX] Load default preset library or factory library when added to rack
 ## 2.0.0-beta6 19 Oct 2024
 
 - Implemented the Pylades module for VCV Rack control from any TouchOSC device
+- Added Pylades TouchOSC .tosc preset file
 - Added factory module mappings for SurgeXT
 - Added an optional "Scroll to selected module" rack navigation feature
 

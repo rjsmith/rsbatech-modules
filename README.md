@@ -1,7 +1,7 @@
 # RSBATech-Modules
 
 <!-- Version and License Badges -->
-![Version](https://img.shields.io/badge/version-2.0.0--beta6-green.svg?style=flat-square)
+![Version](https://img.shields.io/badge/version-2.0.0--beta7-green.svg?style=flat-square)
 ![License](https://img.shields.io/badge/license-GPLv3+-blue.svg?style=flat-square)
 ![Language](https://img.shields.io/badge/language-C++-yellow.svg?style=flat-square)
 
