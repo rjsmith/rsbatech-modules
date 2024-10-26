@@ -324,7 +324,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 			module->lights[0].setBrightness(learnMode == LEARN_MODE::MEM);
 
 			if (module->midiMapLibraryFilename.empty()) {
-				DEBUG("No known mapping library, so try and load default or factory library");
+				// DEBUG("No known mapping library, so try and load default or factory library");
 				// Load default mapping library else load and save plugin factory library
 				bool midiMapLoaded = module->loadDefaultMappingLibraryFromPresetFolder();
 				if (!midiMapLoaded) {
