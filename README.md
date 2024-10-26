@@ -42,7 +42,8 @@ Functionally, Orestes-One and Pylades are basically ([MIDI-CAT](https://library.
 * Control individual rack module parameters with rich value and control label feedback on the Electra-One / TouchOSC screen
 * Smooth 14-bit value controller changes
 * Manual parameter mapping (from MIDI-CAT)
-* Navigate between the mapped modules in the current VCVRack patch using the touch screen of Electra One or TouchOSC
+* Navigate between the mapped modules in the current VCVRack patch using the touch screen of Electra One or TouchOSC.
+* Optionally scroll the VCVRack window to the mapped module
 * Automap a single module
 * Automap all modules in a rack in one go, optionally skipping or overwriting existing module mappings
 * Mouse-free rack module selection and navigation using Electra One or TouchOSC
