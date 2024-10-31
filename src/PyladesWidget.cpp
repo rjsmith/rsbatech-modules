@@ -164,7 +164,7 @@ struct PyladesChoice : MapModuleChoice<MAX_CHANNELS, PyladesModule> {
 
 		menu->addChild(new SlewSlider(&module->midiParam[id]));
 		menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Scaling"));
-		std::string l = string::f("Input %s", module->nprns[id].getNprn() >= 0 ? "MIDI NPRN" : "");
+		std::string l = string::f("Input %s", module->nprns[id].getNprn() >= 0 ? "Value" : "");
 		menu->addChild(construct<ScalingInputLabel>(&MenuLabel::text, l, &ScalingInputLabel::p, &module->midiParam[id]));
 		menu->addChild(construct<ScalingOutputLabel>(&MenuLabel::text, "Parameter range", &ScalingOutputLabel::p, &module->midiParam[id]));
 		menu->addChild(new MinSlider(&module->midiParam[id]));
@@ -1063,7 +1063,7 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 		menu->addChild(createBoolPtrMenuItem("Scroll to selected module", "", &module->scrollToModule));
 		menu->addChild(createBoolPtrMenuItem("Status overlay", "", &module->overlayEnabled));
 		menu->addChild(new MenuSeparator());
-		menu->addChild(createSubmenuItem("Automap this rack", "",
+		menu->addChild(createSubmenuItem("Automap this rack and save", "",
 			[=](Menu* menu) {
 				menu->addChild(createMenuItem("Skip pre-mapped modules", "", [=]() { module->autoMapAllModules(true); }));
 				menu->addChild(createMenuItem("Overwrite pre-mapped modules", "", [=]() { module->autoMapAllModules(false); }));
@@ -1071,7 +1071,7 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 		));
 		menu->addChild(createSubmenuItem("Map module (select)", "",
 			[=](Menu* menu) {
-				menu->addChild(createMenuItem("Automap", RACK_MOD_ALT_NAME "+" RACK_MOD_SHIFT_NAME "+D", [=]() { enableLearn(LEARN_MODE::BIND_AUTOMAP); }));
+				menu->addChild(createMenuItem("Automap and save", RACK_MOD_ALT_NAME "+" RACK_MOD_SHIFT_NAME "+D", [=]() { enableLearn(LEARN_MODE::BIND_AUTOMAP); }));
 				menu->addChild(createMenuItem("Clear first", RACK_MOD_CTRL_NAME "+" RACK_MOD_SHIFT_NAME "+D", [=]() { enableLearn(LEARN_MODE::BIND_CLEAR); }));
 				menu->addChild(createMenuItem("Keep OSC assignments", RACK_MOD_SHIFT_NAME "+D", [=]() { enableLearn(LEARN_MODE::BIND_KEEP); }));
 

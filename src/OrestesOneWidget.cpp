@@ -993,7 +993,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		menu->addChild(createBoolPtrMenuItem("Scroll to selected module", "", &module->scrollToModule));
 		menu->addChild(createBoolPtrMenuItem("Status overlay", "", &module->overlayEnabled));
 		menu->addChild(new MenuSeparator());
-		menu->addChild(createSubmenuItem("Automap this rack", "",
+		menu->addChild(createSubmenuItem("Automap this rack and save", "",
 			[=](Menu* menu) {
 				menu->addChild(createMenuItem("Skip pre-mapped modules", "", [=]() { module->autoMapAllModules(true); }));
 				menu->addChild(createMenuItem("Overwrite pre-mapped modules", "", [=]() { module->autoMapAllModules(false); }));
@@ -1001,7 +1001,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		));
 		menu->addChild(createSubmenuItem("Map module (select)", "",
 			[=](Menu* menu) {
-				menu->addChild(createMenuItem("Automap", RACK_MOD_ALT_NAME "+" RACK_MOD_SHIFT_NAME "+D", [=]() { enableLearn(LEARN_MODE::BIND_AUTOMAP); }));
+				menu->addChild(createMenuItem("Automap and save", RACK_MOD_ALT_NAME "+" RACK_MOD_SHIFT_NAME "+D", [=]() { enableLearn(LEARN_MODE::BIND_AUTOMAP); }));
 				menu->addChild(createMenuItem("Clear first", RACK_MOD_CTRL_NAME "+" RACK_MOD_SHIFT_NAME "+D", [=]() { enableLearn(LEARN_MODE::BIND_CLEAR); }));
 				menu->addChild(createMenuItem("Keep MIDI assignments", RACK_MOD_SHIFT_NAME "+D", [=]() { enableLearn(LEARN_MODE::BIND_KEEP); }));
 
