@@ -376,10 +376,9 @@ struct MapModuleChoice : LedDisplayChoice {
 
 		// Set text
 		if (module->paramHandles[id].moduleId >= 0 && module->learningId != id) {
-			std::string prefix = "";
+			std::string prefix = getSlotPrefix();
 			std::string label = getSlotLabel();
 			if (label == "") {
-				prefix = getSlotPrefix();
 				label = getParamName();
 				if (label == "") {
 					module->clearMap(id);

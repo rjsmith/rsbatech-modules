@@ -848,10 +848,7 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 					for (int i = 0; i < module->mapLen; i++) {
 						if (module->nprns[i].getNprn() >= 0) {
 							std::string text;
-							if (module->textLabel[i] != "") {
-								text = module->textLabel[i];
-							}
-							else if (module->nprns[i].getNprn() >= 0) {
+							if (module->nprns[i].getNprn() >= 0) {
                             	text = string::f("OSC %03d", module->nprns[i].getNprn());
                             }
 							menu->addChild(construct<RemapItem>(&MenuItem::text, text, &RemapItem::module, module, &RemapItem::pq, pq, &RemapItem::id, i, &RemapItem::currentId, currentId));

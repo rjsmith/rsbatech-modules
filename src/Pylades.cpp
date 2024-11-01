@@ -551,7 +551,13 @@ private:
        ParamQuantity* paramQuantity = m->paramQuantities[paramId];
        std::stringstream ss;
        ss << paramQuantity->getDisplayValueString() << " " << paramQuantity->getUnit();
-       oscOutput.sendOscControlUpdate(nprns[id].getNprn(), paramQuantity->getLabel().c_str(), ss.str().c_str());
+       std::string paramName;
+       if (textLabel[id].empty()) {
+       		paramName = paramQuantity->getLabel();
+       } else {
+       		paramName = textLabel[id];
+       }
+       oscOutput.sendOscControlUpdate(nprns[id].getNprn(), paramName.c_str(), ss.str().c_str());
     }
 
     void process(const ProcessArgs &args) override {

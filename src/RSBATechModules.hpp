@@ -32,7 +32,7 @@ struct MemParam {
 	int paramId = -1;
     int nprn = -1;
     NPRNMODE nprnMode;
-	std::string label;
+	std::string label = "";
 	int midiOptions = 0;
 	float slew = 0.f;
 	float min = 0.f;

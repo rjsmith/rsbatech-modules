@@ -542,7 +542,13 @@ struct OrestesOneModule : Module {
        ParamQuantity* paramQuantity = m->paramQuantities[paramId];
        std::stringstream ss;
        ss << paramQuantity->getDisplayValueString() << " " << paramQuantity->getUnit();
-       midiCtrlOutput.sendE1ControlUpdate(nprns[id].getNprn(), paramQuantity->getLabel().c_str(), ss.str().c_str());
+       std::string paramName;
+       if (textLabel[id].empty()) {
+       		paramName = paramQuantity->getLabel();
+       } else {
+       		paramName = textLabel[id];
+       }
+       midiCtrlOutput.sendE1ControlUpdate(nprns[id].getNprn(), paramName.c_str(), ss.str().c_str());
     }
 
 
