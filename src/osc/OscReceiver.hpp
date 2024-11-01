@@ -5,6 +5,11 @@
 
 /*
 This file was copied from https://github.com/The-Modular-Mind/oscelot
+
+Modifications:
+
+Downgraded FATAL logging to WARN level
+
 */
 
 namespace TheModularMind {
@@ -37,7 +42,7 @@ struct OscReceiver : public osc::OscPacketListener {
 			listenSocket = std::unique_ptr<UdpListeningReceiveSocket, decltype(deleter)>(socket, deleter);
 
 		} catch (std::exception &e) {
-			FATAL("OscReceiver couldn't create receiver on port %i, %s", port, e.what());
+			WARN("OscReceiver couldn't create receiver on port %i, %s", port, e.what());
 			if (socket != nullptr) {
 				delete socket;
 				socket = nullptr;
@@ -55,7 +60,7 @@ struct OscReceiver : public osc::OscPacketListener {
 			try {
 				listenSocket->Run();
 			} catch (std::exception &e) {
-				FATAL("OscReceiver error: %s", e.what());
+				WARN("OscReceiver error: %s", e.what());
 			}
 		}
 	}
@@ -90,7 +95,7 @@ struct OscReceiver : public osc::OscPacketListener {
 			} else if (arg->IsString()) {
 				msg.addStringArg(arg->AsStringUnchecked());
 			} else {
-				FATAL("OscReceiver ProcessMessage(): argument in message %s is an unknown type %d", receivedMessage.AddressPattern(), arg->TypeTag());
+				WARN("OscReceiver ProcessMessage(): argument in message %s is an unknown type %d", receivedMessage.AddressPattern(), arg->TypeTag());
 				break;
 			}
 		}

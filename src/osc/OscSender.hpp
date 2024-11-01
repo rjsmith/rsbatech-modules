@@ -5,7 +5,12 @@
 #include "oscpack/osc/OscTypes.h"
 
 /*
-This file was copied from https://github.com/The-Modular-Mind/oscelot
+This file was originally copied from https://github.com/The-Modular-Mind/oscelot.
+
+Modifications:
+
+* Removed some FATAL logging, and changed others to WARN
+
 */
 
 namespace TheModularMind {
@@ -30,14 +35,14 @@ class OscSender {
 		try {
 			IpEndpointName name = IpEndpointName(host.c_str(), port);
 			if (!name.address) {
-				FATAL("Bad hostname: %s", host.c_str());
+				WARN("Bad hostname: %s", host.c_str());
 				return false;
 			}
 			socket = new UdpTransmitSocket(name);
 			sendSocket.reset(socket);
 
 		} catch (std::exception &e) {
-			FATAL("OscSender couldn't start with %s:%i because of: %s", host.c_str(), port, e.what());
+			WARN("OscSender couldn't start with %s:%i because of: %s", host.c_str(), port, e.what());
 			if (socket != nullptr) {
 				delete socket;
 				socket = nullptr;
@@ -50,9 +55,16 @@ class OscSender {
 
 	void stop() { sendSocket.reset(); }
 
+	bool hasSocket() {
+		if (!sendSocket) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 	void sendBundle(const OscBundle &bundle) {
 		if (!sendSocket) {
-			FATAL("OscSender trying to send with empty socket");
 			return;
 		}
 
@@ -65,7 +77,6 @@ class OscSender {
 
 	void sendMessage(const OscMessage &message) {
 		if (!sendSocket) {
-			FATAL("OscSender trying to send with empty socket");
 			return;
 		}
 
@@ -104,7 +115,7 @@ class OscSender {
 				outputStream << message.getArgAsString(i).c_str();
 				break;
 			default:
-				FATAL("OscSender.appendMessage(), Unimplemented type?: %i", (int)message.getArgType(i));
+				WARN("OscSender.appendMessage(), Unimplemented type?: %i", (int)message.getArgType(i));
 				break;
 			}
 		}
