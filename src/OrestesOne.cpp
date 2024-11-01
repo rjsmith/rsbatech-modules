@@ -133,7 +133,7 @@ struct E1MidiOutput : OrestesOneOutput {
     }
     void mappedModuleInfo(RackMappedModuleListItem& m) {
         std::stringstream ss;
-        ss << "mappedMI(\"" << m.getModuleKey() << "\", \"" << m.getModuleDisplayName() <<  "\", " << string::f("%g", m.getY()) << ", " << string::f("%g", m.getX()) << ")";
+        ss << "mappedMI(\"" << m.getModuleDisplayName() <<  "\", " << string::f("%g", m.getY()) << ", " << string::f("%g", m.getX()) << ")";
         sendE1ExecuteLua(ss.str().c_str());
     }
     void endMappedModuleList() {
