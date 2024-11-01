@@ -1796,7 +1796,7 @@ private:
 
 			std::string userPresetPath = this->model->getUserPresetDirectory();
 			std::string defaultMidiMapLibraryFilename = system::join(userPresetPath, DEFAULT_LIBRARY_FILENAME);
-			DEBUG("Factory library loaded, saving to preset library %s", defaultMidiMapLibraryFilename.c_str() );
+			INFO("Factory library loaded, saving to preset library %s", defaultMidiMapLibraryFilename.c_str() );
 			if (!system::exists(midiMapLibraryFilename)) {
 				system::createDirectories(userPresetPath); // NB: no-op if model preset folder already exists
 				midiMapLibraryFilename = defaultMidiMapLibraryFilename;
