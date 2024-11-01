@@ -90,10 +90,11 @@ struct E1MidiOutput : OrestesOneOutput {
    /**
     * Inform E1 that a change module action is starting
     */
-   void changeE1Module(const char* moduleDisplayName, float moduleY, float moduleX, int maxNprnId) {
+   void changeE1Module(const std::string moduleDisplayName, float moduleY, float moduleX, int maxNprnId) {
 
         std::stringstream ss;
-        ss << "changeE1Module(\"" << moduleDisplayName << "\", " << string::f("%g, %g, %d", moduleY, moduleX, maxNprnId) << ")";
+        // Truncate module name to keep string length less than 80 characters, due to E1 3.7 beta firmware bug
+        ss << "changeE1Module(\"" << moduleDisplayName.substr(0, 50).c_str() << "\", " << string::f("%g, %g, %d", moduleY, moduleX, maxNprnId) << ")";
         sendE1ExecuteLua(ss.str().c_str());
 
    }
@@ -133,7 +134,11 @@ struct E1MidiOutput : OrestesOneOutput {
     }
     void mappedModuleInfo(RackMappedModuleListItem& m) {
         std::stringstream ss;
-        ss << "mappedMI(\"" << m.getModuleDisplayName() <<  "\", " << string::f("%g", m.getY()) << ", " << string::f("%g", m.getX()) << ")";
+        // Truncate module display name to ensure entire string is less than 80 characters
+        // to workround an Electra One issue in the beta 3.7 firmware.  This may get fixed, but
+        // truncating a module disply name to max 30 characters makes sense as a longer string will not display very well 
+        // on the E1 module grid buttons.
+        ss << "mappedMI(\"" << m.getModuleDisplayName().substr(0, 15).c_str() <<  "\", " << string::f("%g", m.getY()) << ", " << string::f("%g", m.getX()) << ")";
         sendE1ExecuteLua(ss.str().c_str());
     }
     void endMappedModuleList() {
@@ -1107,7 +1112,7 @@ struct OrestesOneModule : Module {
 		}
 	}
 
-	void changeE1Module(const char* moduleName, float moduleY, float moduleX, int maxNprnId) {
+	void changeE1Module(const std::string moduleName, float moduleY, float moduleX, int maxNprnId) {
 	    // DEBUG("changeE1Module to %s", moduleName);
 	    midiCtrlOutput.changeE1Module(moduleName, moduleY, moduleX, maxNprnId);
 	}
@@ -1472,7 +1477,7 @@ struct OrestesOneModule : Module {
         		maxNprnId = it->nprn;
         	}
         }
-		changeE1Module(m->model->getFullName().c_str(), pos.y, pos.x, maxNprnId);
+		changeE1Module(m->model->getFullName(), pos.y, pos.x, maxNprnId);
 
 		clearMaps_WithLock();
 		midiOutput.reset();
