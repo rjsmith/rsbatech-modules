@@ -23,7 +23,7 @@
       "slug": "Pylades",
       "name": "Pylades",
       "description": "Module control from TouchOSC",
-      "tags": ["Utility", "MIDI", "Controller"]
+      "tags": ["Utility", "Controller"]
     }
   ]
 }
