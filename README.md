@@ -104,3 +104,47 @@ At least 80% of the code of Orestes-One was directly copied from the [MIDI-CAT M
 Thanks to TheModularMind for code, inspiration and ideas from the [Oscelot](https://library.vcvrack.com/OSCelot/OSCelot) module. 
 
 Pylades (& Oscelot) uses code from the [oscpack project](https://github.com/RossBencina/oscpack). I modified the Pylades oscpack code to compile on the Mac ARM64 architecture.
+
+## Development
+
+Development notes, in case I forget.
+
+### Bumping RSBATechModules Plugin Version
+
+Both the Electra One and TouchOSC presets do a version handshake with a connected Oresets-One / Pylades VCVRack module when they start up. This is designed to ensure the combination of device preset + VCVRack module is supported.  It also allow for breaking changes in the API between the device and the VCCRack module ... the user will be prompted to upgrade their device preset if necessary.
+
+For this to work, the device presets have hardcoded [semver](https://semver.org/) version strings which track the semantic version of the RSBATechModules VCvRack plugin.  The major and minor versions must match.  The semver patch level version does not need to match.  This also means that incrementing the minor version of the RSBATechModules plugin will require a new version of the device presets.
+
+```lua
+function isPyladesCompatibleWithTouchOSC(pyladesVersion)
+  local semver = string.find(pyladesVersion, SEMVER_PATTERN)
+  if (semver == nil) then return false end
+  local pyladesMajorVersion, pyladesMinorVersion = string.match(pyladesVersion, SEMVER_PATTERN)
+  return oscMajorVersion == pyladesMajorVersion and oscMinorVersion == pyladesMinorVersion
+end
+```
+
+**Bumping RSBATechModules plugin patch-level version:**
+
+Non-breaking API change
+
+- [ ] Update ```version``` in plugin.json
+- [ ] Update README.md Version badge 
+- [ ] Update CHANGELOG.md
+
+Finally: 
+
+- [ ] Tag last commit with ```vX.Y.Z``` before pushing to github. (This will trigger the github actions to build a new release)
+
+**Bumping RSBATechModules plugin minor-level version:**
+
+Breaking API change in either Pylades or Orestes-One (probably usually both at same time)
+
+- [ ] Repeat 1st set of patch-level version steps
+- [ ] Edit pylades .tosc file ROOT script, change the ```local OSC_PRESET_VERSION = "2.0.0-beta7"``` version string, then commit updated .tosc file
+- [ ] Edit Electra One preset Lua script, change the ```local E1_PRESET_VERSION <const> = "2.0.0"``` version string, then **Save Revision**
+
+Finally: 
+
+- [ ] Tag last commit with ```vX.Y.Z``` before pushing to github. (This will trigger the github actions to build a new release)
+
