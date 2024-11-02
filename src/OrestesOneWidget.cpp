@@ -666,10 +666,9 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 	 */
 	int mergeMidiMapPreset_convert(json_t* importedPresetJ, bool skipPremappedModules) {
 		std::string pluginSlug = json_string_value(json_object_get(importedPresetJ, "plugin"));
-		std::string modelSlug = json_string_value(json_object_get(importedPresetJ, "model"));
-
-		// Only handle presets or midimap JSON files from OrestesOne
-		if (!(pluginSlug == module->model->plugin->slug && modelSlug == module->model->slug))
+		
+		// Only handle presets or midimap JSON files from RSBATechModules plugin
+		if (!(pluginSlug == module->model->plugin->slug))
 			return 0;
 
 		// Get the midiMap in the imported preset Json
