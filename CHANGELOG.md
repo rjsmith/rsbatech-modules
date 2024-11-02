@@ -1,3 +1,13 @@
+## 2.0.0-beta8 2 Nov 2024
+
+- Added custom parameter labels
+- [FIX] Mitigate Electra One 3.7 beta firmware bug that only allows run lua sysex commands up to 80 bytes long
+- [FIX] Prevented OSCSender spamming VCVRack log with "OscSender trying to send with empty socket" messages
+- [FIX] Commented - out DEBUG statements
+- [MAP] Mapped Sapphire modules
+- [MAP] Mapped Squinktronix modules
+- [DOC] Re-sized Wiki images
+
 ## 2.0.0-beta7 25 Oct 2024
 
 - [MAP] Mapped Instruō modules
