@@ -2021,7 +2021,10 @@ struct OrestesOneModule : Module {
 	 */
 	bool loadMidiMapFromLibrary(json_t* libraryJ) {
 
-		std::string pluginSlug = json_string_value(json_object_get(libraryJ, "plugin"));
+        json_t* pluginJ = json_object_get(libraryJ, "plugin");
+        if (!pluginJ) return false;
+
+		std::string pluginSlug = json_string_value(pluginJ);
 
 		// Only handle midimap library JSON files created by OrestesOne
 		if (!(pluginSlug == this->model->plugin->slug))

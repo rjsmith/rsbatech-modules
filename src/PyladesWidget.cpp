@@ -766,9 +766,12 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 	 * Entries from the imported presetJ will overwrite matching entries in the existing midiMap.	 * 
 	 */
 	int mergeMidiMapPreset_convert(json_t* importedPresetJ, bool skipPremappedModules) {
-		std::string pluginSlug = json_string_value(json_object_get(importedPresetJ, "plugin"));
+		json_t* pluginJ = json_object_get(importedPresetJ, "plugin");
+        if (!pluginJ) return 0;
 
-		// Only handle presets or midimap JSON files from Pylades
+		std::string pluginSlug = json_string_value(pluginJ);
+
+		// Only handle presets or midimap JSON files from RSBATechModules
 		if (!(pluginSlug == module->model->plugin->slug))
 			return 0;
 
