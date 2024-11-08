@@ -1,0 +1,36 @@
+{
+    "plugin": "RSBATechModules",
+    "data": {
+        "midiMap": [
+            {
+                "ps": "VCV-Recorder",
+                "ms": "Recorder",
+                "am": false,
+                "pn": "VCV Recorder",
+                "mn": "Recorder",
+                "pm": [
+                    {
+                        "p": 0,
+                        "n": 0,
+                        "nm": 0,
+                        "l": "",
+                        "o": 0,
+                        "s": 0.0,
+                        "m": 0.0,
+                        "x": 1.0
+                    },
+                    {
+                        "p": 1,
+                        "n": 1,
+                        "nm": 0,
+                        "l": "",
+                        "o": 0,
+                        "s": 0.0,
+                        "m": 0.0,
+                        "x": 1.0
+                    }
+                ]
+            }
+        ]
+    }
+}

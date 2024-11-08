@@ -1,0 +1,26 @@
+{
+    "plugin": "RSBATechModules",
+    "data": {
+        "midiMap": [
+            {
+                "ps": "Core",
+                "ms": "AudioInterface2",
+                "am": false,
+                "pn": "VCV Core",
+                "mn": "Audio 2",
+                "pm": [
+                    {
+                        "p": 0,
+                        "n": 0,
+                        "nm": 0,
+                        "l": "",
+                        "o": 0,
+                        "s": 0.0,
+                        "m": 0.0,
+                        "x": 1.0
+                    }
+                ]
+            }
+        ]
+    }
+}
