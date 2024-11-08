@@ -500,6 +500,35 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		module->expMemSaveLibrary(true);
 	}
 
+	void expMemCreateNewEmptyLibrary() {
+
+		osdialog_filters* filters = osdialog_filters_parse(LOAD_MIDIMAP_FILTERS);
+		DEFER({
+			osdialog_filters_free(filters);
+		});
+
+		std::string currentLibraryFilePath;
+		if (!module->midiMapLibraryFilename.empty()) {
+			currentLibraryFilePath = system::getDirectory(module->midiMapLibraryFilename);
+		} else {
+			currentLibraryFilePath = module->model->getUserPresetDirectory();
+		}
+
+		std::string currentLibraryFilename = DEFAULT_LIBRARY_FILENAME;
+		char* path = osdialog_file(OSDIALOG_SAVE, currentLibraryFilePath.c_str(), currentLibraryFilename.c_str(), filters);
+		if (!path) {
+			return;
+		}
+		DEFER({
+			free(path);
+		});
+
+		// Update library filename
+		module->midiMapLibraryFilename = path;
+		module->expMemPluginDeleteAll();
+		module->expMemSaveLibrary(true);
+	}
+
 	void loadMidiMapLibrary_dialog() {
 		osdialog_filters* filters = osdialog_filters_parse(LOAD_MIDIMAP_FILTERS);
 		DEFER({
@@ -610,7 +639,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		h->newModuleJ = toJson();
 		APP->history->push(h);
 
-		module->expMemSaveLibrary();
+		module->expMemSaveLibrary(true);
 	}
 
 	void importFactoryMidiMapPreset_action(bool skipPremappedModules) {
@@ -701,7 +730,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		};
 
 		// currentStateJ* now has the updated merged midimap
-		DEBUG("Imported mappings for %d modules", importedModules);
+		//DEBUG("Imported mappings for %d modules", importedModules);
 		return importedModules;
 	}
 
@@ -1193,8 +1222,10 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 			}
 		));
 
-		menu->addChild(createMenuItem("Save mapping library file...", "", [=]() { expMemCreateLibrary(); }));
+		menu->addChild(createMenuItem("Save mapping library file as...", "", [=]() { expMemCreateLibrary(); }));
 		menu->addChild(createMenuItem("Change mapping library file...", "", [=]() { expMemSelectLibrary(); }));
+		menu->addChild(createMenuItem("Create empty mapping library file...", "", [=]() { expMemCreateNewEmptyLibrary(); }));
+
 
 		menu->addChild(createMenuLabel(system::getFilename(module->midiMapLibraryFilename)));
 		

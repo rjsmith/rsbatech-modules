@@ -1318,6 +1318,22 @@ private:
 		
 	}
 
+    /* Delete all mapped modules, add to undo history */
+    void expMemPluginDeleteAll() {
+        json_t* currentStateJ = toJson();
+
+        resetMap();
+
+        // history::ModuleChange
+        history::ModuleChange* h = new history::ModuleChange;
+        h->name = "clear all plugin mappings";
+        h->moduleId = this->id;
+        h->oldModuleJ = currentStateJ;
+        h->newModuleJ = toJson();
+        APP->history->push(h);
+        
+    }
+
 	/**
 	 * Store current mapping parameters as restorable rack-level mapping
 	 */
@@ -1429,7 +1445,7 @@ private:
 
 	}
 
-		void expMemExportPlugin(std::string pluginSlug) {
+	void expMemExportPlugin(std::string pluginSlug) {
 
 		osdialog_filters* filters = osdialog_filters_parse(SAVE_JSON_FILTERS);
 		DEFER({
@@ -1459,7 +1475,6 @@ private:
 		});
 
 		json_object_set_new(rootJ, "plugin", json_string(this->model->plugin->slug.c_str()));
-		json_object_set_new(rootJ, "model", json_string(this->model->slug.c_str()));
 		json_t* dataJ = json_object();
 
 		// Get map of all mapped modules for this plugin
@@ -1511,9 +1526,12 @@ private:
 	 */ 
 	void expMemSaveLibrary(bool force = false) {
 
-		if (midiMapLibraryFilename.empty()) return;
-		if (!force && !autosaveMappingLibrary) return;
-
+		if (midiMapLibraryFilename.empty()) {
+			return;
+		}
+		if (!force && !autosaveMappingLibrary) {
+			return;
+		}
 		saveMappingLibraryFile(midiMapLibraryFilename);
 
 	}

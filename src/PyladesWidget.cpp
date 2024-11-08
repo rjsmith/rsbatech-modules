@@ -571,6 +571,35 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 		module->expMemSaveLibrary(true);
 	}
 
+	void expMemCreateNewEmptyLibrary() {
+
+		osdialog_filters* filters = osdialog_filters_parse(LOAD_MIDIMAP_FILTERS);
+		DEFER({
+			osdialog_filters_free(filters);
+		});
+
+		std::string currentLibraryFilePath;
+		if (!module->midiMapLibraryFilename.empty()) {
+			currentLibraryFilePath = system::getDirectory(module->midiMapLibraryFilename);
+		} else {
+			currentLibraryFilePath = module->model->getUserPresetDirectory();
+		}
+
+		std::string currentLibraryFilename = DEFAULT_LIBRARY_FILENAME;
+		char* path = osdialog_file(OSDIALOG_SAVE, currentLibraryFilePath.c_str(), currentLibraryFilename.c_str(), filters);
+		if (!path) {
+			return;
+		}
+		DEFER({
+			free(path);
+		});
+
+		// Update library filename
+		module->midiMapLibraryFilename = path;
+		module->expMemPluginDeleteAll();
+		module->expMemSaveLibrary(true);
+	}
+
 	void loadMidiMapLibrary_dialog() {
 		osdialog_filters* filters = osdialog_filters_parse(LOAD_MIDIMAP_FILTERS);
 		DEFER({
@@ -670,8 +699,10 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 		});
 
 		json_t* currentStateJ = toJson();
-		if (mergeMidiMapPreset_convert(moduleJ, skipPremappedModules) == 0)
+		if (mergeMidiMapPreset_convert(moduleJ, skipPremappedModules) == 0) {
+			DEBUG("No modules were imported from file");
 			return;
+		}
 
 		// history::ModuleChange
 		history::ModuleChange* h = new history::ModuleChange;
@@ -681,7 +712,7 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 		h->newModuleJ = toJson();
 		APP->history->push(h);
 
-		module->expMemSaveLibrary();
+		module->expMemSaveLibrary(true);
 	}
 
 	void importFactoryMidiMapPreset_action(bool skipPremappedModules) {
@@ -736,10 +767,9 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 	 */
 	int mergeMidiMapPreset_convert(json_t* importedPresetJ, bool skipPremappedModules) {
 		std::string pluginSlug = json_string_value(json_object_get(importedPresetJ, "plugin"));
-		std::string modelSlug = json_string_value(json_object_get(importedPresetJ, "model"));
 
 		// Only handle presets or midimap JSON files from Pylades
-		if (!(pluginSlug == module->model->plugin->slug && modelSlug == module->model->slug))
+		if (!(pluginSlug == module->model->plugin->slug))
 			return 0;
 
 		// Get the midiMap in the imported preset Json
@@ -1264,8 +1294,9 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 			}
 		));
 
-		menu->addChild(createMenuItem("Save mapping library file...", "", [=]() { expMemCreateLibrary(); }));
+		menu->addChild(createMenuItem("Save mapping library file as...", "", [=]() { expMemCreateLibrary(); }));
 		menu->addChild(createMenuItem("Change mapping library file...", "", [=]() { expMemSelectLibrary(); }));
+		menu->addChild(createMenuItem("Create empty mapping library file...", "", [=]() { expMemCreateNewEmptyLibrary(); }));
 
 		menu->addChild(createMenuLabel(system::getFilename(module->midiMapLibraryFilename)));
 		
