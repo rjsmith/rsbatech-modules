@@ -1,3 +1,9 @@
+## 2.0.0-beta9 10 Nov 2024
+
+- Added "Create empty mapping library" menu action
+- Exported individual plugin mapping files into presets folder
+- [FIX] Prevent crash reading a json file without a "plugin" top-level object property
+
 ## 2.0.0-beta8 2 Nov 2024
 
 - Added custom parameter labels
