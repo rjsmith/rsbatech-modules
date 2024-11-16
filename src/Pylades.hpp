@@ -13,7 +13,6 @@ static const std::string TXPORT_DEFAULT = "8880";
 static const std::string OSCMSG_FADER = "/fader";
 static const std::string OSCMSG_MODULE_START = "/pylades/moduleMeowMory/start";
 static const std::string OSCMSG_MODULE_END = "/pylades/moduleMeowMory/end";
-static const std::string OSCMSG_MODULE_LIST = "/pylades/list";
 static const std::string OSCMSG_PREV_MODULE = "/pylades/prev";
 static const std::string OSCMSG_NEXT_MODULE = "/pylades/next";
 static const std::string OSCMSG_SELECT_MODULE = "/pylades/select";

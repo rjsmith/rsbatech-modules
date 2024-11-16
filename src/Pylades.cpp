@@ -57,9 +57,9 @@ struct OscOutput {
    }
 
    /**
-    * Inform E1 that a change module action is starting
+    * Inform TouchOSC that a change module action is starting
     */
-   void changeE1Module(const char* moduleName, const char* moduleDisplayName, float moduleY, float moduleX, int maxNprnId) {
+   void changeOSCModule(const char* moduleName, const char* moduleDisplayName, float moduleY, float moduleX, int maxNprnId) {
 
 		if (moduleRef.sending) {
 	   		TheModularMind::OscBundle feedbackBundle;
@@ -80,7 +80,7 @@ struct OscOutput {
    }
 
  	/**
- 	 * Inform E1 that a change module sequence has completed
+ 	 * Inform TouchOSC that a change module sequence has completed
  	 */
    void endChangeE1Module() {
 
@@ -97,7 +97,7 @@ struct OscOutput {
    }
 
    /**
-    * Sends a series of lua commands to E1 to transmit the list of mapped modules in the current Rack patch.
+    * Sends a series of lua commands to TouchOSC to transmit the list of mapped modules in the current Rack patch.
     * Pass a begin() and end() of a list or vector of MappedModule objects.
     */
    template <class Iterator>
@@ -990,9 +990,9 @@ private:
 		}
 	}
 
-	void changeE1Module(const char* moduleName, const char* moduleDisplayName, float moduleY, float moduleX, int maxNprnId) {
-	    // DEBUG("changeE1Module to %s", moduleName);
-	    oscOutput.changeE1Module(moduleName, moduleDisplayName, moduleY, moduleX, maxNprnId);
+	void changeOSCModule(const char* moduleName, const char* moduleDisplayName, float moduleY, float moduleX, int maxNprnId) {
+	    // DEBUG("changeOSCModule to %s", moduleName);
+	    oscOutput.changeOSCModule(moduleName, moduleDisplayName, moduleY, moduleX, maxNprnId);
 	}
 
 	void endChangeE1Module() {
@@ -1370,7 +1370,7 @@ private:
         		maxNprnId = it->nprn;
         	}
         }
-		changeE1Module(m->model->name.c_str(), m->model->getFullName().c_str(), pos.y, pos.x, maxNprnId);
+		changeOSCModule(m->model->name.c_str(), m->model->getFullName().c_str(), pos.y, pos.x, maxNprnId);
 
 		clearMaps_WithLock();
 		oscOutput.reset();
@@ -1413,7 +1413,7 @@ private:
         		maxNprnId = it->nprn;
         	}
         }
-		changeE1Module("RackMapping", "Rack Mapping", 0, 0, maxNprnId);
+		changeOSCModule("RackMapping", "Rack Mapping", 0, 0, maxNprnId);
 		clearMaps_WithLock();
 		oscOutput.reset();
 		expMemModuleId = -1;
