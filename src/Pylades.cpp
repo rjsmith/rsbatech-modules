@@ -46,7 +46,6 @@ struct OscOutput {
 			infoMessage.setAddress("/fader/info");
 			infoMessage.addIntArg(id); // controller id
 			infoMessage.addStringArg(displayValue); // displayValue
-		    infoMessage.addIntArg(1); // visible
 		    infoMessage.addStringArg(name); // parameter display name
 			feedbackBundle.addMessage(infoMessage);
 		
