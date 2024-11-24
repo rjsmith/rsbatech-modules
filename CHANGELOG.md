@@ -1,3 +1,9 @@
+## 2.1.0 24 Nov 2024
+
+- Refactored Pylades OSC message names and arguments, hence need to bump minor version of plugin
+- [MAP] Added Venom plugin mappings
+- [MAP] Added Hetrick plugin mappings
+
 ## 2.0.0-beta9 10 Nov 2024
 
 - Added "Create empty mapping library" menu action
