@@ -1,7 +1,7 @@
 {
   "slug": "RSBATechModules",
   "name": "RSBATech Modules",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "license": "GPL-3.0-or-later",
   "brand": "RSBATech",
   "author": "Richard Smith",
@@ -17,13 +17,13 @@
       "slug": "OrestesOne",
       "name": "Orestes One",
       "description": "Module control from Electra One",
-      "tags": ["Utility", "MIDI", "Controller"]
+      "tags": ["External", "Utility", "MIDI", "Controller"]
     },
     {
       "slug": "Pylades",
       "name": "Pylades",
       "description": "Module control from TouchOSC",
-      "tags": ["Utility", "Controller"]
+      "tags": ["External", "Utility", "Controller"]
     }
   ]
 }

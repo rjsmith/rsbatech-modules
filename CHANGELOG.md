@@ -1,3 +1,10 @@
+## 2.1.1 29 Nov 2024
+
+- [FIX] Downgraded OscMessage FATAL to WARN log, to prevent crashing VCVRack
+- [MAP] Mapped new NANO plugin modules v2.3.8.2
+- [MAP] Mapped new Befaco plugin modules v2.8.2
+- [MAP] Mapped new Hetrick plugin modules v2.5.0
+
 ## 2.1.0 24 Nov 2024
 
 - Refactored Pylades OSC message names and arguments, hence need to bump minor version of plugin
