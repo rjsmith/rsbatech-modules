@@ -3,6 +3,10 @@
 
 /*
 This file was copied from https://github.com/The-Modular-Mind/oscelot
+
+Modifications:
+
+Downgraded FATAL logging to WARN level
 */
 
 namespace TheModularMind {
@@ -26,7 +30,8 @@ class OscMessage {
 		remotePort = oscMessage.remotePort;
 
 		for (std::size_t i = 0; i < oscMessage.args.size(); ++i) {
-			switch (oscMessage.getArgType(i)) {
+			osc::TypeTagValues argType = oscMessage.getArgType(i);
+			switch (argType) {
 			case osc::INT32_TYPE_TAG:
 				args.push_back(new OscArgInt32(oscMessage.getArgAsInt(i)));
 				break;
@@ -37,7 +42,7 @@ class OscMessage {
 				args.push_back(new OscArgString(oscMessage.getArgAsString(i)));
 				break;
 			default:
-				FATAL("OscMessage copy(): bad/unimplemented argument type %i", oscMessage.getArgType(i));
+				WARN("OscMessage copy(): bad/unimplemented argument type %i", argType);
 				break;
 			}
 		}
@@ -61,7 +66,6 @@ class OscMessage {
 
 	osc::TypeTagValues getArgType(std::size_t index) const {
 		if (index >= args.size()) {
-			FATAL("OscMessage.getArgType(): index %d out of bounds", (int)index);
 			return osc::NIL_TYPE_TAG;
 		} else {
 			return args[index]->getType();
