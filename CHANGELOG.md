@@ -1,3 +1,8 @@
+## 2.1.2 5 Jan 2025
+
+- [FIX] Prevent non-ASCII module names (e.g. from Instruō) from being encoded and sent to E1 (which does not support unicode)
+- [MAP] Fixed Audible Instruments Elements module mapping
+
 ## 2.1.1 29 Nov 2024
 
 - [FIX] Downgraded OscMessage FATAL to WARN log, to prevent crashing VCVRack
