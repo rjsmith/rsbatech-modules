@@ -6,6 +6,7 @@
 #include "components/MidiWidget.hpp"
 #include "ui/ParamWidgetContextExtender.hpp"
 #include "ui/OverlayMessageWidget.hpp"
+
 #include <osdialog.h>
 #include <vector>
 #include <iomanip>
@@ -28,10 +29,14 @@ struct OrestesOneOutput : midi::Output {
 
 };
 
-
 struct E1MidiOutput : OrestesOneOutput {
 	std::array<int, MAX_CHANNELS> lastNPRNValues{};
     midi::Message m;
+
+    static bool invalidASCIIChar (unsigned char c) 
+    {  
+        return !(c>=0 && c <128);   
+    } 
 
     E1MidiOutput() {
 		reset();
@@ -91,11 +96,10 @@ struct E1MidiOutput : OrestesOneOutput {
     * Inform E1 that a change module action is starting
     */
    void changeE1Module(const std::string moduleDisplayName, float moduleY, float moduleX, int maxNprnId) {
-
-        std::stringstream ss;
         // Truncate module name to keep string length less than 80 characters, due to E1 3.7 beta firmware bug
-        ss << "changeE1Module(\"" << moduleDisplayName.substr(0, 50).c_str() << "\", " << string::f("%g, %g, %d", moduleY, moduleX, maxNprnId) << ")";
-        sendE1ExecuteLua(ss.str().c_str());
+        auto raw = string::f("changeE1Module(\"%s\", %g, %g, %d)", moduleDisplayName.substr(0, 50).c_str(), moduleY, moduleX, maxNprnId);
+        stripUnicode(raw);
+        sendE1ExecuteLua(raw.c_str());
 
    }
 
@@ -103,9 +107,7 @@ struct E1MidiOutput : OrestesOneOutput {
  	 * Inform E1 that a change module sequence has completed
  	 */
    void endChangeE1Module() {
-         std::stringstream ss;
-         ss << "endChangeE1Module()";
-         sendE1ExecuteLua(ss.str().c_str());
+         sendE1ExecuteLua("endChangeE1Module()");
    }
 
    /**
@@ -128,28 +130,26 @@ struct E1MidiOutput : OrestesOneOutput {
    }
 
     void startMappedModuleList() {
-        std::stringstream ss;
-        ss << "startMML()";
-        sendE1ExecuteLua(ss.str().c_str());
+        sendE1ExecuteLua("startMML()");
     }
+
     void mappedModuleInfo(RackMappedModuleListItem& m) {
-        std::stringstream ss;
         // Truncate module display name to ensure entire string is less than 80 characters
         // to workround an Electra One issue in the beta 3.7 firmware.  This may get fixed, but
         // truncating a module disply name to max 30 characters makes sense as a longer string will not display very well 
         // on the E1 module grid buttons.
-        ss << "mappedMI(\"" << m.getModuleDisplayName().substr(0, 15).c_str() <<  "\", " << string::f("%g", m.getY()) << ", " << string::f("%g", m.getX()) << ")";
-        sendE1ExecuteLua(ss.str().c_str());
+        auto raw = string::f("mappedMI(\"%s\", %g, %g)", m.getModuleDisplayName().substr(0, 15).c_str(), m.getY(), m.getX());
+        stripUnicode(raw);
+        sendE1ExecuteLua(raw.c_str());
     }
+
     void endMappedModuleList() {
-         std::stringstream ss;
-         ss << "endMML()";
-         sendE1ExecuteLua(ss.str().c_str());
+         sendE1ExecuteLua("endMML()");
     }
+
     void sendOrestesOneVersion(std::string o1Version) {
-    	std::stringstream ss;
-    	ss << "o1Version(\"" << o1Version << "\")";
-        sendE1ExecuteLua(ss.str().c_str());
+        auto raw = string::f("o1Version(\"%s\")", o1Version.c_str());
+        sendE1ExecuteLua(raw.c_str());
 
     } 
 
@@ -214,7 +214,7 @@ struct E1MidiOutput : OrestesOneOutput {
         m.bytes.push_back(0x00);
         m.bytes.push_back(0x21);
         m.bytes.push_back(0x45);
-        // Execute command
+        // Execute stringstreamcommand
         m.bytes.push_back(0x8);
         // Lua command
         m.bytes.push_back(0xD);
@@ -238,6 +238,14 @@ struct E1MidiOutput : OrestesOneOutput {
              ss << std::setw(2) << std::setfill('0') << (int)data[i];
 
         return ss.str();
+    }
+
+    /**
+     * Utility function to remove non-ASCII-compatible unicode characters from strings sent to E1 in an execute LUA command
+     */
+    void stripUnicode(std::string & str) 
+    { 
+        str.erase(std::remove_if(str.begin(),str.end(), E1MidiOutput::invalidASCIIChar), str.end());  
     }
 
 };

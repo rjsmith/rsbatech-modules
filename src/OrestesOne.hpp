@@ -6,6 +6,5 @@ namespace RSBATechModules {
 namespace OrestesOne {
 
 
-
 } // namespace OrestesOne
 } // namespace Orestes

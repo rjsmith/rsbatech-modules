@@ -165,6 +165,4 @@ struct RackParam : ScaledMapParam<int> {
     }
 };
 
-
-
 }
