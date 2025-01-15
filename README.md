@@ -1,7 +1,7 @@
 # RSBATech-Modules
 
 <!-- Version and License Badges -->
-![Version](https://img.shields.io/badge/version-2.1.2-green.svg?style=flat-square)
+![Version](https://img.shields.io/badge/version-2.1.3-green.svg?style=flat-square)
 ![License](https://img.shields.io/badge/license-GPLv3+-blue.svg?style=flat-square)
 ![Language](https://img.shields.io/badge/language-C++-yellow.svg?style=flat-square)
 
@@ -9,8 +9,8 @@ A [VCV Rack](https://vcvrack.com/) Plugin.
 
 This Plugin includes the following modules:
 
-* Orestes-One
-* Pylades
+* Orestes-One (module parameter control from Electra One MIDI Controller)
+* Pylades (module parameter control from TouchOSC)
 
 
 ## Orestes-One
@@ -53,7 +53,7 @@ Functionally, Orestes-One and Pylades are basically ([MIDI-CAT](https://library.
 * [Factory - provided module mappings](https://github.com/rjsmith/rsbatech-modules/wiki/Factory-Module-Mapping-Library) included
 * Use multiple Pylades and Orestes-One modules connected to different TouchOSC and Electra-One controllers in the same Rack (e.g. dedicate one iPad to controlling a Mix Master, another iPad for controlling other modules and an Electra-One controlling a Rack-wide mapping, all at the same time)
 
-Plus most MIDI-CAT features (up to its [v2.0.beta4](https://github.com/stoermelder/vcvrack-packone/blob/v2/CHANGELOG.md#20beta4))
+Plus most MIDI-CAT features (up to and including [v2.0.beta4](https://github.com/stoermelder/vcvrack-packone/blob/v2/CHANGELOG.md#20beta4))
 
 ## Documentation
 
@@ -99,7 +99,7 @@ The UI elements within the res/ folder are licensed under [CC BY-NC-ND 4.0](http
 
 ## Acknowledgements
 
-At least 80% of the code of Orestes-One was directly copied from the [MIDI-CAT MIDI controller module](https://library.vcvrack.com/Stoermelder-P1/MidiCat) which is part of the essential [stoermelder PackOne](https://github.com/stoermelder/vcvrack-packone) VCV Rack Plugin. I literally could not have created this plugin without it.
+At least 80% of the code of Orestes-One was directly copied from the [MIDI-CAT MIDI controller module](https://library.vcvrack.com/Stoermelder-P1/MidiCat) which is part of the essential [stoermelder PackOne](https://github.com/stoermelder/vcvrack-packone) VCV Rack Plugin. I literally could not have created this plugin without it.  The author has gracefully OK'd the use of the software in this plugin.
 
 Thanks to TheModularMind for code, inspiration and ideas from the [Oscelot](https://library.vcvrack.com/OSCelot/OSCelot) module. 
 

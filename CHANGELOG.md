@@ -1,3 +1,7 @@
+## 2.1.3 15 Jan 2025
+
+- [MAP] Mapped UnfilteredVolume1 plugin modules v2.2.1
+
 ## 2.1.2 5 Jan 2025
 
 - [FIX] Prevent non-ASCII module names (e.g. from Instruō) from being encoded and sent to E1 (which does not support unicode)
