@@ -1252,6 +1252,7 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 					int64_t moduleId = module->paramHandles[i].moduleId;
 					if (moduleId < 0) continue;
 					Module* m = module->paramHandles[i].module;
+					if (!m) continue;
 					auto q = ppair(m->model->plugin->slug, m->model->slug);
 					if (s.find(q) != s.end()) continue;
 					s.insert(q);
