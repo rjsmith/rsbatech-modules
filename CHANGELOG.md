@@ -1,3 +1,10 @@
+## 2.1.4 26 Jan 2025
+
+- [FIX] Prevent crash if access save mapping context menu after deleting mapped module from the rack (and mappings not automatically removed)
+- [MAP] Mapped Cytomic plugin v2.0.6
+- [MAP] Mapped Jasmine & Olive Trees plugin v2.0.2
+- [MAP] Mapped some NYSTHI modules - Simpliciter & Wormholizer v2.4.23
+
 ## 2.1.3 15 Jan 2025
 
 - [MAP] Mapped UnfilteredVolume1 plugin modules v2.2.1
