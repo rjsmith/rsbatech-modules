@@ -1,3 +1,9 @@
+## 2.1.5 2 Mar 2025
+
+- [MAP] Mapped all 4MS plugin v2.0.11
+- [MAP] Mapped CV Funk plugin modules v2.0.12
+- [MAP] Mapped Bastl Pizza plugin modules v2.1.1
+
 ## 2.1.4 26 Jan 2025
 
 - [FIX] Prevent crash if access save mapping context menu after deleting mapped module from the rack (and mappings not automatically removed)
