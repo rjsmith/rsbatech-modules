@@ -59,7 +59,7 @@ jobs:
           path: ${{ env.rack-plugin-toolchain-dir }}/plugin-build
           name: ${{ matrix.platform }}
 
-  build-mac-x64:
+  build-mac:
     name: mac
     needs: modify-plugin-version
     runs-on: macos-latest
