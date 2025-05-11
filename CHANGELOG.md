@@ -1,3 +1,10 @@
+## 2.1.6 11 May 2025
+
+- [MAP] Mapped NANO modules v2.3.9 (OCTA)
+- [MAP] Mapped Moffenzeef plugin v2.0.3
+- [MAP] Mapped nullpath plugin v2.0.1
+- [MAP] Mapped Sanguine Mutants v2.6.6  
+
 ## 2.1.5 2 Mar 2025
 
 - [MAP] Mapped all 4MS plugin v2.0.11
