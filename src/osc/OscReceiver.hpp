@@ -29,6 +29,7 @@ struct OscReceiver : public osc::OscPacketListener {
 			stop();
 		}
 		this->port = port;
+		this->queue.clear();
 
 		UdpListeningReceiveSocket *socket = nullptr;
 		try {
