@@ -1,3 +1,7 @@
+## 2.1.7 16 May 2025
+
+- [FIX] Prevent crash by replacing OscReceiver queue with a lock-free threadsafe dsp::RingBuffer
+
 ## 2.1.6 11 May 2025
 
 - [MAP] Mapped NANO modules v2.3.9 (OCTA)
