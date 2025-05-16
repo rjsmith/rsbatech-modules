@@ -1,4 +1,5 @@
 #pragma once
+#include "plugin.hpp"
 #include <functional>
 #include <queue>
 #include "oscpack/osc/OscPacketListener.h"
@@ -9,6 +10,7 @@ This file was copied from https://github.com/The-Modular-Mind/oscelot
 Modifications:
 
 Downgraded FATAL logging to WARN level
+Replaced OscMessage std::queue with VCVRack dsp::RingBuffer
 
 */
 
@@ -70,8 +72,7 @@ struct OscReceiver : public osc::OscPacketListener {
 	bool shift(OscMessage *message) {
 		if (!message) return false;
 		if (!queue.empty()) {
-			*message = queue.front();
-			queue.pop();
+			*message = queue.shift();
 			return true;
 		}
 		return false;
@@ -80,31 +81,33 @@ struct OscReceiver : public osc::OscPacketListener {
    protected:
 	/// process incoming OSC message and add it to the queue
 	virtual void ProcessMessage(const osc::ReceivedMessage &receivedMessage, const IpEndpointName &remoteEndpoint) override {
-		OscMessage msg;
-		char endpointHost[IpEndpointName::ADDRESS_STRING_LENGTH];
+		if (!queue.full()) {
+			OscMessage msg;
+			char endpointHost[IpEndpointName::ADDRESS_STRING_LENGTH];
 
-		remoteEndpoint.AddressAsString(endpointHost);
-		msg.setAddress(receivedMessage.AddressPattern());
-		msg.setRemoteEndpoint(endpointHost, remoteEndpoint.port);
+			remoteEndpoint.AddressAsString(endpointHost);
+			msg.setAddress(receivedMessage.AddressPattern());
+			msg.setRemoteEndpoint(endpointHost, remoteEndpoint.port);
 
-		for (auto arg = receivedMessage.ArgumentsBegin(); arg != receivedMessage.ArgumentsEnd(); ++arg) {
-			if (arg->IsInt32()) {
-				msg.addIntArg(arg->AsInt32Unchecked());
-			} else if (arg->IsFloat()) {
-				msg.addFloatArg(arg->AsFloatUnchecked());
-			} else if (arg->IsString()) {
-				msg.addStringArg(arg->AsStringUnchecked());
-			} else {
-				WARN("OscReceiver ProcessMessage(): argument in message %s is an unknown type %d", receivedMessage.AddressPattern(), arg->TypeTag());
-				break;
+			for (auto arg = receivedMessage.ArgumentsBegin(); arg != receivedMessage.ArgumentsEnd(); ++arg) {
+				if (arg->IsInt32()) {
+					msg.addIntArg(arg->AsInt32Unchecked());
+				} else if (arg->IsFloat()) {
+					msg.addFloatArg(arg->AsFloatUnchecked());
+				} else if (arg->IsString()) {
+					msg.addStringArg(arg->AsStringUnchecked());
+				} else {
+					WARN("OscReceiver ProcessMessage(): argument in message %s is an unknown type %d", receivedMessage.AddressPattern(), arg->TypeTag());
+					break;
+				}
 			}
+			queue.push(msg);
 		}
-		queue.push(msg);
 	}
 
    private:
 	std::unique_ptr<UdpListeningReceiveSocket, std::function<void(UdpListeningReceiveSocket *)>> listenSocket;
-	std::queue<OscMessage> queue;
+	dsp::RingBuffer<OscMessage, 512> queue;
 	std::thread listenThread;
 };
 }  // namespace TheModularMind

@@ -565,7 +565,7 @@ private:
 		// Aquire new OSC message from the Receiver
 		TheModularMind::OscMessage rxMessage;
 		oscReceived = false;
-		while (oscReceiver.shift(&rxMessage)) {
+		while(oscReceiver.shift(&rxMessage)) {
 			bool r = processOscMessage(rxMessage);
 			oscReceived = oscReceived || r;
 		}
