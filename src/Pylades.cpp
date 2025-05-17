@@ -59,7 +59,7 @@ struct OscOutput {
    /**
     * Inform TouchOSC that a change module action is starting
     */
-   void changeOSCModule(const char* moduleName, const char* moduleDisplayName, float moduleY, float moduleX, int maxNprnId, std::array<std::string, MAX_PAGES> pageLabels) {
+   void changeOSCModule(const char* moduleName, const char* moduleDisplayName, float moduleY, float moduleX, int maxNprnId, const std::array<std::string, MAX_PAGES>& pageLabels) {
 
 		if (moduleRef.sending) {
 	   		TheModularMind::OscBundle feedbackBundle;
@@ -394,7 +394,7 @@ private:
 	dsp::ClockDivider lightDivider;
 
 	/** [Stored to Json] */
-    std::array<std::string, MAX_PAGES> pageLabels{"", "", "", "", "", ""}; // Current mapped module control page labels
+    std::array<std::string, MAX_PAGES> pageLabels = {"", "", "", "", "", ""}; // Current mapped module control page labels
 
 	// MEM-
 	// Pointer of the MEM's attribute
@@ -1002,7 +1002,7 @@ private:
 		}
 	}
 
-	void changeOSCModule(const char* moduleName, const char* moduleDisplayName, float moduleY, float moduleX, int maxNprnId, std::array<std::string, MAX_PAGES> pageLabels) {
+	void changeOSCModule(const char* moduleName, const char* moduleDisplayName, float moduleY, float moduleX, int maxNprnId, const std::array<std::string, MAX_PAGES>& pageLabels) {
 	    // DEBUG("changeOSCModule to %s", moduleName);
 	    oscOutput.changeOSCModule(moduleName, moduleDisplayName, moduleY, moduleX, maxNprnId, pageLabels);
 	}

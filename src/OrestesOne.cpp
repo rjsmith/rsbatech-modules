@@ -95,7 +95,7 @@ struct E1MidiOutput : OrestesOneOutput {
    /**
     * Inform E1 that a change module action is starting
     */
-   void changeE1Module(const std::string moduleDisplayName, float moduleY, float moduleX, int maxNprnId, std::array<std::string, MAX_PAGES> pageLabels) {
+   void changeE1Module(const std::string moduleDisplayName, float moduleY, float moduleX, int maxNprnId, const std::array<std::string, MAX_PAGES>& pageLabels) {
         // Truncate module name to keep string length less than 128 characters
         auto raw = string::f("changeE1Module(\"%s\", %g, %g, %d)", moduleDisplayName.substr(0, 50).c_str(), moduleY, moduleX, maxNprnId);
         stripUnicode(raw);
@@ -442,7 +442,7 @@ struct OrestesOneModule : Module {
 	dsp::ClockDivider indicatorDivider;
 
     /** [Stored to Json] */
-    std::array<std::string, MAX_PAGES> pageLabels{"", "", "", "", "", ""}; // Current mapped module control page labels
+    std::array<std::string, MAX_PAGES> pageLabels = {"", "", "", "", "", ""}; // Current mapped module control page labels
 
 	// MEM-
 	// Pointer of the MEM's attribute
@@ -1136,7 +1136,7 @@ struct OrestesOneModule : Module {
 		}
 	}
 
-	void changeE1Module(const std::string moduleName, float moduleY, float moduleX, int maxNprnId, std::array<std::string, MAX_PAGES> pageLabels) {
+	void changeE1Module(const std::string moduleName, float moduleY, float moduleX, int maxNprnId, const std::array<std::string, MAX_PAGES>& pageLabels) {
 	    // DEBUG("changeE1Module to %s", moduleName);
 	    midiCtrlOutput.changeE1Module(moduleName, moduleY, moduleX, maxNprnId, pageLabels);
 	}
