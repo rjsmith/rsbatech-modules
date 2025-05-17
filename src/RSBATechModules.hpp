@@ -6,6 +6,7 @@ namespace RSBATechModules {
 
 static const int MAX_CHANNELS = 300;
 static const int MAX_NPRN_ID = 299; // 0 to MAX_NPRN_ID
+static const int MAX_PAGES = 6;
 
 static const char LOAD_MIDIMAP_FILTERS[] = "VCV Rack module preset (.vcvm):vcvm, JSON (.json):json";
 static const char SAVE_JSON_FILTERS[] = "JSON (.json):json";
@@ -45,12 +46,14 @@ struct MemModule {
 	std::string moduleName;
 	bool autoMapped;
 	std::list<MemParam*> paramMap;
+	std::array<std::string, MAX_PAGES> pageLabels;
 	~MemModule() {
 		for (auto it : paramMap) delete it;
 	}
 	void reset() {
 		for (auto it : paramMap) delete it;
 		paramMap.clear();	
+		for (auto it : pageLabels) it.clear();
 	}
 
 };
