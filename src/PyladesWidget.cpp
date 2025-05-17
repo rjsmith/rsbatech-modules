@@ -1235,14 +1235,6 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 			}
 
 			Menu* createChildMenu() override {
-				// struct PageLabelItem : MenuItem {
-				// 	PyladesModule* module;
-				// 	int pageIndex;
-				// 	std::string pageLabel;
-				// 	void onAction(const event::Action& e) override {
-				// 		module->pageLabels[pageIndex] = pageLabel;
-				// 	}
-				// }; // PageLabelItem
 				struct PageLabelMenuItem : MenuItem {
 					PyladesModule* module;
 					int id;
@@ -1256,7 +1248,8 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 						int id;
 						void onSelectKey(const event::SelectKey& e) override {
 							if (e.action == GLFW_PRESS && e.key == GLFW_KEY_ENTER) {
-								module->pageLabels[id] = text;
+								module->pageLabels[id] = text.substr(0,20);
+								ui::TextField::setText(module->pageLabels[id]);
 							}
 
 							if (!e.getTarget()) {
@@ -1283,7 +1276,7 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 						labelField->module = module;
 						labelField->id = id;
 						menu->addChild(labelField);
-
+						menu->addChild(createMenuLabel("Max 20 characters"));
 						ResetItem* resetItem = new ResetItem;
 						resetItem->text = "Reset";
 						resetItem->module = module;

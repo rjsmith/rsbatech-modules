@@ -95,11 +95,21 @@ struct E1MidiOutput : OrestesOneOutput {
    /**
     * Inform E1 that a change module action is starting
     */
-   void changeE1Module(const std::string moduleDisplayName, float moduleY, float moduleX, int maxNprnId) {
-        // Truncate module name to keep string length less than 80 characters, due to E1 3.7 beta firmware bug
+   void changeE1Module(const std::string moduleDisplayName, float moduleY, float moduleX, int maxNprnId, std::array<std::string, MAX_PAGES> pageLabels) {
+        // Truncate module name to keep string length less than 128 characters
         auto raw = string::f("changeE1Module(\"%s\", %g, %g, %d)", moduleDisplayName.substr(0, 50).c_str(), moduleY, moduleX, maxNprnId);
         stripUnicode(raw);
         sendE1ExecuteLua(raw.c_str());
+
+        // Send page labels, if any defined, as separate lua command messages
+        for (int i = 0; i < MAX_PAGES; i++) {
+            std::string pageLabel = pageLabels[i];
+            if (!pageLabel.empty()) {
+                auto raw = string::f("changePageLabel(\"%s\", %d)", pageLabel.substr(0, 100).c_str(), i + 1);
+                stripUnicode(raw);
+                sendE1ExecuteLua(raw.c_str());
+            } 
+        }   
 
    }
 
@@ -431,6 +441,9 @@ struct OrestesOneModule : Module {
 	int processDivision;
 	dsp::ClockDivider indicatorDivider;
 
+    /** [Stored to Json] */
+    std::string pageLabels[MAX_PAGES]; // Current mapped module control page labels
+
 	// MEM-
 	// Pointer of the MEM's attribute
 	int64_t expMemModuleId = -1;
@@ -496,6 +509,9 @@ struct OrestesOneModule : Module {
 			midiOptions[i] = 0;
 			midiParam[i].reset();
 		}
+        for (int i = 0; i < MAX_PAGES; i++) {
+            pageLabels[i].clear();
+        }
 		locked = false;
 		midiInput.reset();
 		midiOutput.reset();
@@ -1120,9 +1136,9 @@ struct OrestesOneModule : Module {
 		}
 	}
 
-	void changeE1Module(const std::string moduleName, float moduleY, float moduleX, int maxNprnId) {
+	void changeE1Module(const std::string moduleName, float moduleY, float moduleX, int maxNprnId, std::array<std::string, MAX_PAGES> pageLabels) {
 	    // DEBUG("changeE1Module to %s", moduleName);
-	    midiCtrlOutput.changeE1Module(moduleName, moduleY, moduleX, maxNprnId);
+	    midiCtrlOutput.changeE1Module(moduleName, moduleY, moduleX, maxNprnId, pageLabels);
 	}
 
 	void endChangeE1Module() {
@@ -1395,6 +1411,9 @@ struct OrestesOneModule : Module {
 		m->pluginName = module->model->plugin->name;
 		m->moduleName = module->model->name;
 		m->autoMapped = autoMapped; // Manually saving module map, so assume is no longer considered auto-mapped
+        for (size_t i = 0; i < MAX_PAGES; i++) {
+            m->pageLabels[i] = pageLabels[i];   
+        }
 		auto p = std::pair<std::string, std::string>(pluginSlug, moduleSlug);
 		auto it = midiMap.find(p);
 		if (it != midiMap.end()) {
@@ -1484,6 +1503,9 @@ struct OrestesOneModule : Module {
                 rackMapping.paramMap.push_back(p);    
             }
 		}
+        for (size_t i = 0; i < MAX_PAGES; i++) {
+            rackMapping.pageLabels[i] = pageLabels[i];
+        }
 	}
 
 
@@ -1501,7 +1523,7 @@ struct OrestesOneModule : Module {
         		maxNprnId = it->nprn;
         	}
         }
-		changeE1Module(m->model->getFullName(), pos.y, pos.x, maxNprnId);
+		changeE1Module(m->model->getFullName(), pos.y, pos.x, maxNprnId, map->pageLabels);
 
 		clearMaps_WithLock();
 		midiOutput.reset();
@@ -1529,6 +1551,9 @@ struct OrestesOneModule : Module {
 
 			i++;
 		}
+        for (int i = 0; i < MAX_PAGES; i++) {
+            pageLabels[i] = map->pageLabels[i];
+        }
 
 		updateMapLen();
 
@@ -1545,7 +1570,7 @@ struct OrestesOneModule : Module {
         		maxNprnId = it->nprn;
         	}
         }
-		changeE1Module("Rack Mapping", 0, 0, maxNprnId);
+		changeE1Module("Rack Mapping", 0, 0, maxNprnId, rackMapping.pageLabels);
 		clearMaps_WithLock();
 		midiOutput.reset();
 		midiCtrlOutput.reset();
@@ -1572,6 +1597,9 @@ struct OrestesOneModule : Module {
 
 			i++;
 		}
+        for (int i = 0; i < MAX_PAGES; i++) {
+            pageLabels[i] = rackMapping.pageLabels[i];
+        }
 
 		updateMapLen();
 
@@ -1705,6 +1733,11 @@ struct OrestesOneModule : Module {
 			json_array_append_new(mapsJ, mapJ);
 		}
 		json_object_set_new(rootJ, "maps", mapsJ);
+        json_t* pageLabelsJ = json_array();
+        for (int page = 0; page < MAX_PAGES; page++) {
+            json_array_append_new(pageLabelsJ, json_string(pageLabels[page].c_str()));
+        }
+        json_object_set_new(rootJ, "pageLabels", pageLabelsJ);
 
 		json_object_set_new(rootJ, "midiResendPeriodically", json_boolean(midiResendPeriodically));
 		json_object_set_new(rootJ, "midiIgnoreDevices", json_boolean(midiIgnoreDevices));
@@ -1733,7 +1766,11 @@ struct OrestesOneModule : Module {
 			
 		}
 		json_object_set_new(rackMappingJJ, "paramMap", paramMapJ);
-
+        json_t* rackMappingPageLabelsJ = json_array();
+        for (int page = 0; page < MAX_PAGES; page++) {
+            json_array_append_new(rackMappingPageLabelsJ, json_string(rackMapping.pageLabels[page].c_str()));
+        }
+        json_object_set_new(rackMappingJJ, "pageLabels", rackMappingPageLabelsJ);
 		// json_t* rackMappingJ = rackMappingToJson(rackMapping);
 		json_object_set_new(rootJ, "rackMapping", rackMappingJJ);
 
@@ -1769,7 +1806,11 @@ struct OrestesOneModule : Module {
 				json_array_append_new(paramMapJ, paramMapJJ);
 			}
 			json_object_set_new(midiMapJJ, "pm", paramMapJ); // paramMap
-
+            json_t* pageLabelsJ = json_array();
+            for (int page = 0; page < MAX_PAGES; page++) {
+                json_array_append_new(pageLabelsJ, json_string(a->pageLabels[page].c_str()));
+            }
+            json_object_set_new(midiMapJJ, "pl", pageLabelsJ);
 			json_array_append_new(midiMapJ, midiMapJJ);
 		}
 		return midiMapJ;
@@ -1855,6 +1896,20 @@ struct OrestesOneModule : Module {
 		updateMapLen();
 		//idFixClearMap();
 		
+        json_t* pageLabelsJ = json_object_get(rootJ, "pageLabels");
+        if (pageLabelsJ) {
+            json_t* pageLabelJ;
+            size_t pageLabelsIndex;
+            json_array_foreach(pageLabelsJ, pageLabelsIndex, pageLabelJ) {
+                if (pageLabelsIndex >= MAX_PAGES) continue;
+                pageLabels[pageLabelsIndex] = json_string_value(pageLabelJ);
+            }
+        } else {
+            for (int i = 0; i < MAX_PAGES; i++) {
+                pageLabels[i].clear();
+            }
+        }
+
 		json_t* midiResendPeriodicallyJ = json_object_get(rootJ, "midiResendPeriodically");
 		if (midiResendPeriodicallyJ) midiResendPeriodically = json_boolean_value(midiResendPeriodicallyJ);
 
@@ -1898,7 +1953,15 @@ struct OrestesOneModule : Module {
                 }
 				
 			}
-
+            json_t* pageLabelsJ = json_object_get(rackMappingJ, "pageLabels");
+            if (pageLabelsJ) {
+                json_t* pageLabelJ;
+                size_t pageLabelsIndex;
+                json_array_foreach(pageLabelsJ, pageLabelsIndex, pageLabelJ) {
+                    if (pageLabelsIndex >= MAX_PAGES) continue;
+                    rackMapping.pageLabels[pageLabelsIndex] = json_string_value(pageLabelJ);
+                }
+            }
 		}
 
 		json_t* autosaveMappingLibraryJ = json_object_get(rootJ, "autosaveMidiMapLibrary");
@@ -2095,6 +2158,15 @@ struct OrestesOneModule : Module {
 			a->paramMap.push_back(p);
 
 		}
+        json_t* pageLabelsJ = json_object_get(midiMapJJ, "pl");
+        if (pageLabelsJ) {
+            json_t* pageLabelJ;
+            size_t pageLabelsIndex;
+            json_array_foreach(pageLabelsJ, pageLabelsIndex, pageLabelJ) {
+                if (pageLabelsIndex >= MAX_PAGES) continue;
+                a->pageLabels[pageLabelsIndex] = json_string_value(pageLabelJ);
+            }
+        }
 		midiMap[std::pair<std::string, std::string>(pluginSlug, moduleSlug)] = a;
 	}
 

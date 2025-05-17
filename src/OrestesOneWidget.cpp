@@ -1155,6 +1155,77 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 			}
 		}; // MapMenuItem
 
+		struct SetPageLabelsItem : MenuItem {
+
+			OrestesOneModule* module;
+			SetPageLabelsItem() {
+				rightText = RIGHT_ARROW;
+			}
+
+			Menu* createChildMenu() override {
+				struct PageLabelMenuItem : MenuItem {
+					OrestesOneModule* module;
+					int id;
+
+					PageLabelMenuItem() {
+						rightText = RIGHT_ARROW;
+					}
+
+					struct PageLabelField : ui::TextField {
+						OrestesOneModule* module;
+						int id;
+						void onSelectKey(const event::SelectKey& e) override {
+							if (e.action == GLFW_PRESS && e.key == GLFW_KEY_ENTER) {
+								module->pageLabels[id] = text.substr(0,20);
+								ui::TextField::setText(module->pageLabels[id]);
+							}
+
+							if (!e.getTarget()) {
+								ui::TextField::onSelectKey(e);
+							}
+						}
+					};
+
+					struct ResetItem : ui::MenuItem {
+						OrestesOneModule* module;
+						int id;
+						void onAction(const event::Action& e) override {
+							module->pageLabels[id] = "";
+						}
+					};
+
+					Menu* createChildMenu() override {
+						Menu* menu = new Menu;
+
+						PageLabelField* labelField = new PageLabelField;
+						labelField->placeholder = "Label";
+						labelField->text = module->pageLabels[id];
+						labelField->box.size.x = 180;
+						labelField->module = module;
+						labelField->id = id;
+						menu->addChild(labelField);
+						menu->addChild(createMenuLabel("Max 20 characters"));
+						ResetItem* resetItem = new ResetItem;
+						resetItem->text = "Reset";
+						resetItem->module = module;
+						resetItem->id = id;
+						menu->addChild(resetItem);
+
+						return menu;
+					}
+				}; // struct PageLabelMenuItem
+
+				Menu* menu = new Menu;
+				for (int i = 0; i < MAX_PAGES; i++) {
+					std::string page = "Page ";
+					page += std::to_string(i + 1);
+					menu->addChild(construct<PageLabelMenuItem>(&MenuItem::text, page.c_str(), &PageLabelMenuItem::module, module, &PageLabelMenuItem::id, i));
+				}
+				return menu;
+			}
+		}; // SetPageLabelsItem
+		menu->addChild(construct<SetPageLabelsItem>(&SetPageLabelsItem::text, "Set control page names", &SetPageLabelsItem::module, module));
+
 		struct SaveMenuItem : MenuItem {
 			OrestesOneModule* module;
 			SaveMenuItem() {
