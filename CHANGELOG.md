@@ -1,3 +1,7 @@
+## 2.1.8 17 May 2025
+
+- Added custom module mapping control page / tab labels
+
 ## 2.1.7 16 May 2025
 
 - [FIX] Prevent crash by replacing OscReceiver queue with a lock-free threadsafe dsp::RingBuffer
