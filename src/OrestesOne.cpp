@@ -442,7 +442,7 @@ struct OrestesOneModule : Module {
 	dsp::ClockDivider indicatorDivider;
 
     /** [Stored to Json] */
-    std::string pageLabels[MAX_PAGES]; // Current mapped module control page labels
+    std::array<std::string, MAX_PAGES> pageLabels{}; // Current mapped module control page labels
 
 	// MEM-
 	// Pointer of the MEM's attribute

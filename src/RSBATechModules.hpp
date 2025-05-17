@@ -46,7 +46,7 @@ struct MemModule {
 	std::string moduleName;
 	bool autoMapped;
 	std::list<MemParam*> paramMap;
-	std::array<std::string, MAX_PAGES> pageLabels;
+	std::array<std::string, MAX_PAGES> pageLabels{};
 	~MemModule() {
 		for (auto it : paramMap) delete it;
 	}
