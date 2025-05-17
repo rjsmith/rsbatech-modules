@@ -394,7 +394,7 @@ private:
 	dsp::ClockDivider lightDivider;
 
 	/** [Stored to Json] */
-	std::array<std::string, MAX_PAGES> pageLabels{}; // Current mapped module control page labels
+    std::array<std::string, MAX_PAGES> pageLabels{"", "", "", "", "", ""}; // Current mapped module control page labels
 
 	// MEM-
 	// Pointer of the MEM's attribute
