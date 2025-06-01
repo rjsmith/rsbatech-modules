@@ -30,7 +30,7 @@ struct OscOutput {
 	}
 
 	void reset() {
-		std::fill_n(lastNPRNValues.begin(), MAX_CHANNELS, -1);
+		std::fill_n(lastNPRNValuesSent.begin(), MAX_CHANNELS, -1);
     	b.clear();
 	}
 
@@ -180,10 +180,15 @@ struct OscOutput {
 
     } 
 
-    void setPackedNPRNValue(int value, int nprn, int valueNprnIn, bool force = false) {
-		if ((value == lastNPRNValues[nprn] || value == valueNprnIn || !moduleRef.sending) && !force)
-			return;
-		lastNPRNValues[nprn] = value;
+    bool setPackedNPRNValue(int value, int nprn, int valueNprnIn, bool force = false) {
+
+		if ((value == lastNPRNValuesSent[nprn] || value == valueNprnIn || !moduleRef.sending) && !force) {
+    	    // DEBUG("NOT Sending value %d nprn %d valueNprnIn %d lastNPRNValuesSent %d force %d", value, nprn, valueNprnIn, lastNPRNValuesSent[nprn], force);
+			return false;
+		}
+    	// DEBUG("Sending value %d nprn %d valueNprnIn %d lastNPRNValuesSent %d force %d", value, nprn, valueNprnIn, lastNPRNValuesSent[nprn], force);
+
+		lastNPRNValuesSent[nprn] = value;
 
 		TheModularMind::OscBundle valueBundle;
 		TheModularMind::OscMessage valueMessage;
@@ -194,11 +199,12 @@ struct OscOutput {
 		valueBundle.addMessage(valueMessage);
 
 		moduleRef.oscSender.sendBundle(valueBundle);
+		return true;
 
     }
 
 private:
-	std::array<int, MAX_CHANNELS> lastNPRNValues{};
+	std::array<int, MAX_CHANNELS> lastNPRNValuesSent{};
 	// Assume can re-use a single OscBundle, maybe not thread safe ?
     TheModularMind::OscBundle b;
 	PyladesModule& moduleRef;
@@ -250,6 +256,7 @@ private:
         bool process() {
             int previous = current;
 
+            // If Pylades has received a new OSC fader message since the one stored in this adapter, replace it
             if (module->valuesNprnTs[nprn] > lastTs) {
                 current = module->valuesNprn[nprn];
                 lastTs = module->ts;
@@ -264,13 +271,17 @@ private:
 
         void setValue(int value, bool sendOnly) {
             if (nprn == -1) return;
-            module->oscOutput.setPackedNPRNValue(value, nprn, module->valuesNprn[nprn], current == -1);
+            if (module->oscOutput.setPackedNPRNValue(value, nprn, module->valuesNprn[nprn], current == -1)) {
+            	// Assume OSC client will assign its control to the value we just sent, without waiting to find out if it did
+            	module->valuesNprn[nprn] = -1;
+            }
             if (!sendOnly) current = value;
         }
 
         void reset() {
             nprn = -1;
             current = -1;
+
         }
 
         void resetValue() {
@@ -291,7 +302,7 @@ private:
         }
 
         void set14bit(bool value) {
-            module->midiParam[id].setLimits(0, 128 * 128 - 1, -1);
+            module->rackParam[id].setLimits(0, 16384, -1);
         }
     };
 
@@ -299,11 +310,12 @@ private:
 
 	/** Number of maps */
 	int mapLen = 0;
+	/** Models the state of each external NPRN control, and wraps sending an updated parameter value via OSC */
     OscNPRNAdapter nprns[MAX_CHANNELS];
 	/** [Stored to JSON] */
 	int midiOptions[MAX_CHANNELS];
 	/** [Stored to JSON] */
-	bool midiIgnoreDevices;
+	bool oscIgnoreDevices;
 	/** [Stored to JSON] */
 	bool clearMapsOnLoad;
 
@@ -319,13 +331,13 @@ private:
     bool oscProcessApply;
     bool oscProcessApplyRackMapping;
     math::Vec oscSelectedModulePos;
-    bool oscProcessResendMIDIFeedback;
+    bool oscProcessResendOSCFeedback;
     bool oscVersionPoll;
 	bool oscReceived = false;
 	bool oscSent = false;
 
     // E1 Process flags
-    int sendE1EndMessage = 0;
+    int sendOSCEndMessage = 0;
     bool oscProcessListMappedModules;
     // Re-usable list of mapped modules
     std::vector< RackMappedModuleListItem > oscMappedModuleList;
@@ -366,7 +378,7 @@ private:
 
 	uint32_t ts = 0;
 
-	/** The value of each NPRN parameter, assuming use range 0 .. MAX_NPRN_ID */
+	/** The parameter value of each NPRN control as received via OSC (values in range 0 .. ) */
     int valuesNprn[MAX_NPRN_ID+1];
     uint32_t valuesNprnTs[MAX_NPRN_ID+1];
 	
@@ -382,9 +394,9 @@ private:
 	bool overlayEnabled;
 
 	/** [Stored to Json] */
-	RackParam midiParam[MAX_CHANNELS];
+	RackParam rackParam[MAX_CHANNELS];
 	/** [Stored to Json] */
-	bool midiResendPeriodically;
+	bool oscResendPeriodically;
 	dsp::ClockDivider midiResendDivider;
 
 	dsp::ClockDivider processDivider;
@@ -428,7 +440,7 @@ private:
 		for (int id = 0; id < MAX_CHANNELS; id++) {
 			paramHandles[id].color = mappingIndicatorColor;
 			APP->engine->addParamHandle(&paramHandles[id]);
-			midiParam[id].setLimits(0, 16383, -1);
+			rackParam[id].setLimits(0, 16384, -1);
 			nprns[id].module = this;
 			nprns[id].id = id;
 		}
@@ -463,7 +475,7 @@ private:
 			nprns[i].nprnMode = NPRNMODE::DIRECT;
 			textLabel[i] = "";
 			midiOptions[i] = 0;
-			midiParam[i].reset();
+			rackParam[i].reset();
 		}
 		for (int i = 0; i < MAX_PAGES; i++) {
 			pageLabels[i].clear();
@@ -472,8 +484,8 @@ private:
 		scrollToModule = false;
 		oscOutput.reset();
 		
-		midiIgnoreDevices = false;
-		midiResendPeriodically = false;
+		oscIgnoreDevices = false;
+		oscResendPeriodically = false;
 		midiResendDivider.reset();
 		processDivision = 4098;
 		processDivider.setDivision(processDivision);
@@ -537,14 +549,17 @@ private:
 			sending = oscSender.start(ip, port);
 			if (sending) {
 				INFO("Started OSC Sender on port: %i", port);
-				midiResendFeedback();
+				oscResendFeedback();
 			}
 		} else {
 			oscSender.stop();
 		}
 	}
 
-    void sendE1Feedback(int id) {
+	/**
+	 * Reads current parameter values for current mapped parameters and sends info via OSC
+	 */
+    void sendOSCFeedback(int id) {
 
        if (id >= mapLen) return;
        // Update E1 control with mapped parameter name and value
@@ -593,8 +608,8 @@ private:
 			}
 		}
 
-		if (oscProcessResendMIDIFeedback || (midiResendPeriodically && midiResendDivider.process())) {
-			midiResendFeedback();
+		if (oscProcessResendOSCFeedback || (oscResendPeriodically && midiResendDivider.process())) {
+			oscResendFeedback();
 		}
 
 
@@ -642,10 +657,8 @@ private:
 		}
 
 
-        // Only step channels when some midi event has been received. Additionally
-        // step channels for parameter changes made manually at a lower frequency . Notice
-        // that midi allows about 1000 messages per second, so checking for changes more often
-        // won't lead to higher precision on midi output.
+        // Only step channels when some OSC message has been received. Additionally
+        // step channels for parameter changes made within VCVRack at a lower frequency.
         bool stepParameterChange = processDivider.process();
         if (stepParameterChange || oscReceived) {
             processMappings(args.sampleTime, stepParameterChange, oscReceived);
@@ -678,7 +691,7 @@ private:
 
 			switch (midiMode) {
 				case MIDIMODE::MIDIMODE_DEFAULT: {
-					midiParam[id].paramQuantity = paramQuantity;
+					rackParam[id].paramQuantity = paramQuantity;
 					int t = -1;
 
  
@@ -689,12 +702,14 @@ private:
 								if (lastValueIn[id] != nprns[id].getValue()) {
 									lastValueIn[id] = nprns[id].getValue();
 									t = nprns[id].getValue();
+								} else {
+									// DEBUG("Skipping changing rack value %d", lastValueIn[id]);
 								}
 								break;
 							case NPRNMODE::PICKUP1:
 								if (lastValueIn[id] != nprns[id].getValue()) {
-									if (midiParam[id].isNear(lastValueIn[id])) {
-										midiParam[id].resetFilter();
+									if (rackParam[id].isNear(lastValueIn[id])) {
+										rackParam[id].resetFilter();
 										t = nprns[id].getValue();
 									}
 									lastValueIn[id] = nprns[id].getValue();
@@ -702,8 +717,8 @@ private:
 								break;
 							case NPRNMODE::PICKUP2:
 								if (lastValueIn[id] != nprns[id].getValue()) {
-									if (midiParam[id].isNear(lastValueIn[id], nprns[id].getValue())) {
-										midiParam[id].resetFilter();
+									if (rackParam[id].isNear(lastValueIn[id], nprns[id].getValue())) {
+										rackParam[id].resetFilter();
 										t = nprns[id].getValue();
 									}
 									lastValueIn[id] = nprns[id].getValue();
@@ -711,19 +726,19 @@ private:
 								break;
 							case NPRNMODE::TOGGLE:
 								if (nprns[id].getValue() > 0 && (lastValueIn[id] == -1 || lastValueIn[id] >= 0)) {
-									t = midiParam[id].getLimitMax();
+									t = rackParam[id].getLimitMax();
 									lastValueIn[id] = -2;
 								}
 								else if (nprns[id].getValue() == 0 && lastValueIn[id] == -2) {
-									t = midiParam[id].getLimitMax();
+									t = rackParam[id].getLimitMax();
 									lastValueIn[id] = -3;
 								}
 								else if (nprns[id].getValue() > 0 && lastValueIn[id] == -3) {
-									t = midiParam[id].getLimitMin();
+									t = rackParam[id].getLimitMin();
 									lastValueIn[id] = -4;
 								}
 								else if (nprns[id].getValue() == 0 && lastValueIn[id] == -4) {
-									t = midiParam[id].getLimitMin();
+									t = rackParam[id].getLimitMin();
 									lastValueIn[id] = -1;
 								}
 								break;
@@ -733,64 +748,59 @@ private:
 									lastValueIn[id] = -2;
 								}
 								else if (nprns[id].getValue() == 0 && lastValueIn[id] == -2) {
-									t = midiParam[id].getValue();
+									t = rackParam[id].getValue();
 									lastValueIn[id] = -3;
 								}
 								else if (nprns[id].getValue() > 0 && lastValueIn[id] == -3) {
-									t = midiParam[id].getLimitMin();
+									t = rackParam[id].getLimitMin();
 									lastValueIn[id] = -4;
 								}
 								else if (nprns[id].getValue() == 0 && lastValueIn[id] == -4) {
-									t = midiParam[id].getLimitMin();
+									t = rackParam[id].getLimitMin();
 									lastValueIn[id] = -1;
 								}
 								break;
 						}
-					}
+					} 
 
 			        int v;
 
 					// Set a new value for the mapped parameter
 					if (oscProcessResetParameter && nprn == oscProcessResetParameterNPRN) {
-                        midiParam[id].setValueToDefault();
+                        rackParam[id].setValueToDefault();
                         oscProcessResetParameterNPRN = -1;
                         lastValueOut[id] = -1;
-                        nprns[id].resetValue(); // Forces NPRN adapter to emit NPRM message out
-
+                        nprns[id].resetValue(); // Forces NPRN adapter to emit NPRN message out
                     } else if (t >= 0) {
-						midiParam[id].setValue(t);
+						rackParam[id].setValue(t);
 						if (overlayEnabled && overlayQueue.capacity() > 0) overlayQueue.push(id);
 					}
 
 					// Apply value on the mapped parameter (respecting slew and scale)
-					midiParam[id].process(st);
+					rackParam[id].process(st);
 
 					// Retrieve the current value of the parameter (ignoring slew and scale)
-					v = midiParam[id].getValue();
+					v = rackParam[id].getValue();
 
 					// Midi feedback
 					if (lastValueOut[id] != v) {
 
-						if (!oscProcessResetParameter && nprn >= 0 && nprns[id].nprnMode == NPRNMODE::DIRECT)
                         							lastValueIn[id] = v;
 				        
-
-						// Send enriched parameter feedback to E1
-						// But only at the "processDivider" rate to control data rate sent to E1.
-						// This means the displayed parameter values on E1 will lag the actual parameter value whilst
-						// the parameter is being chnaged (either from E1 or from the VCVRack GUI).
-						// Users can adjust the Oresets-One "Precision" to balance that lag with stability of E1 (reducing data traffic)
+						// Send enriched parameter feedback to OSC
+						// But only at the "processDivider" rate to control data rate sent to OSC.
+						// This means the displayed parameter values sent to OSC will lag the actual parameter value whilst
+						// the parameter is being changed (either from OSC or from the VCVRack GUI).
+						// Users can adjust the Pylades "Precision" to balance that lag with stability of the OSC client (reducing data traffic)
 						if (stepParameterChange) {
-							// Send manually altered parameter change out to MIDI
-						    nprns[id].setValue(v, lastValueIn[id] < 0);
+							// Send manually altered parameter change out to OSC
 							lastValueOut[id] = v;
 							oscSent = true;
-							// DEBUG("Sending MIDI feedback for %d, value %d", id, v);
-							sendE1Feedback(id);
+							sendOSCFeedback(id);
                         	oscProcessResetParameter = false;
                        		 // If we are broadcasting parameter updates when switching modules,
                        		 // record that we have now sent this parameter
-                        	if (sendE1EndMessage > 0) sendE1EndMessage--;
+                        	if (sendOSCEndMessage > 0) sendOSCEndMessage--;
                         }
 					}
 				} break;
@@ -811,11 +821,11 @@ private:
 
 		// Send end of mapping message, when switching between saved module mappings
 		// NB: Module parameters may get processed in multiple process() calls, so we need to wait until all the module parameters
-		// have been send to E1 before sending the final endChangeE1Module command to the E1.
-        if (sendE1EndMessage == 1) {
-          // Send end module mapping message to E1
+		// have been send to OSC before sending the final endChangeE1Module command to the OSC.
+        if (sendOSCEndMessage == 1) {
+          // Send end module mapping message to OSC
           endChangeE1Module();
-          sendE1EndMessage = 0;
+          sendOSCEndMessage = 0;
         }
 	}
 
@@ -829,7 +839,7 @@ private:
 	 * /fader (updated fader value from TouchOSC)
 	 * ======
 	 * [0] 		Controller Id (int)
-	 * [1]		Value (int, 0-16535 14 bit integer)
+	 * [1]		Value (int, 0-16384 14 bit integer)
 	 * 
 	 * /pylades/next (jump to next mapped module to right of current selected module in rack)
 	 * =============
@@ -877,6 +887,7 @@ private:
 	            refreshParamHandleText(learningId);
 	        }
 	        oscReceived = valuesNprn[nprn] != value;
+	        // DEBUG("oscReceived %d valuesNprn[nprn] %d value %d", oscReceived, valuesNprn[nprn], value);
 	        valuesNprn[nprn] = value;
 	        valuesNprnTs[nprn] = ts;
 			return oscReceived;
@@ -907,7 +918,7 @@ private:
             return true;
         } else if (address == OSCMSG_RESEND) {
         	// DEBUG("Received an OSC Re-send OSC Feedback Command");
-            oscProcessResendMIDIFeedback = true;
+            oscProcessResendOSCFeedback = true;
             return true;
         } else if (address == OSCMSG_APPLY_MODULE) {
         	// Remotely switch on the "apply" mode, so next mouse click will apply mapped settings for selected module
@@ -941,8 +952,8 @@ private:
             return;
         }
 
-        if (oscProcessResendMIDIFeedback) {
-            oscProcessResendMIDIFeedback = false;
+        if (oscProcessResendOSCFeedback) {
+            oscProcessResendOSCFeedback = false;
         }
 
         if (oscVersionPoll) {
@@ -995,7 +1006,7 @@ private:
 
     }
 
-	void midiResendFeedback() {
+	void oscResendFeedback() {
 		for (int i = 0; i < MAX_CHANNELS; i++) {
 			lastValueOut[i] = -1;
 			nprns[i].resetValue();
@@ -1016,7 +1027,7 @@ private:
 		learningId = -1;
 		nprns[id].reset();
 		midiOptions[id] = 0;
-		midiParam[id].reset();
+		rackParam[id].reset();
 		if (!midiOnly) {
 			textLabel[id] = "";
 			APP->engine->updateParamHandle(&paramHandles[id], -1, 0, true);
@@ -1031,7 +1042,7 @@ private:
 			nprns[id].reset();
 			textLabel[id] = "";
 			midiOptions[id] = 0;
-			midiParam[id].reset();
+			rackParam[id].reset();
 			APP->engine->updateParamHandle(&paramHandles[id], -1, 0, true);
 			refreshParamHandleText(id);
 		}
@@ -1045,7 +1056,7 @@ private:
 			nprns[id].reset();
 			textLabel[id] = "";
 			midiOptions[id] = 0;
-			midiParam[id].reset();
+			rackParam[id].reset();
 			APP->engine->updateParamHandle_NoLock(&paramHandles[id], -1, 0, true);
 			refreshParamHandleText(id);
 		}
@@ -1082,11 +1093,11 @@ private:
 			nprns[learningId].nprnMode = nprns[learningId - 1].nprnMode;
 			nprns[learningId].set14bit(true);
 			midiOptions[learningId] = midiOptions[learningId - 1];
-			midiParam[learningId].setSlew(midiParam[learningId - 1].getSlew());
-			midiParam[learningId].setMin(midiParam[learningId - 1].getMin());
-			midiParam[learningId].setMax(midiParam[learningId - 1].getMax());
-			midiParam[learningId].clockMode = midiParam[learningId - 1].clockMode;
-			midiParam[learningId].clockSource = midiParam[learningId - 1].clockSource;
+			rackParam[learningId].setSlew(rackParam[learningId - 1].getSlew());
+			rackParam[learningId].setMin(rackParam[learningId - 1].getMin());
+			rackParam[learningId].setMax(rackParam[learningId - 1].getMax());
+			rackParam[learningId].clockMode = rackParam[learningId - 1].clockMode;
+			rackParam[learningId].clockSource = rackParam[learningId - 1].clockSource;
 		}
 		textLabel[learningId] = "";
 
@@ -1136,7 +1147,7 @@ private:
 
 	void learnParam(int id, int64_t moduleId, int paramId, bool resetMidiSettings = true) {
 		APP->engine->updateParamHandle(&paramHandles[id], moduleId, paramId, true);
-		midiParam[id].reset(resetMidiSettings);
+		rackParam[id].reset(resetMidiSettings);
 		learnedParam = true;
 		commitLearn();
 		updateMapLen();
@@ -1144,7 +1155,7 @@ private:
 
 	void learnParamAutomap(int id, int64_t moduleId, int paramId) {
 		APP->engine->updateParamHandle(&paramHandles[id], moduleId, paramId, true);
-		midiParam[id].reset(true);
+		rackParam[id].reset(true);
 		learnedParam = true;
 		if (id <= MAX_NPRN_ID) {
 			learnedNprn = true;
@@ -1265,9 +1276,9 @@ private:
 			p->nprnMode = nprns[i].nprnMode;
 			p->label = textLabel[i];
 			p->midiOptions = midiOptions[i];
-			p->slew = midiParam[i].getSlew();
-			p->min = midiParam[i].getMin();
-			p->max = midiParam[i].getMax();
+			p->slew = rackParam[i].getSlew();
+			p->min = rackParam[i].getMin();
+			p->max = rackParam[i].getMax();
 			m->paramMap.push_back(p);
 		}
 
@@ -1361,9 +1372,9 @@ private:
                 p->nprnMode = nprns[i].nprnMode;
                 p->label = textLabel[i];
                 p->midiOptions = midiOptions[i];
-                p->slew = midiParam[i].getSlew();
-                p->min = midiParam[i].getMin();
-                p->max = midiParam[i].getMax();
+                p->slew = rackParam[i].getSlew();
+                p->min = rackParam[i].getMin();
+                p->max = rackParam[i].getMax();
                 p->moduleId = paramHandles[i].moduleId;
                 rackMapping.paramMap.push_back(p);    
             }
@@ -1395,7 +1406,7 @@ private:
 
 		expMemModuleId = m->id;
 		int i = 0;
-		sendE1EndMessage = 1;
+		sendOSCEndMessage = 1;
 		for (MemParam* it : map->paramMap) {
 			learnParam(i, m->id, it->paramId);
 			nprns[i].setNprn(it->nprn);
@@ -1403,15 +1414,15 @@ private:
 			nprns[i].set14bit(true);
 			textLabel[i] = it->label;
 			midiOptions[i] = it->midiOptions;
-			midiParam[i].setSlew(it->slew);
-			midiParam[i].setMin(it->min);
-			midiParam[i].setMax(it->max);
+			rackParam[i].setSlew(it->slew);
+			rackParam[i].setMin(it->min);
+			rackParam[i].setMax(it->max);
 			// Force next processMappings() call to process all mappings after module controls have been switched
 			lastValueOut[i] = -1;
 
-			// If this parameter is mapped to a MIDI controller, increment the sendE1EndMessage counter so
+			// If this parameter is mapped to a MIDI controller, increment the sendOSCEndMessage counter so
 			// the process() code can figure out when it has sent all mapped parameters for the module to the E1
-		    if (nprns[i].getNprn() >= 0) sendE1EndMessage++;
+		    if (nprns[i].getNprn() >= 0) sendOSCEndMessage++;
 
 			i++;
 		}
@@ -1440,7 +1451,7 @@ private:
 		expMemModuleId = -1;
 
 		int i = 0;
-		sendE1EndMessage = 1;
+		sendOSCEndMessage = 1;
 		for (MemParam* it : rackMapping.paramMap) {
 			learnParam(i,it->moduleId, it->paramId);
 			nprns[i].setNprn(it->nprn);
@@ -1448,15 +1459,15 @@ private:
 			nprns[i].set14bit(true);
 			textLabel[i] = it->label;
 			midiOptions[i] = it->midiOptions;
-			midiParam[i].setSlew(it->slew);
-			midiParam[i].setMin(it->min);
-			midiParam[i].setMax(it->max);
+			rackParam[i].setSlew(it->slew);
+			rackParam[i].setMin(it->min);
+			rackParam[i].setMax(it->max);
 			// Force next processMappings() call to process all mappings after module controls have been switched
 			lastValueOut[i] = -1;
 
-			// If this parameter is mapped to a MIDI controller, increment the sendE1EndMessage counter so
+			// If this parameter is mapped to a MIDI controller, increment the sendOSCEndMessage counter so
 			// the process() code can figure out when it has sent all mapped parameters for the module to the E1
-		    if (nprns[i].getNprn() >= 0) sendE1EndMessage++;
+		    if (nprns[i].getNprn() >= 0) sendOSCEndMessage++;
 
 			i++;
 		}
@@ -1590,11 +1601,11 @@ private:
 			json_object_set_new(mapJ, "paramId", json_integer(paramHandles[id].paramId));
 			json_object_set_new(mapJ, "label", json_string(textLabel[id].c_str()));
 			json_object_set_new(mapJ, "midiOptions", json_integer(midiOptions[id]));
-			json_object_set_new(mapJ, "slew", json_real(midiParam[id].getSlew()));
-			json_object_set_new(mapJ, "min", json_real(midiParam[id].getMin()));
-			json_object_set_new(mapJ, "max", json_real(midiParam[id].getMax()));
-			json_object_set_new(mapJ, "clockMode", json_integer((int)midiParam[id].clockMode));
-			json_object_set_new(mapJ, "clockSource", json_integer(midiParam[id].clockSource));
+			json_object_set_new(mapJ, "slew", json_real(rackParam[id].getSlew()));
+			json_object_set_new(mapJ, "min", json_real(rackParam[id].getMin()));
+			json_object_set_new(mapJ, "max", json_real(rackParam[id].getMax()));
+			json_object_set_new(mapJ, "clockMode", json_integer((int)rackParam[id].clockMode));
+			json_object_set_new(mapJ, "clockSource", json_integer(rackParam[id].clockSource));
 			json_array_append_new(mapsJ, mapJ);
 		}
 		json_object_set_new(rootJ, "maps", mapsJ);
@@ -1604,8 +1615,8 @@ private:
 		}
 		json_object_set_new(rootJ, "pageLabels", pageLabelsJ);
 
-		json_object_set_new(rootJ, "midiResendPeriodically", json_boolean(midiResendPeriodically));
-		json_object_set_new(rootJ, "midiIgnoreDevices", json_boolean(midiIgnoreDevices));
+		json_object_set_new(rootJ, "midiResendPeriodically", json_boolean(oscResendPeriodically));
+		json_object_set_new(rootJ, "midiIgnoreDevices", json_boolean(oscIgnoreDevices));
 		
 		// OSC connection
 		json_object_set_new(rootJ, "receiving", json_boolean(receiving));
@@ -1752,11 +1763,11 @@ private:
 					}
 				}
 				if (labelJ) textLabel[mapIndex] = json_string_value(labelJ);
-				if (slewJ) midiParam[mapIndex].setSlew(json_real_value(slewJ));
-				if (minJ) midiParam[mapIndex].setMin(json_real_value(minJ));
-				if (maxJ) midiParam[mapIndex].setMax(json_real_value(maxJ));
-				if (clockModeJ) midiParam[mapIndex].clockMode = (RackParam::CLOCKMODE)json_integer_value(clockModeJ);
-				if (clockSourceJ) midiParam[mapIndex].clockSource = json_integer_value(clockSourceJ);
+				if (slewJ) rackParam[mapIndex].setSlew(json_real_value(slewJ));
+				if (minJ) rackParam[mapIndex].setMin(json_real_value(minJ));
+				if (maxJ) rackParam[mapIndex].setMax(json_real_value(maxJ));
+				if (clockModeJ) rackParam[mapIndex].clockMode = (RackParam::CLOCKMODE)json_integer_value(clockModeJ);
+				if (clockSourceJ) rackParam[mapIndex].clockSource = json_integer_value(clockSourceJ);
 			}
 		}
 
@@ -1777,12 +1788,12 @@ private:
 			}
 		}
 		
-		json_t* midiResendPeriodicallyJ = json_object_get(rootJ, "midiResendPeriodically");
-		if (midiResendPeriodicallyJ) midiResendPeriodically = json_boolean_value(midiResendPeriodicallyJ);
+		json_t* oscResendPeriodicallyJ = json_object_get(rootJ, "midiResendPeriodically");
+		if (oscResendPeriodicallyJ) oscResendPeriodically = json_boolean_value(oscResendPeriodicallyJ);
 
-		if (!midiIgnoreDevices) {
-			json_t* midiIgnoreDevicesJ = json_object_get(rootJ, "midiIgnoreDevices");
-			if (midiIgnoreDevicesJ)	midiIgnoreDevices = json_boolean_value(midiIgnoreDevicesJ);
+		if (!oscIgnoreDevices) {
+			json_t* oscIgnoreDevicesJ = json_object_get(rootJ, "midiIgnoreDevices");
+			if (oscIgnoreDevicesJ)	oscIgnoreDevices = json_boolean_value(oscIgnoreDevicesJ);
 			receiving = json_boolean_value(json_object_get(rootJ, "receiving"));
 			sending = json_boolean_value(json_object_get(rootJ, "sending"));
 			ip = json_string_value(json_object_get(rootJ, "ip"));
