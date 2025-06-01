@@ -1,6 +1,9 @@
-## 2.1.8 17 May 2025
+## 2.1.8 1 June 2025
 
-- Added custom module mapping control page / tab labels
+- Added custom module mapping control page / tab labels ("Set control page names" option)
+- Ported [PackOne ScaledMapParam snapEnabled control improvement](https://github.com/stoermelder/vcvrack-packone/commit/3369bec1bf2eb6ba5878f382f76da704fb32829e)
+- [MAP] Added control page names to MindMeld Mixers and AuxExpanders
+- [MAP] Mapped Cella plugin v2.9.0
 
 ## 2.1.7 16 May 2025
 
@@ -69,6 +72,7 @@
 - [MAP] Mapped Instruō modules
 - [MAP] Mapped Synthesizer.com modules
 - [FIX] Load default preset library or factory library when added to rack
+
 ## 2.0.0-beta6 19 Oct 2024
 
 - Implemented the Pylades module for VCV Rack control from any TouchOSC device
