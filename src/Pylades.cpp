@@ -183,7 +183,6 @@ struct OscOutput {
     bool setPackedNPRNValue(int value, int nprn, int valueNprnIn, bool force = false) {
 
 		if ((value == lastNPRNValuesSent[nprn] || value == valueNprnIn || !moduleRef.sending) && !force) {
-    	    // DEBUG("NOT Sending value %d nprn %d valueNprnIn %d lastNPRNValuesSent %d force %d", value, nprn, valueNprnIn, lastNPRNValuesSent[nprn], force);
 			return false;
 		}
     	// DEBUG("Sending value %d nprn %d valueNprnIn %d lastNPRNValuesSent %d force %d", value, nprn, valueNprnIn, lastNPRNValuesSent[nprn], force);
@@ -784,7 +783,7 @@ private:
 
 					// Midi feedback
 					if (lastValueOut[id] != v) {
-
+						if (!oscProcessResetParameter && nprn >= 0 && nprns[id].nprnMode == NPRNMODE::DIRECT)
                         							lastValueIn[id] = v;
 				        
 						// Send enriched parameter feedback to OSC
@@ -794,6 +793,7 @@ private:
 						// Users can adjust the Pylades "Precision" to balance that lag with stability of the OSC client (reducing data traffic)
 						if (stepParameterChange) {
 							// Send manually altered parameter change out to OSC
+							nprns[id].setValue(v, lastValueIn[id] < 0);
 							lastValueOut[id] = v;
 							oscSent = true;
 							sendOSCFeedback(id);
