@@ -64,9 +64,9 @@ struct PyladesChoice : MapModuleChoice<MAX_CHANNELS, PyladesModule> {
 				Menu* menu = new Menu;
 				menu->addChild(construct<NprnModeItem>(&MenuItem::text, "Direct", &NprnModeItem::module, module, &NprnModeItem::id, id, &NprnModeItem::nprnMode, NPRNMODE::DIRECT));
 				menu->addChild(construct<NprnModeItem>(&MenuItem::text, "Pickup (snap)", &NprnModeItem::module, module, &NprnModeItem::id, id, &NprnModeItem::nprnMode, NPRNMODE::PICKUP1));
-				reinterpret_cast<MenuItem*>(menu->children.back())->disabled = module->midiParam[id].clockMode != RackParam::CLOCKMODE::OFF;
+				reinterpret_cast<MenuItem*>(menu->children.back())->disabled = module->rackParam[id].clockMode != RackParam::CLOCKMODE::OFF;
 				menu->addChild(construct<NprnModeItem>(&MenuItem::text, "Pickup (jump)", &NprnModeItem::module, module, &NprnModeItem::id, id, &NprnModeItem::nprnMode, NPRNMODE::PICKUP2));
-				reinterpret_cast<MenuItem*>(menu->children.back())->disabled = module->midiParam[id].clockMode != RackParam::CLOCKMODE::OFF;
+				reinterpret_cast<MenuItem*>(menu->children.back())->disabled = module->rackParam[id].clockMode != RackParam::CLOCKMODE::OFF;
 				menu->addChild(construct<NprnModeItem>(&MenuItem::text, "Toggle", &NprnModeItem::module, module, &NprnModeItem::id, id, &NprnModeItem::nprnMode, NPRNMODE::TOGGLE));
 				menu->addChild(construct<NprnModeItem>(&MenuItem::text, "Toggle + Value", &NprnModeItem::module, module, &NprnModeItem::id, id, &NprnModeItem::nprnMode, NPRNMODE::TOGGLE_VALUE));
 				return menu;
@@ -99,10 +99,10 @@ struct PyladesChoice : MapModuleChoice<MAX_CHANNELS, PyladesModule> {
 				};
 
 				Menu* menu = new Menu;
-				menu->addChild(construct<PresetItem>(&MenuItem::text, "Default", &PresetItem::p, &module->midiParam[id], &PresetItem::min, 0.f, &PresetItem::max, 1.f));
-				menu->addChild(construct<PresetItem>(&MenuItem::text, "Inverted", &PresetItem::p, &module->midiParam[id], &PresetItem::min, 1.f, &PresetItem::max, 0.f));
-				menu->addChild(construct<PresetItem>(&MenuItem::text, "Lower 50%", &PresetItem::p, &module->midiParam[id], &PresetItem::min, 0.f, &PresetItem::max, 0.5f));
-				menu->addChild(construct<PresetItem>(&MenuItem::text, "Upper 50%", &PresetItem::p, &module->midiParam[id], &PresetItem::min, 0.5f, &PresetItem::max, 1.f));
+				menu->addChild(construct<PresetItem>(&MenuItem::text, "Default", &PresetItem::p, &module->rackParam[id], &PresetItem::min, 0.f, &PresetItem::max, 1.f));
+				menu->addChild(construct<PresetItem>(&MenuItem::text, "Inverted", &PresetItem::p, &module->rackParam[id], &PresetItem::min, 1.f, &PresetItem::max, 0.f));
+				menu->addChild(construct<PresetItem>(&MenuItem::text, "Lower 50%", &PresetItem::p, &module->rackParam[id], &PresetItem::min, 0.f, &PresetItem::max, 0.5f));
+				menu->addChild(construct<PresetItem>(&MenuItem::text, "Upper 50%", &PresetItem::p, &module->rackParam[id], &PresetItem::min, 0.5f, &PresetItem::max, 1.f));
 				return menu;
 			}
 		}; // struct PresetMenuItem
@@ -162,13 +162,13 @@ struct PyladesChoice : MapModuleChoice<MAX_CHANNELS, PyladesModule> {
 			}
 		}; // struct LabelMenuItem
 
-		menu->addChild(new SlewSlider(&module->midiParam[id]));
+		menu->addChild(new SlewSlider(&module->rackParam[id]));
 		menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Scaling"));
 		std::string l = string::f("Input %s", module->nprns[id].getNprn() >= 0 ? "Value" : "");
-		menu->addChild(construct<ScalingInputLabel>(&MenuLabel::text, l, &ScalingInputLabel::p, &module->midiParam[id]));
-		menu->addChild(construct<ScalingOutputLabel>(&MenuLabel::text, "Parameter range", &ScalingOutputLabel::p, &module->midiParam[id]));
-		menu->addChild(new MinSlider(&module->midiParam[id]));
-		menu->addChild(new MaxSlider(&module->midiParam[id]));
+		menu->addChild(construct<ScalingInputLabel>(&MenuLabel::text, l, &ScalingInputLabel::p, &module->rackParam[id]));
+		menu->addChild(construct<ScalingOutputLabel>(&MenuLabel::text, "Parameter range", &ScalingOutputLabel::p, &module->rackParam[id]));
+		menu->addChild(new MinSlider(&module->rackParam[id]));
+		menu->addChild(new MaxSlider(&module->rackParam[id]));
 		menu->addChild(construct<PresetMenuItem>(&MenuItem::text, "Presets", &PresetMenuItem::module, module, &PresetMenuItem::id, id));
 		menu->addChild(new MenuSeparator());
 		menu->addChild(construct<LabelMenuItem>(&MenuItem::text, "Custom label", &LabelMenuItem::module, module, &LabelMenuItem::id, id));
@@ -913,13 +913,13 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 				std::string midiCatId = "";
 				std::list<Widget*> w;
 				w.push_back(construct<MapMenuItem>(&MenuItem::text, string::f("Re-map %s", midiCatId.c_str()), &MapMenuItem::module, module, &MapMenuItem::pq, pq, &MapMenuItem::currentId, id));
-				w.push_back(new SlewSlider(&module->midiParam[id]));
+				w.push_back(new SlewSlider(&module->rackParam[id]));
 				w.push_back(construct<MenuLabel>(&MenuLabel::text, "Scaling"));
 				std::string l = string::f("Input %s", module->nprns[id].getNprn() >= 0 ? "OSC" : "");
-				w.push_back(construct<ScalingInputLabel>(&MenuLabel::text, l, &ScalingInputLabel::p, &module->midiParam[id]));
-				w.push_back(construct<ScalingOutputLabel>(&MenuLabel::text, "Parameter range", &ScalingOutputLabel::p, &module->midiParam[id]));
-				w.push_back(new MinSlider(&module->midiParam[id]));
-				w.push_back(new MaxSlider(&module->midiParam[id]));
+				w.push_back(construct<ScalingInputLabel>(&MenuLabel::text, l, &ScalingInputLabel::p, &module->rackParam[id]));
+				w.push_back(construct<ScalingOutputLabel>(&MenuLabel::text, "Parameter range", &ScalingOutputLabel::p, &module->rackParam[id]));
+				w.push_back(new MinSlider(&module->rackParam[id]));
+				w.push_back(new MaxSlider(&module->rackParam[id]));
 				w.push_back(construct<CenterModuleItem>(&MenuItem::text, "Go to mapping module", &CenterModuleItem::mw, this));
 				w.push_back(new PyladesEndItem);
 
@@ -1048,7 +1048,7 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 		menu->addChild(new MenuSeparator());
 		menu->addChild(createSubmenuItem("Preset load", "",
 			[=](Menu* menu) {
-				menu->addChild(createBoolPtrMenuItem("Ignore OSC devices", "", &module->midiIgnoreDevices));
+				menu->addChild(createBoolPtrMenuItem("Ignore OSC devices", "", &module->oscIgnoreDevices));
 				menu->addChild(createBoolPtrMenuItem("Clear mapping slots", "", &module->clearMapsOnLoad));
 			}
 		));
@@ -1077,8 +1077,8 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 		));
 		menu->addChild(createSubmenuItem("Re-send OSC feedback", "",
 			[=](Menu* menu) {
-				menu->addChild(createMenuItem("Now", "", [=]() { module->midiResendFeedback(); }));
-				menu->addChild(createBoolPtrMenuItem("Periodically", "", &module->midiResendPeriodically));
+				menu->addChild(createMenuItem("Now", "", [=]() { module->oscResendFeedback(); }));
+				menu->addChild(createBoolPtrMenuItem("Periodically", "", &module->oscResendPeriodically));
 			}
 		));
 	
@@ -1227,6 +1227,77 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 			}
 		}; // MapMenuItem
 
+		struct SetPageLabelsItem : MenuItem {
+
+			PyladesModule* module;
+			SetPageLabelsItem() {
+				rightText = RIGHT_ARROW;
+			}
+
+			Menu* createChildMenu() override {
+				struct PageLabelMenuItem : MenuItem {
+					PyladesModule* module;
+					int id;
+
+					PageLabelMenuItem() {
+						rightText = RIGHT_ARROW;
+					}
+
+					struct PageLabelField : ui::TextField {
+						PyladesModule* module;
+						int id;
+						void onSelectKey(const event::SelectKey& e) override {
+							if (e.action == GLFW_PRESS && e.key == GLFW_KEY_ENTER) {
+								module->pageLabels[id] = text.substr(0,20);
+								ui::TextField::setText(module->pageLabels[id]);
+							}
+
+							if (!e.getTarget()) {
+								ui::TextField::onSelectKey(e);
+							}
+						}
+					};
+
+					struct ResetItem : ui::MenuItem {
+						PyladesModule* module;
+						int id;
+						void onAction(const event::Action& e) override {
+							module->pageLabels[id] = "";
+						}
+					};
+
+					Menu* createChildMenu() override {
+						Menu* menu = new Menu;
+
+						PageLabelField* labelField = new PageLabelField;
+						labelField->placeholder = "Label";
+						labelField->text = module->pageLabels[id];
+						labelField->box.size.x = 180;
+						labelField->module = module;
+						labelField->id = id;
+						menu->addChild(labelField);
+						menu->addChild(createMenuLabel("Max 20 characters"));
+						ResetItem* resetItem = new ResetItem;
+						resetItem->text = "Reset";
+						resetItem->module = module;
+						resetItem->id = id;
+						menu->addChild(resetItem);
+
+						return menu;
+					}
+				}; // struct PageLabelMenuItem
+
+				Menu* menu = new Menu;
+				for (int i = 0; i < MAX_PAGES; i++) {
+					std::string page = "Page ";
+					page += std::to_string(i + 1);
+					menu->addChild(construct<PageLabelMenuItem>(&MenuItem::text, page.c_str(), &PageLabelMenuItem::module, module, &PageLabelMenuItem::id, i));
+				}
+				return menu;
+			}
+		}; // SetPageLabelsItem
+		menu->addChild(construct<SetPageLabelsItem>(&SetPageLabelsItem::text, "Set control page names", &SetPageLabelsItem::module, module));
+
 		struct SaveMenuItem : MenuItem {
 			PyladesModule* module;
 			SaveMenuItem() {
@@ -1274,7 +1345,7 @@ struct PyladesWidget : ThemedModuleWidget<PyladesModule>, ParamWidgetContextExte
 
 		menu->addChild(construct<SaveMenuItem>(&MenuItem::text, "Add module to library", &SaveMenuItem::module, module));
 		menu->addChild(createMenuItem("Save rack-level mapping", "", [=]() { module->expMemSaveRackMapping(); }));
-
+		menu->addChild(new MenuSeparator());
 		menu->addChild(createMenuItem("Clear mappings", "", [=]() { module->clearMaps_WithLock(); }));
 		menu->addChild(createMenuItem("Apply module mapping", RACK_MOD_SHIFT_NAME "+V", [=]() { enableLearn(LEARN_MODE::MEM); }));
 		menu->addChild(createMenuItem("Apply rack-level mapping", "", [=]() { module->expMemApplyRackMapping(); }));
