@@ -49,6 +49,7 @@ Functionally, Orestes-One and Pylades are basically ([MIDI-CAT](https://library.
 * Mouse-free rack module selection and navigation using Electra One or TouchOSC
 * Special support designed for [MindMeld PatchMaster](https://library.vcvrack.com/MindMeldModular/PatchMaster) modules in a rack, allowing switching between a single rack-level mapping and individual module mappings.
 * Create and manage re-usable module-specific mappings stored in a module mapping library file
+* Override parameter labels and control page labels
 * Export and import module mappings, so they can be shared and curated by the user community (there are over 3000 modules to be mapped after all!)
 * [Factory - provided module mappings](https://github.com/rjsmith/rsbatech-modules/wiki/Factory-Module-Mapping-Library) included
 * Use multiple Pylades and Orestes-One modules connected to different TouchOSC and Electra-One controllers in the same Rack (e.g. dedicate one iPad to controlling a Mix Master, another iPad for controlling other modules and an Electra-One controlling a Rack-wide mapping, all at the same time)
