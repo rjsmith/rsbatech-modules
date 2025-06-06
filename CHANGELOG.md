@@ -1,9 +1,12 @@
-## 2.1.8 1 June 2025
+## 2.1.8 6 June 2025
 
 - Added custom module mapping control page / tab labels ("Set control page names" option)
 - Ported [PackOne ScaledMapParam snapEnabled control improvement](https://github.com/stoermelder/vcvrack-packone/commit/3369bec1bf2eb6ba5878f382f76da704fb32829e)
 - [MAP] Added control page names to MindMeld Mixers and AuxExpanders
 - [MAP] Mapped Cella plugin v2.9.0
+- [MAP] Mapped MUS-X plugin v2.1.1
+  - NB: Set the "Mod Matrix" module's "Latch buttons" context option = true
+
 
 ## 2.1.7 16 May 2025
 
