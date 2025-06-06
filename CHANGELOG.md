@@ -1,8 +1,12 @@
 ## 2.1.8 6 June 2025
 
-- Added custom module mapping control page / tab labels ("Set control page names" option)
+- Removed the previous horizontal fader-based TouchOSC preset from the repository. The "Pylades vx.x.x.tosc" file is now the knob-based TouchOSC layout. 
+  - I always intended to remove the horizontal fader - based layout, I think the knob layout with its vertical finger movements is more natural to use, especially when controlling 2+ parameters at the same time.
+- Added custom module / rack mapping control page labels ("Set control page names" option)
+  - Use the updated Pylades v2.1.3.tosc TouchOSC file to see the new dynamic control page labels.
+  - The Electra One VCVRack preset has already been updated to support page names (v2.1.5)
 - Ported [PackOne ScaledMapParam snapEnabled control improvement](https://github.com/stoermelder/vcvrack-packone/commit/3369bec1bf2eb6ba5878f382f76da704fb32829e)
-- [MAP] Added control page names to MindMeld Mixers and AuxExpanders
+- [MAP] Added control page names to MindMeld Mixers and AuxExpander module mappings
 - [MAP] Mapped Cella plugin v2.9.0
 - [MAP] Mapped MUS-X plugin v2.1.1
   - NB: Set the "Mod Matrix" module's "Latch buttons" context option = true
