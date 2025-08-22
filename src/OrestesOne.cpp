@@ -1172,6 +1172,10 @@ struct OrestesOneModule : Module {
 		}
 		mapLen = 1;
 		expMemModuleId = -1;
+
+        for (int i = 0; i < MAX_PAGES; i++) {
+            pageLabels[i].clear();
+        }
 	}
 
 	void clearMaps_NoLock() {
@@ -1186,6 +1190,10 @@ struct OrestesOneModule : Module {
 		}
 		mapLen = 1;
 		expMemModuleId = -1;
+
+        for (int i = 0; i < MAX_PAGES; i++) {
+            pageLabels[i].clear();
+        }
 	}
 
 	void updateMapLen() {
