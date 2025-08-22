@@ -1,3 +1,11 @@
+## 2.1.9 22 Aug 2025
+
+- [FIX] Clear/reset control page labels when starting a new module mapping
+- [MAP] Mapped new CV Funk plugin modules v2.0.24
+- [MAP] Mapped Venom Oscillators (Sofias Daughter) plugin v2.1.8
+- [MAP] Mapped new Sapphire plugin modules v2.6.0
+- [MAP] Mapped Synthesis Technology Bundle 2 (E352 & E370) v2.1.0
+
 ## 2.1.8 6 June 2025
 
 - Removed the previous horizontal fader-based TouchOSC preset from the repository. The "Pylades vx.x.x.tosc" file is now the knob-based TouchOSC layout. 
