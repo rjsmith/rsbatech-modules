@@ -1,3 +1,13 @@
+## 2.1.10 16 Nov 2025
+
+- Show In / Out prefix text on each MIDI Widget
+- [FIX] Removed unused MIDI CTRL In widget
+- [MAP] Mapped VostokInstruments v2.0.0
+- [MAP] Updated Venom mappings to v2.13.2
+- [MAP] Updated CV Funk mappings to v2.0.36
+- [MAP] Mapped TeknoLogical v2.0.2
+- [MAP] Updated Moffenzeef mappings to v2.3.0
+
 ## 2.1.9 22 Aug 2025
 
 - [FIX] Clear/reset control page labels when starting a new module mapping
