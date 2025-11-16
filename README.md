@@ -98,6 +98,8 @@ The software within the src/ folder is licensed under GPL 3+ (see LICENSE for mo
 
 The UI elements within the res/ folder are licensed under [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/). You may not distribute modified adaptations of these graphics.
 
+Electra One image (c) 2019-2025 Electra One
+
 ## Acknowledgements
 
 At least 80% of the code of Orestes-One was directly copied from the [MIDI-CAT MIDI controller module](https://library.vcvrack.com/Stoermelder-P1/MidiCat) which is part of the essential [stoermelder PackOne](https://github.com/stoermelder/vcvrack-packone) VCV Rack Plugin. I literally could not have created this plugin without it.  The author has gracefully OK'd the use of the software in this plugin.
