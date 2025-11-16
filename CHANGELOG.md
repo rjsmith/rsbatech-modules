@@ -1,4 +1,4 @@
-## 2.1.10 16 Nov 2025
+## 2.1.10 Unreleased
 
 - Show In / Out prefix text on each MIDI Widget
 - [FIX] Removed unused MIDI CTRL In widget
