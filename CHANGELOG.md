@@ -3,10 +3,11 @@
 - Show In / Out prefix text on each MIDI Widget
 - [FIX] Removed unused MIDI CTRL In widget
 - [MAP] Mapped VostokInstruments v2.0.0
+- [MAP] Mapped TeknoLogical v2.0.2
+- [MAP] Mapped Venom Chaos Boxes v2.0.0
 - [MAP] Updated Venom mappings to v2.14.5
 - [MAP] Updated Venom Oscillations to v2.1.0 (Sofia's Daughter & Spice Factory)
 - [MAP] Updated CV Funk mappings to v2.0.36
-- [MAP] Mapped TeknoLogical v2.0.2
 - [MAP] Updated Moffenzeef mappings to v2.3.0
 
 ## 2.1.9 22 Aug 2025
