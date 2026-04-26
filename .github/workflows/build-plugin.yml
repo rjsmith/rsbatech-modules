@@ -62,7 +62,8 @@ jobs:
   build-mac:
     name: mac
     needs: modify-plugin-version
-    runs-on: macos-latest
+    # Changed from using macos-latest because of this: https://community.vcvrack.com/t/plugin-build-suddenly-failing-but-only-on-mac-intel/24876
+    runs-on: macos-14
     strategy:
       fail-fast: false
       matrix:

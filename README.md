@@ -1,7 +1,7 @@
 # RSBATech-Modules
 
 <!-- Version and License Badges -->
-![Version](https://img.shields.io/badge/version-2.1.9-green.svg?style=flat-square)
+![Version](https://img.shields.io/badge/version-2.1.10-green.svg?style=flat-square)
 ![License](https://img.shields.io/badge/license-GPLv3+-blue.svg?style=flat-square)
 ![Language](https://img.shields.io/badge/language-C++-yellow.svg?style=flat-square)
 
@@ -97,6 +97,8 @@ tail -f log.txt
 The software within the src/ folder is licensed under GPL 3+ (see LICENSE for more details)
 
 The UI elements within the res/ folder are licensed under [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/). You may not distribute modified adaptations of these graphics.
+
+Electra One image (c) 2019-2025 Electra One
 
 ## Acknowledgements
 
