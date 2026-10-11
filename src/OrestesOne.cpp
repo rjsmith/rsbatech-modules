@@ -268,8 +268,6 @@ struct OrestesOneModule : Module {
 	E1MidiOutput midiOutput;
 
 	/** [Stored to Json] */
-	midi::InputQueue midiCtrlInput;
-	/** [Stored to Json] */
 	E1MidiOutput midiCtrlOutput;
 
 	/** [Stored to JSON] */
@@ -516,7 +514,6 @@ struct OrestesOneModule : Module {
 		midiInput.reset();
 		midiOutput.reset();
 		midiOutput.midi::Output::reset();
-		midiCtrlInput.reset();
 		midiCtrlOutput.reset();
 		midiCtrlOutput.midi::Output::reset();
 		midiIgnoreDevices = false;
@@ -820,6 +817,7 @@ struct OrestesOneModule : Module {
         }
 
         if (e1VersionPoll) {
+            INFO("Connecting to Electra One...");
         	// Send the OrestesOne plugin version to E1
         	std::string o1PluginVersion = model->plugin->version;
         	midiCtrlOutput.sendOrestesOneVersion(o1PluginVersion);
@@ -1751,7 +1749,6 @@ struct OrestesOneModule : Module {
 		json_object_set_new(rootJ, "midiIgnoreDevices", json_boolean(midiIgnoreDevices));
 		json_object_set_new(rootJ, "midiInput", midiInput.toJson());
 		json_object_set_new(rootJ, "midiOutput", midiOutput.toJson());
-		json_object_set_new(rootJ, "midiCtrlInput", midiCtrlInput.toJson());
 		json_object_set_new(rootJ, "midiCtrlOutput", midiCtrlOutput.toJson());
 
 
@@ -1928,8 +1925,6 @@ struct OrestesOneModule : Module {
 			if (midiInputJ) midiInput.fromJson(midiInputJ);
 			json_t* midiOutputJ = json_object_get(rootJ, "midiOutput");
 			if (midiOutputJ) midiOutput.fromJson(midiOutputJ);
-			json_t* midiCtrlInputJ = json_object_get(rootJ, "midiCtrlInput");
-			if (midiCtrlInputJ) midiCtrlInput.fromJson(midiCtrlInputJ);
 			json_t* midiCtrlOutputJ = json_object_get(rootJ, "midiCtrlOutput");
 			if (midiCtrlOutputJ) midiCtrlOutput.fromJson(midiCtrlOutputJ);
 		}

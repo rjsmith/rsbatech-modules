@@ -215,6 +215,11 @@ struct MemDisplay : OrestesLedDisplay {
 		if (!module) return;
 		text = string::f("%i", (int)module->midiMap.size());
 	}
+
+	virtual void onRemove(const RemoveEvent& e) override {
+    	INFO("Removing MemDisplay");
+    }
+
 };
 
 struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetContextExtender {
@@ -237,6 +242,7 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 
 	OrestesOneWidget(OrestesOneModule* module)
 		: ThemedModuleWidget<OrestesOneModule>(module, "OrestesOne") {
+		INFO("Creating OrestesOneWidget %s", module ? "with module" : "no module");	
 		setModule(module);
 		this->module = module;
 		box.size.x = 300;
@@ -248,22 +254,17 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 
 		MidiWidget<>* midiInputWidget = createWidget<MidiWidget<>>(Vec(10.0f, 36.4f));
 		midiInputWidget->box.size = Vec(130.0f, 67.0f);
-		midiInputWidget->setMidiPort(module ? &module->midiInput : NULL);
+		midiInputWidget->setMidiPort(module ? &module->midiInput : NULL, "In");
 		addChild(midiInputWidget);
-
-		MidiWidget<>* midiCtrlInputWidget = createWidget<MidiWidget<>>(Vec(160.0f, 36.4f));
-		midiCtrlInputWidget->box.size = Vec(130.0f, 67.0f);
-		midiCtrlInputWidget->setMidiPort(module ? &module->midiCtrlInput : NULL);
-		addChild(midiCtrlInputWidget);
 
 		MidiWidget<>* midiOutputWidget = createWidget<MidiWidget<>>(Vec(10.0f, 107.4f));
 		midiOutputWidget->box.size = Vec(130.0f, 67.0f);
-		midiOutputWidget->setMidiPort(module ? &module->midiOutput : NULL);
+		midiOutputWidget->setMidiPort(module ? &module->midiOutput : NULL, "Out");
 		addChild(midiOutputWidget);
 
 		MidiWidget<>* midiCtrlOutputWidget = createWidget<MidiWidget<>>(Vec(160.0f, 107.4f));
 		midiCtrlOutputWidget->box.size = Vec(130.0f, 67.0f);
-		midiCtrlOutputWidget->setMidiPort(module ? &module->midiCtrlOutput : NULL);
+		midiCtrlOutputWidget->setMidiPort(module ? &module->midiCtrlOutput : NULL, "Out");
 		addChild(midiCtrlOutputWidget);
 
 		mapWidget = createWidget<OrestesOneDisplay>(Vec(10.0f, 178.5f));
@@ -291,10 +292,16 @@ struct OrestesOneWidget : ThemedModuleWidget<OrestesOneModule>, ParamWidgetConte
 		}
 
 		if (module) {
+   			INFO("Unregistering map widget");
 			OverlayMessageWidget::unregisterProvider(mapWidget);
+		} else {
+			INFO ("Destructor - no module");
 		}
 	}
 
+    virtual void onRemove(const RemoveEvent& e) override {
+    	INFO("Removing OrestesOneWidget");
+    }
 
 	void step() override {
 		ThemedModuleWidget<OrestesOneModule>::step();
